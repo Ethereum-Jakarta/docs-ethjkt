@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Hardhat Configuration and Deployment
+# 3. Hardhat Configuration and Deployment
 
 This guide explains how to configure Hardhat, set up deployment, and verify your smart contract.
 

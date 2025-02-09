@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Setting Up Manta Pacific Sepolia Testnet on MetaMask
+# 1. Setting Up Manta Pacific Sepolia Testnet on MetaMask
 
 Follow these steps to add **Manta Pacific Sepolia Testnet** to your **MetaMask** wallet and request faucet funds.
 

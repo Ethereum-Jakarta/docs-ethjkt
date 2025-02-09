@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# Understanding Deployed Contracts on Manta Explorer
+# 4. Understanding Deployed Contracts on Manta Explorer
 
 This guide explains the importance of verifying smart contracts, what **Read Contract** and **Write Contract** tabs mean, and how to interact with your deployed contracts on the **Manta Pacific Sepolia Testnet Explorer**.
 

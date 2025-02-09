@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Development Setup for Hardhat on Visual Studio Code
+# 2. Development Setup for Hardhat on Visual Studio Code
 
 This guide will help you set up **Microsoft Visual Studio Code** for **Hardhat**, a popular development framework for Ethereum smart contracts.
 
