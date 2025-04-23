@@ -18,10 +18,6 @@ Sebelum memulai, pastikan Anda telah menginstal:
 - [MetaMask](https://metamask.io/) browser extension (sudah dikonfigurasi dengan Monad Testnet)
 - [Git](https://git-scm.com/downloads) (opsional tetapi direkomendasikan)
 
-:::tip
-Jika belum mengkonfigurasi MetaMask untuk Monad Testnet, silakan ikuti panduan [Mengatur Monad Testnet pada MetaMask](./1-mengatur-monad-testnet) terlebih dahulu.
-:::
-
 ## 1. Membuat Direktori Proyek
 
 ### Langkah-langkah Detail:
