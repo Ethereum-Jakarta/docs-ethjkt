@@ -1,11 +1,11 @@
 ---
-sidebar_position: 2.3
-title: 2.3. Pengembangan Smart Contract Token Factory
+sidebar_position: 4
+title: 4. Pengembangan Smart Contract Token Factory
 description: Membuat smart contract untuk Token ERC20 dan Token Factory dengan fitur burning dan pelacakan
 keywords: [smart contract, token, erc20, solidity, factory, monad, testnet, openzeppelin, burning, inheritance]
 ---
 
-# 2.3. Pengembangan Smart Contract Token Factory
+# 4. Pengembangan Smart Contract Token Factory
 
 Pada bagian ini, kita akan mengembangkan dua smart contract utama: `Token.sol` untuk token ERC20 dan `TokenFactory.sol` untuk membuat token ERC20 secara dinamis. Kedua kontrak ini bekerja sama untuk memberikan platform yang fleksibel untuk pembuatan token.
 

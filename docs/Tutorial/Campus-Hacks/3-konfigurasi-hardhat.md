@@ -1,11 +1,11 @@
 ---
-sidebar_position: 2.2
-title: 2.2. Konfigurasi Hardhat untuk Monad Testnet
+sidebar_position: 3
+title: 3. Konfigurasi Hardhat untuk Monad Testnet
 description: Mengkonfigurasi Hardhat untuk jaringan Monad Testnet dan menyiapkan pengelolaan private key yang aman
 keywords: [hardhat, monad, testnet, typescript, private key, hardhat-vars, vscode, security]
 ---
 
-# 2.2. Konfigurasi Hardhat untuk Monad Testnet
+# 3. Konfigurasi Hardhat untuk Monad Testnet
 
 Setelah mempersiapkan lingkungan pengembangan, langkah selanjutnya adalah mengkonfigurasi Hardhat untuk bekerja dengan jaringan **Monad Testnet** dan menyiapkan pengelolaan private key yang aman. Konfigurasi yang benar sangat penting untuk memastikan keberhasilan deployment dan interaksi dengan blockchain.
 

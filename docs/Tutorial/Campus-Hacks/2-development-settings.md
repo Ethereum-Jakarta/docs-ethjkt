@@ -1,11 +1,11 @@
 ---
-sidebar_position: 2.1
-title: 2.1. Persiapan Lingkungan untuk Token Factory
+sidebar_position: 2
+title: 2. Persiapan Lingkungan untuk Token Factory
 description: Mempersiapkan lingkungan pengembangan dengan Node.js, VS Code, dan Hardhat untuk pengembangan token pada jaringan Monad Testnet
 keywords: [hardhat, vscode, ethereum, development, smart contract, web3, monad, testnet, typescript, token, erc20, factory]
 ---
 
-# 2.1. Persiapan Lingkungan untuk Token Factory
+# 2. Persiapan Lingkungan untuk Token Factory
 
 Panduan ini akan membantu Anda mempersiapkan lingkungan pengembangan untuk membuat **Token Factory** pada jaringan **Monad Testnet**. Token Factory adalah platform untuk menciptakan token ERC20 secara dinamis menggunakan smart contract.
 

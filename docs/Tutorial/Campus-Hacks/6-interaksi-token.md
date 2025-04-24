@@ -1,6 +1,6 @@
 ---
-sidebar_position: 2.5
-title: 2.5. Interaksi dengan Token di Monad Testnet
+sidebar_position: 6
+title: 6. Interaksi dengan Token di Monad Testnet
 description: Men-deploy smart contract ke Monad Testnet dan berinteraksi dengan token ERC20
 keywords: [monad, testnet, token, erc20, factory, deployment, interaction, verification, transfer, burning, blockchain, explorer]
 ---

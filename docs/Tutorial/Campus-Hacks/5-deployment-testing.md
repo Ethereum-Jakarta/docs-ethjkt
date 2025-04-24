@@ -1,11 +1,11 @@
 ---
-sidebar_position: 2.4
-title: 2.4. Deployment dan Testing Smart Contract
+sidebar_position: 5
+title: 5. Deployment dan Testing Smart Contract
 description: Membuat script deployment, testing, dan berinteraksi dengan smart contract
 keywords: [hardhat, testing, deployment, smart contract, monad, testnet, token factory, typescript, test suite, coverage]
 ---
 
-# 2.4. Deployment dan Testing Smart Contract
+# 5. Deployment dan Testing Smart Contract
 
 Setelah mengembangkan smart contract Token Factory, langkah berikutnya adalah memastikan contract bekerja dengan baik melalui testing dan kemudian men-deploy-nya ke jaringan. Pada bagian ini, kita akan mempelajari cara membuat script deployment, menguji contract dengan test suite komprehensif, dan menganalisis coverage testing.
 
