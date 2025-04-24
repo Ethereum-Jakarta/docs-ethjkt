@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import type {PluginOptions} from 'docusaurus-plugin-search-local';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -30,6 +31,17 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  plugins: [
+    [
+      'docusaurus-plugin-search-local',
+      {
+        hashed: true,          // keeps search index cache-friendly
+        highlightSearchTermsOnTargetPage: true,
+        docsRouteBasePath: '/', // indexes docs at /
+      } satisfies PluginOptions,
+    ],
+  ],
 
   presets: [
     [
