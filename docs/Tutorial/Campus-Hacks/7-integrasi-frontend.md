@@ -9,6 +9,8 @@ keywords: [frontend, react, vite, token factory, web3, wagmi, rainbowkit, tailwi
 
 Pada bagian ini, kita akan membuat frontend sederhana menggunakan React, Vite, dan TailwindCSS untuk berinteraksi dengan smart contract Token Factory yang telah kita deploy. Frontend ini akan memungkinkan pengguna untuk membuat token baru dan melihat token yang telah dibuat.
 
+![Tampilan Frontend Monad Token Factory](/img/monad-fe.png)
+
 ## 1. Setup Proyek Frontend
 
 Mari mulai dengan membuat proyek React + Vite baru dengan TypeScript.

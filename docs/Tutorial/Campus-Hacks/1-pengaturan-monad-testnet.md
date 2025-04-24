@@ -7,7 +7,31 @@ keywords: [monad, testnet, blockchain, metamask, jaringan, web3]
 
 # 1. Mengatur Monad Testnet pada MetaMask
 
-Ikuti panduan ini untuk menambahkan **Monad Testnet** ke dompet **MetaMask** Anda menggunakan situs resmi Monad. Panduan ini dibuat berdasarkan tampilan antarmuka terbaru dari situs testnet.monad.xyz.
+## Apa itu Monad?
+
+**Monad** adalah blockchain Layer-1 inovatif yang dirancang untuk mengatasi masalah skalabilitas, kecepatan, dan biaya yang sering dihadapi oleh blockchain generasi sebelumnya. Monad dioptimalkan khusus untuk aplikasi DeFi (Decentralized Finance) dan menawarkan beberapa keunggulan:
+
+- **Throughput Tinggi**: Mampu memproses ribuan transaksi per detik
+- **Biaya Rendah**: Gas fee yang lebih terjangkau dibandingkan blockchain lainnya
+- **Kompatibilitas EVM**: Mendukung smart contract Ethereum, memudahkan migrasi dApp
+- **Paralelisme**: Arsitektur yang memungkinkan eksekusi transaksi secara paralel
+- **Finality Cepat**: Konfirmasi transaksi dalam hitungan detik
+
+### Monad sebagai Blockchain Layer-1
+
+Monad adalah blockchain **Layer-1** yang berarti:
+
+- **Memiliki Blockchain Sendiri**: Monad mengoperasikan blockchain independen dengan infrastruktur, konsensus, dan mekanisme validasi sendiri, tidak bergantung pada blockchain lain untuk keamanan atau finalisasi.
+
+- **Bukan Solusi Scaling Layer-2**: Berbeda dengan solusi Layer-2 (seperti Optimism, Arbitrum, atau zkSync) yang bergantung pada Ethereum atau blockchain lain untuk keamanan, Monad beroperasi sebagai jaringan mandiri.
+
+- **Konsensus Independen**: Memiliki mekanisme konsensus sendiri untuk memvalidasi transaksi dan mengamankan jaringan, bukan hanya meng-"roll up" transaksi ke blockchain induk.
+
+- **Inovasi Arsitektur**: Menggunakan arsitektur blockchain yang dioptimalkan dari awal dengan fokus pada paralelisme dan throughput tinggi, bukan sekedar menambahkan lapisan di atas blockchain yang sudah ada.
+
+- **Keamanan Native**: Keamanan dan validasi transaksi ditangani langsung oleh validator Monad, bukan bergantung pada blockchain lain untuk konfirmasi dan finalisasi transaksi.
+
+Monad Testnet adalah lingkungan pengujian yang memungkinkan developer untuk membangun dan menguji aplikasi mereka sebelum diluncurkan ke mainnet.
 
 ## 1. Mengakses Situs Resmi Monad Testnet
 
