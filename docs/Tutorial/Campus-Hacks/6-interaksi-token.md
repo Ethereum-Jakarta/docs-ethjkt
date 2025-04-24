@@ -363,7 +363,7 @@ npx hardhat verify --network monadTestnet FACTORY_ADDRESS
 Untuk token yang dibuat oleh factory:
 
 ```bash
-npx hardhat verify --network monadTestnet TOKEN_ADDRESS "CONSTRUCTOR_ARG1" "CONSTRUCTOR_ARG2" ...
+npx hardhat verify --network monadTestnet addressTokenErc20 addressOwnerToken initialSupply tokenName tokenSymbol
 ```
 
 Jika verifikasi berhasil, Anda akan melihat pesan sukses dan link ke kontrak yang terverifikasi di explorer.

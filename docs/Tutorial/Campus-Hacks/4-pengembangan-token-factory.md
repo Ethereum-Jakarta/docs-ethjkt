@@ -31,7 +31,7 @@ Kontrak `Token.sol` merupakan implementasi token ERC20 dengan kemampuan burning 
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.28;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -90,7 +90,7 @@ Kontrak `TokenFactory.sol` berfungsi sebagai factory untuk membuat token ERC20 d
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.28;
 
 import "./Token.sol";
 
