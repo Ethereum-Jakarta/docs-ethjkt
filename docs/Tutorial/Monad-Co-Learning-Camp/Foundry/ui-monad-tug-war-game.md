@@ -106,8 +106,6 @@ src/
 │   └── index.tsx          # Export konstanta
 ├── types/
 │   └── game.ts            # Type definitions untuk game
-├── utils/
-│   └── gameHelpers.ts     # Helper functions untuk game logic
 ├── App.tsx                # Komponen root dengan provider
 ├── main.tsx               # Entry point
 └── index.css              # Stylesheet utama
@@ -121,331 +119,383 @@ Buat folder `src/constants` dan file `TUGWAR_ABI.json` dengan ABI dari kontrak T
 
 ```json
 [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "resetter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "newMaxScoreDifference",
-        "type": "uint8"
-      }
-    ],
-    "name": "GameReset",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "winningTeam",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "finalScore1",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "finalScore2",
-        "type": "uint8"
-      }
-    ],
-    "name": "GameWon",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "player",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isTeam1",
-        "type": "bool"
-      },
-      {
-        "indexed": false,
-        "internalType": "int8",
-        "name": "newRopePosition",
-        "type": "int8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "GameNotStarted",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "GameOver",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InvalidMaxScoreDifference",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "OnlyOwner",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "resetter",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "newMaxScoreDifference",
+                "type": "uint8"
+            }
+        ],
+        "name": "GameReset",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "winningTeam",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "finalScore1",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "finalScore2",
+                "type": "uint8"
+            }
+        ],
+        "name": "GameWon",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "player",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "isTeam1",
+                "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "int8",
+                "name": "newRopePosition",
+                "type": "int8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "team1Score",
+                "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "team2Score",
+                "type": "uint8"
+            }
+        ],
+        "name": "PullExecuted",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "canStartGame",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "canStart",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "gamesPlayed",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getGameInfo",
+        "outputs": [
+            {
+                "internalType": "int8",
+                "name": "currentRopePos",
+                "type": "int8"
+            },
+            {
+                "internalType": "uint8",
+                "name": "score1",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint8",
+                "name": "score2",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint8",
+                "name": "maxDiff",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint8",
+                "name": "winner",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint256",
+                "name": "pulls",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "games",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getPrediction",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "predictedWinner",
+                "type": "uint8"
+            },
+            {
+                "internalType": "uint8",
+                "name": "confidence",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint8",
+                "name": "teamNumber",
+                "type": "uint8"
+            }
+        ],
+        "name": "getTeamStats",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "score",
+                "type": "uint8"
+            },
+            {
+                "internalType": "bool",
+                "name": "isWinning",
+                "type": "bool"
+            },
+            {
+                "internalType": "uint8",
+                "name": "scoreAdvantage",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getWinStatus",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "maxScoreDifference",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bool",
+                "name": "isTeam1",
+                "type": "bool"
+            }
+        ],
+        "name": "pull",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint8",
+                "name": "_maxScoreDifference",
+                "type": "uint8"
+            }
+        ],
+        "name": "reSet",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "ropePosition",
+        "outputs": [
+            {
+                "internalType": "int8",
+                "name": "",
+                "type": "int8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "team1Score",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "team2Score",
-        "type": "uint8"
-      }
-    ],
-    "name": "PullExecuted",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "canStartGame",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "canStart",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getGameInfo",
-    "outputs": [
-      {
-        "internalType": "int8",
-        "name": "currentRopePos",
-        "type": "int8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "score1",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "score2",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "maxDiff",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "winner",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint256",
-        "name": "pulls",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "games",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "teamNumber",
-        "type": "uint8"
-      }
-    ],
-    "name": "getTeamStats",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "score",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bool",
-        "name": "isWinning",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "scoreAdvantage",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getPrediction",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "predictedWinner",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint8",
-        "name": "confidence",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getWinStatus",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "gamesPlayed",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "maxScoreDifference",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "isTeam1",
-        "type": "bool"
-      }
-    ],
-    "name": "pull",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "_maxScoreDifference",
-        "type": "uint8"
-      }
-    ],
-    "name": "reSet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "ropePosition",
-    "outputs": [
-      {
-        "internalType": "int8",
-        "name": "",
-        "type": "int8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "team1Score",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "team2Score",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalPulls",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalPulls",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
 ]
 ```
 
@@ -503,7 +553,7 @@ export interface GameEvent {
 Perbarui `src/App.tsx` untuk mengatur provider dan konfigurasi:
 
 ```typescript
-import Header from './components/Header';
+import Header from "./components/Header";
 import '@rainbow-me/rainbowkit/styles.css';
 
 import {
@@ -511,7 +561,7 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import {
+import type {
   Chain
 } from 'wagmi/chains';
 import {
@@ -613,7 +663,7 @@ export default Header
 Buat file `src/components/GameBoard.tsx`:
 
 ```typescript
-import { GameInfo } from "../types/game";
+import type { GameInfo } from "../types/game";
 
 interface GameBoardProps {
   gameInfo: GameInfo;
@@ -822,8 +872,8 @@ export default GameControls;
 Buat file `src/components/GameStats.tsx`:
 
 ```typescript
-import { BarChart3, Target, Trophy, Users } from "lucide-react";
-import { GameInfo, TeamStats, GamePrediction } from "../types/game";
+import { BarChart3, Target, Trophy } from "lucide-react";
+import type { GameInfo, TeamStats, GamePrediction } from "../types/game";
 
 interface GameStatsProps {
   gameInfo: GameInfo;
@@ -968,7 +1018,7 @@ export default GameStats;
 Buat file `src/components/Container.tsx` yang akan berisi logika utama interaksi dengan kontrak:
 
 ```typescript
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAccount, useReadContract, useWriteContract, useWatchContractEvent } from "wagmi";
 import { TUGWAR_ABI, TUGWAR_CONTRACT_ADDRESS } from "../constants";
@@ -978,7 +1028,7 @@ import GameBoard from "./GameBoard";
 import GameControls from "./GameControls";
 import GameStats from "./GameStats";
 import GameHistory from "./GameHistory";
-import { GameInfo, TeamStats, GamePrediction, GameEvent } from "../types/game";
+import type { GameInfo, TeamStats, GamePrediction, GameEvent } from "../types/game";
 
 const tugwarContract = {
   address: TUGWAR_CONTRACT_ADDRESS as `0x${string}`,
@@ -1044,8 +1094,8 @@ const Container = () => {
     },
   });
 
-  // Process data
-  const gameInfo: GameInfo = gameInfoData ? {
+  // Process data with proper type assertions and checks
+  const gameInfo: GameInfo = gameInfoData && Array.isArray(gameInfoData) ? {
     ropePosition: Number(gameInfoData[0]),
     team1Score: Number(gameInfoData[1]),
     team2Score: Number(gameInfoData[2]),
@@ -1063,19 +1113,19 @@ const Container = () => {
     gamesPlayed: 0,
   };
 
-  const team1Stats: TeamStats = team1StatsData ? {
+  const team1Stats: TeamStats = team1StatsData && Array.isArray(team1StatsData) ? {
     score: Number(team1StatsData[0]),
     isWinning: Boolean(team1StatsData[1]),
     scoreAdvantage: Number(team1StatsData[2]),
   } : { score: 0, isWinning: false, scoreAdvantage: 0 };
 
-  const team2Stats: TeamStats = team2StatsData ? {
+  const team2Stats: TeamStats = team2StatsData && Array.isArray(team2StatsData) ? {
     score: Number(team2StatsData[0]),
     isWinning: Boolean(team2StatsData[1]),
     scoreAdvantage: Number(team2StatsData[2]),
   } : { score: 0, isWinning: false, scoreAdvantage: 0 };
 
-  const prediction: GamePrediction = predictionData ? {
+  const prediction: GamePrediction = predictionData && Array.isArray(predictionData) ? {
     predictedWinner: Number(predictionData[0]),
     confidence: Number(predictionData[1]),
   } : { predictedWinner: 0, confidence: 0 };
@@ -1093,11 +1143,19 @@ const Container = () => {
       
       // Add event to history
       const log = logs[0];
-      if (log && log.args) {
-        const { player, isTeam1, team1Score, team2Score } = log.args;
+      if (log && 'args' in log && log.args) {
+        const args = log.args as {
+          player: string;
+          isTeam1: boolean;
+          newRopePosition: number;
+          team1Score: number;
+          team2Score: number;
+        };
+        
+        const { player, isTeam1, team1Score, team2Score } = args;
         const newEvent: GameEvent = {
           type: 'pull',
-          player: player as string,
+          player: player,
           team: isTeam1 ? 1 : 2,
           timestamp: Date.now(),
         };
@@ -1126,8 +1184,14 @@ const Container = () => {
       
       // Add event to history
       const log = logs[0];
-      if (log && log.args) {
-        const { winningTeam, finalScore1, finalScore2 } = log.args;
+      if (log && 'args' in log && log.args) {
+        const args = log.args as {
+          winningTeam: number;
+          finalScore1: number;
+          finalScore2: number;
+        };
+        
+        const { winningTeam, finalScore1, finalScore2 } = args;
         const newEvent: GameEvent = {
           type: 'win',
           team: Number(winningTeam),
@@ -1346,7 +1410,7 @@ Untuk melengkapi experience, buat file `src/components/GameHistory.tsx`:
 ```typescript
 import { useState } from "react";
 import { Clock, Trophy, Users, RotateCcw } from "lucide-react";
-import { GameEvent } from "../types/game";
+import type { GameEvent } from "../types/game";
 
 interface GameHistoryProps {
   events: GameEvent[];
