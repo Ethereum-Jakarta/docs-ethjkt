@@ -1,6 +1,6 @@
 ---
-sidebar_position: 4
-title: Integrasi Frontend dengan TugWar Game
+sidebar_position: 2
+title: 2. Integrasi Frontend dengan TugWar Game
 description: Membuat frontend React dengan Vite untuk berinteraksi dengan TugWar Game smart contract
 keywords: [frontend, react, vite, tugwar game, web3, wagmi, rainbowkit, tailwindcss, game, integration]
 ---
@@ -61,31 +61,199 @@ export default defineConfig({
 Buat file `src/index.css` dengan konten:
 
 ```css
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
-body {
-  font-family: "Inter", sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+:root {
+  /* Monad Brand Colors */
+  --monad-off-white: #fbfaf9;
+  --monad-purple: #836ef9;
+  --monad-blue: #200052;
+  --monad-berry: #a0055d;
+  --monad-black: #0e100f;
+  --monad-white: #ffffff;
+
+  /* Derived colors for UI */
+  --monad-purple-light: rgba(131, 110, 249, 0.8);
+  --monad-purple-dark: rgba(131, 110, 249, 0.2);
+  --monad-berry-light: rgba(160, 5, 93, 0.8);
+  --monad-berry-dark: rgba(160, 5, 93, 0.2);
+  --monad-blue-light: rgba(32, 0, 82, 0.8);
+  --monad-blue-dark: rgba(32, 0, 82, 0.3);
+
+  /* UI System Colors */
+  --bg-primary: var(--monad-blue);
+  --bg-secondary: var(--monad-black);
+  --bg-tertiary: rgba(32, 0, 82, 0.6);
+  --text-primary: var(--monad-off-white);
+  --text-secondary: var(--monad-white);
+  --text-muted: rgba(251, 250, 249, 0.7);
+  --border-primary: rgba(131, 110, 249, 0.3);
+  --border-secondary: rgba(251, 250, 249, 0.1);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, var(--monad-blue) 0%, var(--monad-black) 50%, #1a0040 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--monad-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--monad-purple);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--monad-berry);
+}
+
+/* Animations */
 @keyframes rope-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(0) translateY(-50%);
+  }
+  25% {
+    transform: translateX(-3px) translateY(-50%);
+  }
+  75% {
+    transform: translateX(3px) translateY(-50%);
+  }
 }
 
 .rope-shake {
-  animation: rope-shake 0.3s ease-in-out;
+  animation: rope-shake 0.4s ease-in-out;
 }
 
 @keyframes victory-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
 }
 
 .victory-pulse {
-  animation: victory-pulse 0.8s ease-in-out infinite;
+  animation: victory-pulse 1.2s ease-in-out infinite;
 }
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes glow-purple {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(131, 110, 249, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(131, 110, 249, 0.6), 0 0 30px rgba(131, 110, 249, 0.4);
+  }
+}
+
+@keyframes glow-berry {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(160, 5, 93, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(160, 5, 93, 0.6), 0 0 30px rgba(160, 5, 93, 0.4);
+  }
+}
+
+.glow-purple {
+  animation: glow-purple 2s ease-in-out infinite;
+}
+
+.glow-berry {
+  animation: glow-berry 2s ease-in-out infinite;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(14, 16, 15, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(251, 250, 249, 0.1);
+}
+
+.glass-dark {
+  background: rgba(32, 0, 82, 0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(131, 110, 249, 0.2);
+}
+
+/* Button hover effects */
+.btn-primary {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Monad brand gradients */
+.gradient-monad-primary {
+  background: linear-gradient(135deg, var(--monad-purple) 0%, var(--monad-berry) 100%);
+}
+
+.gradient-monad-secondary {
+  background: linear-gradient(135deg, var(--monad-blue) 0%, var(--monad-black) 100%);
+}
+
+.text-gradient-monad {
+  background: linear-gradient(135deg, var(--monad-purple) 0%, var(--monad-berry) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 ```
 
 ## 3. Struktur Proyek
@@ -611,7 +779,7 @@ function App() {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-purple-800">
+          <div className="min-h-scree">
             <Header />
             <Container />
           </div>
@@ -633,23 +801,37 @@ Buat file `src/components/Header.tsx`:
 
 ```typescript
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { Users, Trophy } from "lucide-react"
+import { Users, Trophy, Zap } from "lucide-react"
 
 const Header = () => {
   return (
-    <header className="bg-black/20 backdrop-blur-sm py-4 border-b border-white/10">
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1">
-            <Users className="w-6 h-6 text-blue-400" />
-            <Trophy className="w-6 h-6 text-yellow-400" />
+    <header className="glass-dark sticky top-0 z-50 py-4 border-b border-white/10">
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <div className="flex items-center space-x-1 p-2 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/10">
+              <Users className="w-5 h-5" style={{ color: "#836EF9" }} />
+              <Zap className="w-4 h-4" style={{ color: "#FBFAF9" }} />
+              <Trophy className="w-5 h-5" style={{ color: "#A0055D" }} />
+            </div>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">TugWar Game</h1>
-            <p className="text-xs text-gray-300">Powered by Monad</p>
+            <h1 className="text-2xl font-bold text-gradient-monad font-inter">TugWar</h1>
+            <p className="text-xs font-medium" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              Powered by Monad Testnet
+            </p>
           </div>
         </div>
-        <ConnectButton />
+
+        <div className="flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6 text-sm" style={{ color: "rgba(251, 250, 249, 0.8)" }}>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#836EF9" }}></div>
+              <span>Live Game</span>
+            </div>
+          </div>
+          <ConnectButton />
+        </div>
       </div>
     </header>
   )
@@ -663,69 +845,158 @@ export default Header
 Buat file `src/components/GameBoard.tsx`:
 
 ```typescript
-import type { GameInfo } from "../types/game";
+import type { GameInfo } from "../types/game"
 
 interface GameBoardProps {
-  gameInfo: GameInfo;
-  isShaking: boolean;
+  gameInfo: GameInfo
+  isShaking: boolean
 }
 
 const GameBoard = ({ gameInfo, isShaking }: GameBoardProps) => {
-  const { ropePosition, team1Score, team2Score, winner } = gameInfo;
-  
+  const { ropePosition, team1Score, team2Score, winner } = gameInfo
+
   // Calculate rope position for visualization (center at position 0)
-  const ropeVisualPosition = Math.max(-10, Math.min(10, ropePosition));
-  const ropePercentage = ((ropeVisualPosition + 10) / 20) * 100;
+  const ropeVisualPosition = Math.max(-10, Math.min(10, ropePosition))
+  const ropePercentage = ((ropeVisualPosition + 10) / 20) * 100
 
   const getRopeEmoji = () => {
-    if (winner === 1) return "🏆";
-    if (winner === 2) return "🏆";
-    return "🔥";
-  };
+    if (winner === 1) return "👑"
+    if (winner === 2) return "👑"
+    return "⚡"
+  }
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Battle Arena</h2>
-        <div className="flex justify-between items-center text-lg">
-          <div className={`text-blue-400 font-bold ${winner === 1 ? 'victory-pulse' : ''}`}>
-            Team 1: {team1Score}
+    <div className="glass rounded-2xl p-8 card-hover border border-white/10">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h2 className="text-3xl mb-4 text-gradient-monad font-inter font-bold">Battle Arena</h2>
+        <div className="flex justify-between items-center">
+          <div
+            className={`flex items-center space-x-3 p-4 rounded-xl border ${winner === 1 ? "victory-pulse glow-purple" : ""}`}
+            style={{
+              backgroundColor: "rgba(131, 110, 249, 0.1)",
+              borderColor: "rgba(131, 110, 249, 0.3)",
+            }}
+          >
+            <span className="text-3xl">🟣</span>
+            <div>
+              <div className="font-medium text-sm" style={{ color: "#836EF9" }}>
+                Team 1
+              </div>
+              <div className="font-bold text-2xl" style={{ color: "#FBFAF9" }}>
+                {team1Score}
+              </div>
+            </div>
           </div>
-          <div className="text-white">VS</div>
-          <div className={`text-red-400 font-bold ${winner === 2 ? 'victory-pulse' : ''}`}>
-            Team 2: {team2Score}
+
+          <div
+            className="flex items-center space-x-2 px-6 py-3 rounded-xl border"
+            style={{
+              backgroundColor: "rgba(14, 16, 15, 0.5)",
+              borderColor: "rgba(251, 250, 249, 0.2)",
+            }}
+          >
+            <div className="font-bold text-lg" style={{ color: "#FBFAF9" }}>
+              VS
+            </div>
+          </div>
+
+          <div
+            className={`flex items-center space-x-3 p-4 rounded-xl border ${winner === 2 ? "victory-pulse glow-berry" : ""}`}
+            style={{
+              backgroundColor: "rgba(160, 5, 93, 0.1)",
+              borderColor: "rgba(160, 5, 93, 0.3)",
+            }}
+          >
+            <div className="text-right">
+              <div className="font-medium text-sm" style={{ color: "#A0055D" }}>
+                Team 2
+              </div>
+              <div className="font-bold text-2xl" style={{ color: "#FBFAF9" }}>
+                {team2Score}
+              </div>
+            </div>
+            <span className="text-3xl">🔴</span>
           </div>
         </div>
       </div>
 
       {/* Rope Visualization */}
-      <div className="relative mb-6">
-        <div className="flex justify-between text-sm text-gray-300 mb-2">
-          <span>Team 1 Territory</span>
-          <span>Center</span>
-          <span>Team 2 Territory</span>
-        </div>
-        
-        <div className="relative h-12 bg-gradient-to-r from-blue-900/50 via-gray-700/50 to-red-900/50 rounded-lg border-2 border-white/30 overflow-hidden">
-          {/* Center line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-white/60 transform -translate-x-1/2"></div>
-          
-          {/* Rope indicator */}
-          <div 
-            className={`absolute top-1/2 w-8 h-8 transform -translate-y-1/2 -translate-x-1/2 transition-all duration-500 ${isShaking ? 'rope-shake' : ''}`}
-            style={{ left: `${ropePercentage}%` }}
-          >
-            <div className="w-full h-full bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-lg border-2 border-yellow-300">
-              {getRopeEmoji()}
-            </div>
-          </div>
-          
-          {/* Territory markers */}
-          <div className="absolute left-2 top-1/2 transform -translate-y-1/2 text-blue-400 font-bold">🔵</div>
-          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-red-400 font-bold">🔴</div>
+      <div className="relative mb-8">
+        <div className="flex justify-between text-sm mb-4 px-4" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+          <span className="font-medium">Team 1 Territory</span>
+          <span className="font-medium">Neutral Zone</span>
+          <span className="font-medium">Team 2 Territory</span>
         </div>
 
-        <div className="flex justify-between text-xs text-gray-400 mt-1">
+        <div
+          className="relative h-16 rounded-2xl border border-white/10 overflow-hidden backdrop-blur-sm"
+          style={{
+            background: `linear-gradient(to right, 
+                 rgba(131, 110, 249, 0.2) 0%, 
+                 rgba(14, 16, 15, 0.3) 50%, 
+                 rgba(160, 5, 93, 0.2) 100%)`,
+          }}
+        >
+          {/* Center line */}
+          <div
+            className="absolute left-1/2 top-2 bottom-2 w-0.5 transform -translate-x-1/2 rounded-full"
+            style={{ backgroundColor: "rgba(251, 250, 249, 0.4)" }}
+          ></div>
+
+          {/* Grid lines */}
+          <div
+            className="absolute left-1/4 top-4 bottom-4 w-px"
+            style={{ backgroundColor: "rgba(251, 250, 249, 0.2)" }}
+          ></div>
+          <div
+            className="absolute right-1/4 top-4 bottom-4 w-px"
+            style={{ backgroundColor: "rgba(251, 250, 249, 0.2)" }}
+          ></div>
+
+          {/* Rope indicator */}
+          <div
+            className={`absolute top-1/2 w-12 h-12 transform -translate-y-1/2 -translate-x-1/2 transition-all duration-700 ease-out ${isShaking ? "rope-shake" : ""}`}
+            style={{ left: `${ropePercentage}%` }}
+          >
+            <div
+              className="w-full h-full rounded-full flex items-center justify-center text-xl shadow-2xl border-2 relative gradient-monad-primary"
+              style={{ borderColor: "rgba(251, 250, 249, 0.3)" }}
+            >
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{ background: "linear-gradient(to bottom right, rgba(251, 250, 249, 0.2), transparent)" }}
+              ></div>
+              <span className="relative z-10">{getRopeEmoji()}</span>
+            </div>
+          </div>
+
+          {/* Territory markers */}
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center border"
+              style={{
+                backgroundColor: "rgba(131, 110, 249, 0.2)",
+                borderColor: "rgba(131, 110, 249, 0.4)",
+              }}
+            >
+              <span style={{ color: "#836EF9" }}>🟣</span>
+            </div>
+          </div>
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center border"
+              style={{
+                backgroundColor: "rgba(160, 5, 93, 0.2)",
+                borderColor: "rgba(160, 5, 93, 0.4)",
+              }}
+            >
+              <span style={{ color: "#A0055D" }}>🔴</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between text-xs mt-2 px-4" style={{ color: "rgba(251, 250, 249, 0.5)" }}>
           <span>-10</span>
           <span>0</span>
           <span>+10</span>
@@ -733,30 +1004,52 @@ const GameBoard = ({ gameInfo, isShaking }: GameBoardProps) => {
       </div>
 
       {/* Position indicator */}
-      <div className="text-center">
-        <p className="text-white">
-          Rope Position: <span className="font-mono font-bold">{ropePosition}</span>
-        </p>
+      <div className="text-center space-y-2">
+        <div
+          className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl border"
+          style={{
+            backgroundColor: "rgba(14, 16, 15, 0.5)",
+            borderColor: "rgba(251, 250, 249, 0.2)",
+          }}
+        >
+          <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>Rope Position:</span>
+          <span className="font-mono font-bold text-lg" style={{ color: "#FBFAF9" }}>
+            {ropePosition}
+          </span>
+        </div>
+
         {winner === 0 && (
-          <p className="text-gray-300 text-sm mt-1">
-            {ropePosition > 0 ? "Team 2 is pulling ahead!" : ropePosition < 0 ? "Team 1 is pulling ahead!" : "Perfect balance!"}
+          <p className="text-sm" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+            {ropePosition > 0
+              ? "🔴 Team 2 is gaining ground!"
+              : ropePosition < 0
+                ? "🟣 Team 1 is pulling ahead!"
+                : "⚖️ Perfect balance!"}
           </p>
         )}
       </div>
 
       {/* Winner announcement */}
       {winner !== 0 && (
-        <div className="mt-4 text-center">
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black font-bold py-3 px-6 rounded-lg shadow-lg victory-pulse">
-            🎉 Team {winner} Wins! 🎉
+        <div className="mt-8 text-center">
+          <div
+            className="inline-flex items-center space-x-3 font-bold py-4 px-8 rounded-2xl shadow-2xl victory-pulse border gradient-monad-primary"
+            style={{
+              color: "#FBFAF9",
+              borderColor: "rgba(251, 250, 249, 0.3)",
+            }}
+          >
+            <span className="text-2xl">🎉</span>
+            <span className="text-xl">Team {winner} Wins!</span>
+            <span className="text-2xl">🎉</span>
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GameBoard;
+export default GameBoard
 ```
 
 ## 8. Membuat Game Controls
@@ -764,88 +1057,184 @@ export default GameBoard;
 Buat file `src/components/GameControls.tsx`:
 
 ```typescript
-import { useState } from "react";
-import { Users, Zap } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { Users, Zap, Loader2 } from "lucide-react"
 
 interface GameControlsProps {
-  onPull: (isTeam1: boolean) => void;
-  isConnected: boolean;
-  winner: number;
-  isLoading: boolean;
+  onPull: (isTeam1: boolean) => void
+  isConnected: boolean
+  winner: number
+  isLoading: boolean
 }
 
 const GameControls = ({ onPull, isConnected, winner, isLoading }: GameControlsProps) => {
-  const [lastPull, setLastPull] = useState<number | null>(null);
+  const [lastPull, setLastPull] = useState<number | null>(null)
 
   const handlePull = (isTeam1: boolean) => {
-    if (!isConnected || winner !== 0 || isLoading) return;
-    
-    onPull(isTeam1);
-    setLastPull(isTeam1 ? 1 : 2);
-    
+    if (!isConnected || winner !== 0 || isLoading) return
+
+    onPull(isTeam1)
+    setLastPull(isTeam1 ? 1 : 2)
+
     // Reset last pull indicator after 2 seconds
-    setTimeout(() => setLastPull(null), 2000);
-  };
+    setTimeout(() => setLastPull(null), 2000)
+  }
 
   const getButtonClass = (isTeam1: boolean) => {
-    const baseClass = "flex-1 py-6 px-4 rounded-xl font-bold text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg border-2";
-    const teamNumber = isTeam1 ? 1 : 2;
-    
+    const baseClass =
+      "group relative flex-1 py-8 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform border-2 overflow-hidden"
+    const teamNumber = isTeam1 ? 1 : 2
+
     if (!isConnected || winner !== 0) {
-      return `${baseClass} bg-gray-600 text-gray-400 cursor-not-allowed border-gray-600`;
+      return `${baseClass} cursor-not-allowed border-opacity-30`
     }
-    
+
     if (isLoading) {
-      return `${baseClass} ${isTeam1 ? 'bg-blue-500 border-blue-400' : 'bg-red-500 border-red-400'} opacity-50 cursor-not-allowed text-white`;
+      return `${baseClass} cursor-not-allowed opacity-50`
     }
-    
-    const recentPull = lastPull === teamNumber ? 'ring-4 ring-yellow-400 scale-105' : '';
-    
-    return `${baseClass} ${isTeam1 ? 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 border-blue-400 text-white' : 'bg-gradient-to-br from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 border-red-400 text-white'} ${recentPull}`;
-  };
+
+    const recentPull = lastPull === teamNumber ? "ring-4 scale-105" : ""
+    const hoverEffect = "hover:scale-105 hover:shadow-2xl active:scale-95"
+
+    return `${baseClass} ${recentPull} ${hoverEffect} btn-primary`
+  }
+
+  const getButtonStyle = (isTeam1: boolean) => {
+    if (!isConnected || winner !== 0) {
+      return {
+        backgroundColor: "rgba(14, 16, 15, 0.5)",
+        borderColor: "rgba(251, 250, 249, 0.2)",
+        color: "rgba(251, 250, 249, 0.5)",
+      }
+    }
+
+    if (isLoading) {
+      return isTeam1
+        ? {
+            backgroundColor: "rgba(131, 110, 249, 0.5)",
+            borderColor: "rgba(131, 110, 249, 0.3)",
+            color: "#FBFAF9",
+          }
+        : {
+            backgroundColor: "rgba(160, 5, 93, 0.5)",
+            borderColor: "rgba(160, 5, 93, 0.3)",
+            color: "#FBFAF9",
+          }
+    }
+
+    return isTeam1
+      ? {
+          background: "linear-gradient(135deg, #836EF9 0%, #9F7AEA 100%)",
+          borderColor: "rgba(131, 110, 249, 0.5)",
+          color: "#FBFAF9",
+        }
+      : {
+          background: "linear-gradient(135deg, #A0055D 0%, #C53030 100%)",
+          borderColor: "rgba(160, 5, 93, 0.5)",
+          color: "#FBFAF9",
+        }
+  }
+
+  const getRingStyle = (isTeam1: boolean) => {
+    if (lastPull === (isTeam1 ? 1 : 2)) {
+      return { ringColor: isTeam1 ? "#836EF9" : "#A0055D" }
+    }
+    return {}
+  }
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/20">
-      <h3 className="text-xl font-bold text-white text-center mb-4">Choose Your Team</h3>
-      
+    <div className="glass rounded-2xl p-8 card-hover border border-white/10">
+      <div className="text-center mb-6">
+        <h3 className="text-2xl font-bold mb-2" style={{ color: "#FBFAF9" }}>
+          Choose Your Side
+        </h3>
+        <p style={{ color: "rgba(251, 250, 249, 0.7)" }}>Click to pull the rope for your team</p>
+      </div>
+
       {!isConnected && (
-        <div className="text-center mb-4">
-          <p className="text-yellow-300 text-sm">⚠️ Connect your wallet to play!</p>
-        </div>
-      )}
-      
-      {winner !== 0 && (
-        <div className="text-center mb-4">
-          <p className="text-green-300 text-sm">🎉 Game Over! Reset to play again.</p>
+        <div className="text-center mb-6">
+          <div
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl border"
+            style={{
+              backgroundColor: "rgba(131, 110, 249, 0.1)",
+              borderColor: "rgba(131, 110, 249, 0.3)",
+            }}
+          >
+            <span style={{ color: "#836EF9" }}>⚠️</span>
+            <span className="text-sm font-medium" style={{ color: "#836EF9" }}>
+              Connect your wallet to play!
+            </span>
+          </div>
         </div>
       )}
 
-      <div className="flex space-x-4">
+      {winner !== 0 && (
+        <div className="text-center mb-6">
+          <div
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl border"
+            style={{
+              backgroundColor: "rgba(131, 110, 249, 0.1)",
+              borderColor: "rgba(131, 110, 249, 0.3)",
+            }}
+          >
+            <span style={{ color: "#836EF9" }}>🎉</span>
+            <span className="text-sm font-medium" style={{ color: "#836EF9" }}>
+              Game Over! Reset to play again.
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div className="flex space-x-6">
         <button
           onClick={() => handlePull(true)}
           disabled={!isConnected || winner !== 0 || isLoading}
           className={getButtonClass(true)}
+          style={{
+            ...getButtonStyle(true),
+            ...getRingStyle(true),
+          }}
         >
-          <div className="flex items-center justify-center space-x-2">
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{ background: "linear-gradient(to right, rgba(131, 110, 249, 0.2), transparent)" }}
+          ></div>
+          <div className="relative flex items-center justify-center space-x-3">
             <Users className="w-6 h-6" />
-            <div>
-              <div>Pull for Team 1</div>
-              <div className="text-sm opacity-80">🔵 Blue Team</div>
+            <div className="text-center">
+              <div className="text-xl font-bold">Pull for Team 1</div>
+              <div className="text-sm opacity-90 flex items-center justify-center space-x-1">
+                <span>🟣</span>
+                <span>Purple Team</span>
+              </div>
             </div>
             <Zap className="w-5 h-5" />
           </div>
         </button>
-        
+
         <button
           onClick={() => handlePull(false)}
           disabled={!isConnected || winner !== 0 || isLoading}
           className={getButtonClass(false)}
+          style={{
+            ...getButtonStyle(false),
+            ...getRingStyle(false),
+          }}
         >
-          <div className="flex items-center justify-center space-x-2">
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{ background: "linear-gradient(to left, rgba(160, 5, 93, 0.2), transparent)" }}
+          ></div>
+          <div className="relative flex items-center justify-center space-x-3">
             <Zap className="w-5 h-5" />
-            <div>
-              <div>Pull for Team 2</div>
-              <div className="text-sm opacity-80">🔴 Red Team</div>
+            <div className="text-center">
+              <div className="text-xl font-bold">Pull for Team 2</div>
+              <div className="text-sm opacity-90 flex items-center justify-center space-x-1">
+                <span>🔴</span>
+                <span>Berry Team</span>
+              </div>
             </div>
             <Users className="w-6 h-6" />
           </div>
@@ -853,18 +1242,26 @@ const GameControls = ({ onPull, isConnected, winner, isLoading }: GameControlsPr
       </div>
 
       {isLoading && (
-        <div className="text-center mt-4">
-          <div className="inline-flex items-center space-x-2 text-yellow-300">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-300"></div>
-            <span className="text-sm">Processing pull...</span>
+        <div className="text-center mt-6">
+          <div
+            className="inline-flex items-center space-x-3 px-6 py-3 rounded-xl border"
+            style={{
+              backgroundColor: "rgba(14, 16, 15, 0.5)",
+              borderColor: "rgba(251, 250, 249, 0.2)",
+            }}
+          >
+            <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#836EF9" }} />
+            <span className="font-medium" style={{ color: "#FBFAF9" }}>
+              Processing pull...
+            </span>
           </div>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GameControls;
+export default GameControls
 ```
 
 ## 9. Membuat Game Stats
@@ -872,113 +1269,210 @@ export default GameControls;
 Buat file `src/components/GameStats.tsx`:
 
 ```typescript
-import { BarChart3, Target, Trophy } from "lucide-react";
-import type { GameInfo, TeamStats, GamePrediction } from "../types/game";
+"use client"
+
+import { BarChart3, Target, Trophy, RotateCcw, Loader2 } from "lucide-react"
+import type { GameInfo, TeamStats, GamePrediction } from "../types/game"
 
 interface GameStatsProps {
-  gameInfo: GameInfo;
-  team1Stats: TeamStats;
-  team2Stats: TeamStats;
-  prediction: GamePrediction;
-  isOwner: boolean;
-  onReset: () => void;
-  isResetting: boolean;
+  gameInfo: GameInfo
+  team1Stats: TeamStats
+  team2Stats: TeamStats
+  prediction: GamePrediction
+  isOwner: boolean
+  onReset: () => void
+  isResetting: boolean
 }
 
-const GameStats = ({ 
-  gameInfo, 
-  team1Stats, 
-  team2Stats, 
-  prediction, 
-  isOwner, 
-  onReset, 
-  isResetting 
-}: GameStatsProps) => {
-  const { maxScoreDifference, totalPulls, gamesPlayed } = gameInfo;
+const GameStats = ({ gameInfo, team1Stats, team2Stats, prediction, isOwner, onReset, isResetting }: GameStatsProps) => {
+  const { maxScoreDifference, totalPulls, gamesPlayed } = gameInfo
 
   const getProgressPercentage = (score: number) => {
-    return Math.min((score / maxScoreDifference) * 100, 100);
-  };
+    return Math.min((score / maxScoreDifference) * 100, 100)
+  }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Team Statistics */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-        <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-          <BarChart3 className="w-5 h-5 mr-2" />
+      <div className="glass rounded-2xl p-8 card-hover border border-white/10">
+        <h3 className="text-2xl font-bold mb-6 flex items-center" style={{ color: "#FBFAF9" }}>
+          <BarChart3 className="w-6 h-6 mr-3" style={{ color: "#836EF9" }} />
           Team Statistics
         </h3>
-        
-        <div className="space-y-4">
+
+        <div className="space-y-6">
           {/* Team 1 */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-blue-400 font-semibold">🔵 Team 1</span>
-              <span className="text-white">{team1Stats.score} points</span>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#836EF9" }}></div>
+                <span className="font-semibold text-lg" style={{ color: "#836EF9" }}>
+                  Team 1
+                </span>
+                {team1Stats.isWinning && (
+                  <span
+                    className="text-xs px-2 py-1 rounded-full border font-medium"
+                    style={{
+                      backgroundColor: "rgba(131, 110, 249, 0.2)",
+                      color: "#836EF9",
+                      borderColor: "rgba(131, 110, 249, 0.3)",
+                    }}
+                  >
+                    Leading
+                  </span>
+                )}
+              </div>
+              <span className="font-bold text-xl" style={{ color: "#FBFAF9" }}>
+                {team1Stats.score}
+              </span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-blue-400 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${getProgressPercentage(team1Stats.score)}%` }}
-              ></div>
+            <div
+              className="relative w-full rounded-full h-4 overflow-hidden"
+              style={{ backgroundColor: "rgba(14, 16, 15, 0.5)" }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-700 ease-out relative"
+                style={{
+                  width: `${getProgressPercentage(team1Stats.score)}%`,
+                  background: "linear-gradient(to right, #836EF9, #9F7AEA)",
+                }}
+              >
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: "linear-gradient(to right, rgba(131, 110, 249, 0.3), transparent)" }}
+                ></div>
+              </div>
             </div>
-            <div className="flex justify-between text-xs text-gray-300 mt-1">
-              <span>{team1Stats.isWinning ? "🏆 Leading" : "📈 Catching up"}</span>
+            <div className="flex justify-between text-sm" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+              <span>Progress to victory</span>
               <span>Advantage: +{team1Stats.scoreAdvantage}</span>
             </div>
           </div>
 
           {/* Team 2 */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-red-400 font-semibold">🔴 Team 2</span>
-              <span className="text-white">{team2Stats.score} points</span>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#A0055D" }}></div>
+                <span className="font-semibold text-lg" style={{ color: "#A0055D" }}>
+                  Team 2
+                </span>
+                {team2Stats.isWinning && (
+                  <span
+                    className="text-xs px-2 py-1 rounded-full border font-medium"
+                    style={{
+                      backgroundColor: "rgba(160, 5, 93, 0.2)",
+                      color: "#A0055D",
+                      borderColor: "rgba(160, 5, 93, 0.3)",
+                    }}
+                  >
+                    Leading
+                  </span>
+                )}
+              </div>
+              <span className="font-bold text-xl" style={{ color: "#FBFAF9" }}>
+                {team2Stats.score}
+              </span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-red-500 to-red-400 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${getProgressPercentage(team2Stats.score)}%` }}
-              ></div>
+            <div
+              className="relative w-full rounded-full h-4 overflow-hidden"
+              style={{ backgroundColor: "rgba(14, 16, 15, 0.5)" }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-700 ease-out relative"
+                style={{
+                  width: `${getProgressPercentage(team2Stats.score)}%`,
+                  background: "linear-gradient(to right, #A0055D, #C53030)",
+                }}
+              >
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: "linear-gradient(to right, rgba(160, 5, 93, 0.3), transparent)" }}
+                ></div>
+              </div>
             </div>
-            <div className="flex justify-between text-xs text-gray-300 mt-1">
-              <span>{team2Stats.isWinning ? "🏆 Leading" : "📈 Catching up"}</span>
+            <div className="flex justify-between text-sm" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+              <span>Progress to victory</span>
               <span>Advantage: +{team2Stats.scoreAdvantage}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Game Info & Prediction */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-        <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-          <Target className="w-5 h-5 mr-2" />
+      {/* Game Info & Controls */}
+      <div className="glass rounded-2xl p-8 card-hover border border-white/10">
+        <h3 className="text-2xl font-bold mb-6 flex items-center" style={{ color: "#FBFAF9" }}>
+          <Target className="w-6 h-6 mr-3" style={{ color: "#A0055D" }} />
           Game Information
         </h3>
-        
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <span className="text-gray-300">Win Condition:</span>
-            <span className="text-white font-semibold">{maxScoreDifference} points ahead</span>
-          </div>
-          
-          <div className="flex justify-between">
-            <span className="text-gray-300">Total Pulls:</span>
-            <span className="text-white font-semibold">{totalPulls}</span>
-          </div>
-          
-          <div className="flex justify-between">
-            <span className="text-gray-300">Games Played:</span>
-            <span className="text-white font-semibold">{gamesPlayed}</span>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div
+              className="rounded-xl p-4 border"
+              style={{
+                backgroundColor: "rgba(14, 16, 15, 0.5)",
+                borderColor: "rgba(251, 250, 249, 0.2)",
+              }}
+            >
+              <div className="text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+                Win Condition
+              </div>
+              <div className="font-bold text-lg" style={{ color: "#FBFAF9" }}>
+                {maxScoreDifference} points
+              </div>
+            </div>
+            <div
+              className="rounded-xl p-4 border"
+              style={{
+                backgroundColor: "rgba(14, 16, 15, 0.5)",
+                borderColor: "rgba(251, 250, 249, 0.2)",
+              }}
+            >
+              <div className="text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+                Total Pulls
+              </div>
+              <div className="font-bold text-lg" style={{ color: "#FBFAF9" }}>
+                {totalPulls}
+              </div>
+            </div>
           </div>
 
-          {/* Prediction */}
+          <div
+            className="rounded-xl p-4 border"
+            style={{
+              backgroundColor: "rgba(14, 16, 15, 0.5)",
+              borderColor: "rgba(251, 250, 249, 0.2)",
+            }}
+          >
+            <div className="text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+              Games Played
+            </div>
+            <div className="font-bold text-lg" style={{ color: "#FBFAF9" }}>
+              {gamesPlayed}
+            </div>
+          </div>
+
+          {/* AI Prediction */}
           {prediction.predictedWinner > 0 && (
-            <div className="mt-4 p-3 bg-purple-900/50 rounded-lg border border-purple-600/50">
-              <div className="flex items-center justify-between">
-                <span className="text-purple-300 text-sm font-semibold">🔮 AI Prediction</span>
-                <span className="text-white text-sm">{prediction.confidence}% confidence</span>
+            <div
+              className="rounded-xl p-4 border"
+              style={{
+                background: "linear-gradient(135deg, rgba(131, 110, 249, 0.2), rgba(160, 5, 93, 0.2))",
+                borderColor: "rgba(131, 110, 249, 0.3)",
+              }}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-semibold" style={{ color: "#836EF9" }}>
+                    🔮 AI Prediction
+                  </span>
+                </div>
+                <span className="text-sm font-medium" style={{ color: "#FBFAF9" }}>
+                  {prediction.confidence}% confidence
+                </span>
               </div>
-              <div className="text-white font-bold mt-1">
+              <div className="font-bold" style={{ color: "#FBFAF9" }}>
                 Team {prediction.predictedWinner} is favored to win
               </div>
             </div>
@@ -989,17 +1483,22 @@ const GameStats = ({
             <button
               onClick={onReset}
               disabled={isResetting}
-              className="w-full mt-4 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none btn-primary border gradient-monad-primary"
+              style={{
+                color: "#FBFAF9",
+                borderColor: "rgba(251, 250, 249, 0.3)",
+              }}
             >
               {isResetting ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
-                  <span>Resetting...</span>
+                <div className="flex items-center justify-center space-x-3">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Resetting Game...</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center space-x-2">
-                  <Trophy className="w-4 h-4" />
+                <div className="flex items-center justify-center space-x-3">
+                  <RotateCcw className="w-5 h-5" />
                   <span>Reset Game</span>
+                  <Trophy className="w-5 h-5" />
                 </div>
               )}
             </button>
@@ -1007,10 +1506,10 @@ const GameStats = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default GameStats;
+export default GameStats
 ```
 
 ## 10. Implementasi Komponen Container
@@ -1018,30 +1517,32 @@ export default GameStats;
 Buat file `src/components/Container.tsx` yang akan berisi logika utama interaksi dengan kontrak:
 
 ```typescript
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useAccount, useReadContract, useWriteContract, useWatchContractEvent } from "wagmi";
-import { TUGWAR_ABI, TUGWAR_CONTRACT_ADDRESS } from "../constants";
-import { waitForTransactionReceipt } from "@wagmi/core";
-import { config } from "../App";
-import GameBoard from "./GameBoard";
-import GameControls from "./GameControls";
-import GameStats from "./GameStats";
-import GameHistory from "./GameHistory";
-import type { GameInfo, TeamStats, GamePrediction, GameEvent } from "../types/game";
+"use client"
+
+import { useState } from "react"
+import toast from "react-hot-toast"
+import { useAccount, useReadContract, useWriteContract, useWatchContractEvent } from "wagmi"
+import { TUGWAR_ABI, TUGWAR_CONTRACT_ADDRESS } from "../constants"
+import { waitForTransactionReceipt } from "@wagmi/core"
+import { config } from "../App"
+import GameBoard from "./GameBoard"
+import GameControls from "./GameControls"
+import GameStats from "./GameStats"
+import GameHistory from "./GameHistory"
+import type { GameInfo, TeamStats, GamePrediction, GameEvent } from "../types/game"
 
 const tugwarContract = {
   address: TUGWAR_CONTRACT_ADDRESS as `0x${string}`,
   abi: TUGWAR_ABI,
-};
+}
 
 const Container = () => {
-  const { address, isConnected } = useAccount();
-  const { writeContractAsync } = useWriteContract();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
-  const [isShaking, setIsShaking] = useState(false);
-  const [gameEvents, setGameEvents] = useState<GameEvent[]>([]);
+  const { address, isConnected } = useAccount()
+  const { writeContractAsync } = useWriteContract()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
+  const [isShaking, setIsShaking] = useState(false)
+  const [gameEvents, setGameEvents] = useState<GameEvent[]>([])
 
   // Read game information
   const { data: gameInfoData, refetch: refetchGameInfo } = useReadContract({
@@ -1051,7 +1552,7 @@ const Container = () => {
       enabled: isConnected,
       refetchInterval: 5000, // Refetch every 5 seconds
     },
-  });
+  })
 
   // Read team 1 stats
   const { data: team1StatsData, refetch: refetchTeam1Stats } = useReadContract({
@@ -1062,7 +1563,7 @@ const Container = () => {
       enabled: isConnected,
       refetchInterval: 5000,
     },
-  });
+  })
 
   // Read team 2 stats
   const { data: team2StatsData, refetch: refetchTeam2Stats } = useReadContract({
@@ -1073,7 +1574,7 @@ const Container = () => {
       enabled: isConnected,
       refetchInterval: 5000,
     },
-  });
+  })
 
   // Read prediction
   const { data: predictionData, refetch: refetchPrediction } = useReadContract({
@@ -1083,7 +1584,7 @@ const Container = () => {
       enabled: isConnected,
       refetchInterval: 5000,
     },
-  });
+  })
 
   // Read owner
   const { data: ownerData } = useReadContract({
@@ -1092,177 +1593,195 @@ const Container = () => {
     query: {
       enabled: isConnected,
     },
-  });
+  })
 
   // Process data with proper type assertions and checks
-  const gameInfo: GameInfo = gameInfoData && Array.isArray(gameInfoData) ? {
-    ropePosition: Number(gameInfoData[0]),
-    team1Score: Number(gameInfoData[1]),
-    team2Score: Number(gameInfoData[2]),
-    maxScoreDifference: Number(gameInfoData[3]),
-    winner: Number(gameInfoData[4]),
-    totalPulls: Number(gameInfoData[5]),
-    gamesPlayed: Number(gameInfoData[6]),
-  } : {
-    ropePosition: 0,
-    team1Score: 0,
-    team2Score: 0,
-    maxScoreDifference: 5,
-    winner: 0,
-    totalPulls: 0,
-    gamesPlayed: 0,
-  };
+  const gameInfo: GameInfo =
+    gameInfoData && Array.isArray(gameInfoData)
+      ? {
+          ropePosition: Number(gameInfoData[0]),
+          team1Score: Number(gameInfoData[1]),
+          team2Score: Number(gameInfoData[2]),
+          maxScoreDifference: Number(gameInfoData[3]),
+          winner: Number(gameInfoData[4]),
+          totalPulls: Number(gameInfoData[5]),
+          gamesPlayed: Number(gameInfoData[6]),
+        }
+      : {
+          ropePosition: 0,
+          team1Score: 0,
+          team2Score: 0,
+          maxScoreDifference: 5,
+          winner: 0,
+          totalPulls: 0,
+          gamesPlayed: 0,
+        }
 
-  const team1Stats: TeamStats = team1StatsData && Array.isArray(team1StatsData) ? {
-    score: Number(team1StatsData[0]),
-    isWinning: Boolean(team1StatsData[1]),
-    scoreAdvantage: Number(team1StatsData[2]),
-  } : { score: 0, isWinning: false, scoreAdvantage: 0 };
+  const team1Stats: TeamStats =
+    team1StatsData && Array.isArray(team1StatsData)
+      ? {
+          score: Number(team1StatsData[0]),
+          isWinning: Boolean(team1StatsData[1]),
+          scoreAdvantage: Number(team1StatsData[2]),
+        }
+      : { score: 0, isWinning: false, scoreAdvantage: 0 }
 
-  const team2Stats: TeamStats = team2StatsData && Array.isArray(team2StatsData) ? {
-    score: Number(team2StatsData[0]),
-    isWinning: Boolean(team2StatsData[1]),
-    scoreAdvantage: Number(team2StatsData[2]),
-  } : { score: 0, isWinning: false, scoreAdvantage: 0 };
+  const team2Stats: TeamStats =
+    team2StatsData && Array.isArray(team2StatsData)
+      ? {
+          score: Number(team2StatsData[0]),
+          isWinning: Boolean(team2StatsData[1]),
+          scoreAdvantage: Number(team2StatsData[2]),
+        }
+      : { score: 0, isWinning: false, scoreAdvantage: 0 }
 
-  const prediction: GamePrediction = predictionData && Array.isArray(predictionData) ? {
-    predictedWinner: Number(predictionData[0]),
-    confidence: Number(predictionData[1]),
-  } : { predictedWinner: 0, confidence: 0 };
+  const prediction: GamePrediction =
+    predictionData && Array.isArray(predictionData)
+      ? {
+          predictedWinner: Number(predictionData[0]),
+          confidence: Number(predictionData[1]),
+        }
+      : { predictedWinner: 0, confidence: 0 }
 
-  const isOwner = address && ownerData && address.toLowerCase() === (ownerData as string).toLowerCase();
+  const isOwner = address && ownerData && address.toLowerCase() === (ownerData as string).toLowerCase()
 
   // Watch for contract events
   useWatchContractEvent({
     ...tugwarContract,
-    eventName: 'PullExecuted',
+    eventName: "PullExecuted",
     onLogs(logs) {
-      console.log('Pull executed:', logs);
-      triggerShake();
-      refetchAll();
-      
+      console.log("Pull executed:", logs)
+      triggerShake()
+      refetchAll()
+
       // Add event to history
-      const log = logs[0];
-      if (log && 'args' in log && log.args) {
+      const log = logs[0]
+      if (log && "args" in log && log.args) {
         const args = log.args as {
-          player: string;
-          isTeam1: boolean;
-          newRopePosition: number;
-          team1Score: number;
-          team2Score: number;
-        };
-        
-        const { player, isTeam1, team1Score, team2Score } = args;
+          player: string
+          isTeam1: boolean
+          newRopePosition: number
+          team1Score: number
+          team2Score: number
+        }
+
+        const { player, isTeam1, team1Score, team2Score } = args
         const newEvent: GameEvent = {
-          type: 'pull',
+          type: "pull",
           player: player,
           team: isTeam1 ? 1 : 2,
           timestamp: Date.now(),
-        };
-        setGameEvents(prev => [...prev, newEvent]);
-        
+        }
+        setGameEvents((prev) => [...prev, newEvent])
+
         // Show toast notification
-        toast.success(
-          `${isTeam1 ? 'Team 1' : 'Team 2'} pulled! Score: ${team1Score} - ${team2Score}`,
-          {
-            style: {
-              background: "#2B2F36",
-              color: "#fff",
-            },
-          }
-        );
+        toast.success(`${isTeam1 ? "Team 1" : "Team 2"} pulled! Score: ${team1Score} - ${team2Score}`, {
+          style: {
+            background: "rgba(32, 0, 82, 0.95)",
+            color: "#FBFAF9",
+            border: "1px solid rgba(131, 110, 249, 0.3)",
+            borderRadius: "12px",
+            fontFamily: "Inter, sans-serif",
+          },
+        })
       }
     },
-  });
+  })
 
   useWatchContractEvent({
     ...tugwarContract,
-    eventName: 'GameWon',
+    eventName: "GameWon",
     onLogs(logs) {
-      console.log('Game won:', logs);
-      refetchAll();
-      
+      console.log("Game won:", logs)
+      refetchAll()
+
       // Add event to history
-      const log = logs[0];
-      if (log && 'args' in log && log.args) {
+      const log = logs[0]
+      if (log && "args" in log && log.args) {
         const args = log.args as {
-          winningTeam: number;
-          finalScore1: number;
-          finalScore2: number;
-        };
-        
-        const { winningTeam, finalScore1, finalScore2 } = args;
+          winningTeam: number
+          finalScore1: number
+          finalScore2: number
+        }
+
+        const { winningTeam, finalScore1, finalScore2 } = args
         const newEvent: GameEvent = {
-          type: 'win',
+          type: "win",
           team: Number(winningTeam),
           timestamp: Date.now(),
-        };
-        setGameEvents(prev => [...prev, newEvent]);
-        
+        }
+        setGameEvents((prev) => [...prev, newEvent])
+
         // Show victory toast
-        toast.success(
-          `🎉 Team ${winningTeam} Wins! Final Score: ${finalScore1} - ${finalScore2}`,
-          {
-            duration: 5000,
-            style: {
-              background: "#2B2F36",
-              color: "#fff",
-            },
-          }
-        );
+        toast.success(`🎉 Team ${winningTeam} Wins! Final Score: ${finalScore1} - ${finalScore2}`, {
+          duration: 5000,
+          style: {
+            background: "rgba(32, 0, 82, 0.95)",
+            color: "#FBFAF9",
+            border: "1px solid rgba(131, 110, 249, 0.5)",
+            borderRadius: "12px",
+            fontFamily: "Inter, sans-serif",
+          },
+        })
       }
     },
-  });
+  })
 
   useWatchContractEvent({
     ...tugwarContract,
-    eventName: 'GameReset',
+    eventName: "GameReset",
     onLogs(logs) {
-      console.log('Game reset:', logs);
-      refetchAll();
-      
+      console.log("Game reset:", logs)
+      refetchAll()
+
       // Add event to history and clear previous events
       const newEvent: GameEvent = {
-        type: 'reset',
+        type: "reset",
         timestamp: Date.now(),
-      };
-      setGameEvents([newEvent]); // Reset history on game reset
-      
-      toast.success('Game has been reset!', {
+      }
+      setGameEvents([newEvent]) // Reset history on game reset
+
+      toast.success("Game has been reset!", {
         style: {
-          background: "#2B2F36",
-          color: "#fff",
+          background: "rgba(32, 0, 82, 0.95)",
+          color: "#FBFAF9",
+          border: "1px solid rgba(160, 5, 93, 0.3)",
+          borderRadius: "12px",
+          fontFamily: "Inter, sans-serif",
         },
-      });
+      })
     },
-  });
+  })
 
   // Trigger rope shake animation
   const triggerShake = () => {
-    setIsShaking(true);
-    setTimeout(() => setIsShaking(false), 300);
-  };
+    setIsShaking(true)
+    setTimeout(() => setIsShaking(false), 400)
+  }
 
   // Refetch all data
   const refetchAll = () => {
-    refetchGameInfo();
-    refetchTeam1Stats();
-    refetchTeam2Stats();
-    refetchPrediction();
-  };
+    refetchGameInfo()
+    refetchTeam1Stats()
+    refetchTeam2Stats()
+    refetchPrediction()
+  }
 
   // Handle pull action
   const handlePull = async (isTeam1: boolean) => {
-    if (!isConnected || gameInfo.winner !== 0) return;
+    if (!isConnected || gameInfo.winner !== 0) return
 
-    setIsLoading(true);
-    
-    toast.loading(`Team ${isTeam1 ? '1' : '2'} is pulling...`, {
+    setIsLoading(true)
+
+    toast.loading(`Team ${isTeam1 ? "1" : "2"} is pulling...`, {
       style: {
-        background: "#2B2F36",
-        color: "#fff",
+        background: "rgba(32, 0, 82, 0.95)",
+        color: "#FBFAF9",
+        border: "1px solid rgba(131, 110, 249, 0.3)",
+        borderRadius: "12px",
+        fontFamily: "Inter, sans-serif",
       },
-    });
+    })
 
     try {
       const result = await writeContractAsync({
@@ -1270,49 +1789,57 @@ const Container = () => {
         functionName: "pull",
         args: [isTeam1],
         account: address as `0x${string}`,
-      });
+      })
 
-      toast.dismiss();
+      toast.dismiss()
       toast.loading("Confirming pull...", {
         style: {
-          background: "#2B2F36",
-          color: "#fff",
+          background: "rgba(32, 0, 82, 0.95)",
+          color: "#FBFAF9",
+          border: "1px solid rgba(131, 110, 249, 0.3)",
+          borderRadius: "12px",
+          fontFamily: "Inter, sans-serif",
         },
-      });
+      })
 
       await waitForTransactionReceipt(config, {
         hash: result as `0x${string}`,
-      });
+      })
 
-      toast.dismiss();
+      toast.dismiss()
       // Success toast will be handled by event listener
-      
     } catch (error) {
-      console.error("Pull failed:", error);
-      toast.dismiss();
+      console.error("Pull failed:", error)
+      toast.dismiss()
       toast.error("Pull failed. Please try again.", {
         style: {
-          background: "#2B2F36",
-          color: "#fff",
+          background: "rgba(32, 0, 82, 0.95)",
+          color: "#FBFAF9",
+          border: "1px solid rgba(160, 5, 93, 0.5)",
+          borderRadius: "12px",
+          fontFamily: "Inter, sans-serif",
         },
-      });
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   // Handle reset game (owner only)
   const handleReset = async () => {
-    if (!isConnected || !isOwner) return;
+    if (!isConnected || !isOwner) return
 
-    setIsResetting(true);
-    
+    setIsResetting(true)
+
     toast.loading("Resetting game...", {
       style: {
-        background: "#2B2F36",
-        color: "#fff",
+        background: "rgba(32, 0, 82, 0.95)",
+        color: "#FBFAF9",
+        border: "1px solid rgba(131, 110, 249, 0.3)",
+        borderRadius: "12px",
+        fontFamily: "Inter, sans-serif",
       },
-    });
+    })
 
     try {
       const result = await writeContractAsync({
@@ -1320,87 +1847,112 @@ const Container = () => {
         functionName: "reSet",
         args: [5], // Reset with default max score difference of 5
         account: address as `0x${string}`,
-      });
+      })
 
-      toast.dismiss();
+      toast.dismiss()
       toast.loading("Confirming reset...", {
         style: {
-          background: "#2B2F36",
-          color: "#fff",
+          background: "rgba(32, 0, 82, 0.95)",
+          color: "#FBFAF9",
+          border: "1px solid rgba(131, 110, 249, 0.3)",
+          borderRadius: "12px",
+          fontFamily: "Inter, sans-serif",
         },
-      });
+      })
 
       await waitForTransactionReceipt(config, {
         hash: result as `0x${string}`,
-      });
+      })
 
-      toast.dismiss();
+      toast.dismiss()
       // Success toast will be handled by event listener
-      
     } catch (error) {
-      console.error("Reset failed:", error);
-      toast.dismiss();
+      console.error("Reset failed:", error)
+      toast.dismiss()
       toast.error("Reset failed. Please try again.", {
         style: {
-          background: "#2B2F36",
-          color: "#fff",
+          background: "rgba(32, 0, 82, 0.95)",
+          color: "#FBFAF9",
+          border: "1px solid rgba(160, 5, 93, 0.5)",
+          borderRadius: "12px",
+          fontFamily: "Inter, sans-serif",
         },
-      });
+      })
     } finally {
-      setIsResetting(false);
+      setIsResetting(false)
     }
-  };
+  }
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl">
-      {isConnected ? (
-        <div className="space-y-6">
-          <GameBoard gameInfo={gameInfo} isShaking={isShaking} />
-          <GameControls 
-            onPull={handlePull}
-            isConnected={isConnected}
-            winner={gameInfo.winner}
-            isLoading={isLoading}
-          />
-          <GameStats 
-            gameInfo={gameInfo}
-            team1Stats={team1Stats}
-            team2Stats={team2Stats}
-            prediction={prediction}
-            isOwner={Boolean(isOwner)}
-            onReset={handleReset}
-            isResetting={isResetting}
-          />
-          <GameHistory events={gameEvents} />
-        </div>
-      ) : (
-        <div className="text-center py-20">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 max-w-md mx-auto border border-white/20">
-            <div className="text-6xl mb-4">🎮</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Welcome to TugWar!</h2>
-            <p className="text-gray-300 mb-6">
-              Connect your wallet to start playing the ultimate blockchain tug of war game. 
-              Choose your team and battle for victory!
-            </p>
-            <div className="flex justify-center space-x-4 text-sm text-gray-400">
-              <div className="flex items-center space-x-1">
-                <span>🔵</span>
-                <span>Team 1</span>
-              </div>
-              <div>VS</div>
-              <div className="flex items-center space-x-1">
-                <span>🔴</span>
-                <span>Team 2</span>
+    <main className="min-h-screen pt-8 pb-16">
+      <div className="container mx-auto px-6 max-w-7xl">
+        {isConnected ? (
+          <div className="space-y-8">
+            <GameBoard gameInfo={gameInfo} isShaking={isShaking} />
+            <GameControls
+              onPull={handlePull}
+              isConnected={isConnected}
+              winner={gameInfo.winner}
+              isLoading={isLoading}
+            />
+            <GameStats
+              gameInfo={gameInfo}
+              team1Stats={team1Stats}
+              team2Stats={team2Stats}
+              prediction={prediction}
+              isOwner={Boolean(isOwner)}
+              onReset={handleReset}
+              isResetting={isResetting}
+            />
+            <GameHistory events={gameEvents} />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="glass card-hover rounded-2xl p-12 max-w-lg mx-auto text-center">
+              <div className="text-8xl mb-6 float-animation">🎮</div>
+              <h2 className="text-3xl font-bold mb-4 text-gradient-monad font-inter">Welcome to TugWar</h2>
+              <p className="mb-8 text-lg leading-relaxed" style={{ color: "rgba(251, 250, 249, 0.8)" }}>
+                Connect your wallet to join the ultimate blockchain tug of war battle. Choose your team and fight for
+                victory on the Monad testnet!
+              </p>
+              <div className="flex justify-center items-center space-x-8 text-sm">
+                <div
+                  className="flex items-center space-x-2 p-3 rounded-xl border"
+                  style={{
+                    backgroundColor: "rgba(131, 110, 249, 0.1)",
+                    borderColor: "rgba(131, 110, 249, 0.3)",
+                  }}
+                >
+                  <span className="text-2xl">🟣</span>
+                  <span className="font-medium" style={{ color: "#836EF9" }}>
+                    Team 1
+                  </span>
+                </div>
+                <div className="font-bold text-xl" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+                  VS
+                </div>
+                <div
+                  className="flex items-center space-x-2 p-3 rounded-xl border"
+                  style={{
+                    backgroundColor: "rgba(160, 5, 93, 0.1)",
+                    borderColor: "rgba(160, 5, 93, 0.3)",
+                  }}
+                >
+                  <span className="text-2xl">🔴</span>
+                  <span className="font-medium" style={{ color: "#A0055D" }}>
+                    Team 2
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </main>
-  );
-};
+  )
+}
 
-export default Container;
+export default Container
 ```
 
 ## 11. Membuat Game History Component
@@ -1408,101 +1960,188 @@ export default Container;
 Untuk melengkapi experience, buat file `src/components/GameHistory.tsx`:
 
 ```typescript
-import { useState } from "react";
-import { Clock, Trophy, Users, RotateCcw } from "lucide-react";
-import type { GameEvent } from "../types/game";
+"use client"
+
+import { useState } from "react"
+import { Clock, Trophy, Users, RotateCcw, ChevronDown, ChevronRight } from "lucide-react"
+import type { GameEvent } from "../types/game"
 
 interface GameHistoryProps {
-  events: GameEvent[];
+  events: GameEvent[]
 }
 
 const GameHistory = ({ events }: GameHistoryProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  
+  const [isExpanded, setIsExpanded] = useState(false)
+
   const getEventIcon = (type: string) => {
     switch (type) {
-      case 'pull': return <Users className="w-4 h-4" />;
-      case 'win': return <Trophy className="w-4 h-4 text-yellow-400" />;
-      case 'reset': return <RotateCcw className="w-4 h-4 text-orange-400" />;
-      default: return <Users className="w-4 h-4" />;
+      case "pull":
+        return <Users className="w-4 h-4" />
+      case "win":
+        return <Trophy className="w-4 h-4" style={{ color: "#836EF9" }} />
+      case "reset":
+        return <RotateCcw className="w-4 h-4" style={{ color: "#A0055D" }} />
+      default:
+        return <Users className="w-4 h-4" />
     }
-  };
+  }
 
   const getEventMessage = (event: GameEvent) => {
     switch (event.type) {
-      case 'pull':
-        return `Team ${event.team} pulled the rope`;
-      case 'win':
-        return `🎉 Team ${event.team} won the game!`;
-      case 'reset':
-        return `🔄 Game was reset`;
+      case "pull":
+        return `Team ${event.team} pulled the rope`
+      case "win":
+        return `Team ${event.team} won the game!`
+      case "reset":
+        return `Game was reset`
       default:
-        return 'Unknown event';
+        return "Unknown event"
     }
-  };
+  }
 
   const getEventColor = (type: string) => {
     switch (type) {
-      case 'pull': return 'bg-blue-900/50 border-blue-600/50';
-      case 'win': return 'bg-yellow-900/50 border-yellow-600/50';
-      case 'reset': return 'bg-orange-900/50 border-orange-600/50';
-      default: return 'bg-gray-900/50 border-gray-600/50';
+      case "pull":
+        return {
+          backgroundColor: "rgba(131, 110, 249, 0.1)",
+          borderColor: "rgba(131, 110, 249, 0.2)",
+          hoverBg: "rgba(131, 110, 249, 0.2)",
+        }
+      case "win":
+        return {
+          backgroundColor: "rgba(131, 110, 249, 0.15)",
+          borderColor: "rgba(131, 110, 249, 0.3)",
+          hoverBg: "rgba(131, 110, 249, 0.25)",
+        }
+      case "reset":
+        return {
+          backgroundColor: "rgba(160, 5, 93, 0.1)",
+          borderColor: "rgba(160, 5, 93, 0.2)",
+          hoverBg: "rgba(160, 5, 93, 0.2)",
+        }
+      default:
+        return {
+          backgroundColor: "rgba(14, 16, 15, 0.3)",
+          borderColor: "rgba(251, 250, 249, 0.1)",
+          hoverBg: "rgba(14, 16, 15, 0.5)",
+        }
     }
-  };
+  }
+
+  const getTeamColor = (team?: number) => {
+    if (team === 1) return "#836EF9"
+    if (team === 2) return "#A0055D"
+    return "rgba(251, 250, 249, 0.6)"
+  }
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-      <div 
-        className="flex items-center justify-between cursor-pointer hover:bg-white/5 rounded-lg p-2 -m-2 transition-colors"
+    <div className="glass rounded-2xl p-8 card-hover border border-white/10">
+      <button
+        className="w-full flex items-center justify-between hover:bg-white/5 rounded-xl p-3 -m-3 transition-all duration-200"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <h3 className="text-xl font-bold text-white flex items-center">
-          <Clock className="w-5 h-5 mr-2" />
-          Game History ({events.length})
+        <h3 className="text-2xl font-bold flex items-center" style={{ color: "#FBFAF9" }}>
+          <Clock className="w-6 h-6 mr-3" style={{ color: "#836EF9" }} />
+          Game History
+          <span
+            className="ml-3 text-lg px-3 py-1 rounded-full border font-medium"
+            style={{
+              backgroundColor: "rgba(14, 16, 15, 0.5)",
+              color: "#FBFAF9",
+              borderColor: "rgba(251, 250, 249, 0.2)",
+            }}
+          >
+            {events.length}
+          </span>
         </h3>
-        <div className="text-white text-xl">
-          {isExpanded ? '▼' : '▶'}
+        <div className="transition-transform duration-200" style={{ color: "rgba(251, 250, 249, 0.6)" }}>
+          {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
         </div>
-      </div>
-      
+      </button>
+
       {isExpanded && (
-        <div className="mt-4 space-y-2 max-h-60 overflow-y-auto">
+        <div className="mt-6">
           {events.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="text-4xl mb-2">🎮</div>
-              <p className="text-gray-400">No events yet</p>
-              <p className="text-gray-500 text-sm">Start pulling to see game history!</p>
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4 float-animation">🎮</div>
+              <h4 className="text-xl font-semibold mb-2" style={{ color: "#FBFAF9" }}>
+                No events yet
+              </h4>
+              <p style={{ color: "rgba(251, 250, 249, 0.6)" }}>Start pulling to see the battle unfold!</p>
             </div>
           ) : (
-            events.slice().reverse().map((event, index) => (
-              <div 
-                key={index} 
-                className={`flex items-center space-x-3 p-3 rounded-lg border transition-all duration-200 hover:scale-[1.02] ${getEventColor(event.type)}`}
-              >
-                <div className="text-gray-300">
-                  {getEventIcon(event.type)}
-                </div>
-                <div className="flex-1">
-                  <p className="text-white text-sm font-medium">{getEventMessage(event)}</p>
-                  <p className="text-gray-400 text-xs">
-                    {new Date(event.timestamp).toLocaleTimeString()}
-                  </p>
-                </div>
-                {event.player && (
-                  <div className="text-xs text-gray-400 font-mono max-w-20 truncate">
-                    {event.player.slice(0, 6)}...{event.player.slice(-4)}
-                  </div>
-                )}
-              </div>
-            ))
+            <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+              {events
+                .slice()
+                .reverse()
+                .map((event, index) => {
+                  const colors = getEventColor(event.type)
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center space-x-4 p-4 rounded-xl border transition-all duration-200 hover:scale-[1.01]"
+                      style={{
+                        backgroundColor: colors.backgroundColor,
+                        borderColor: colors.borderColor,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.hoverBg
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.backgroundColor
+                      }}
+                    >
+                      <div
+                        className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border"
+                        style={{
+                          backgroundColor: "rgba(14, 16, 15, 0.5)",
+                          borderColor: "rgba(251, 250, 249, 0.2)",
+                        }}
+                      >
+                        {getEventIcon(event.type)}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium" style={{ color: getTeamColor(event.team) }}>
+                          {getEventMessage(event)}
+                        </p>
+                        <p className="text-sm" style={{ color: "rgba(251, 250, 249, 0.5)" }}>
+                          {new Date(event.timestamp).toLocaleTimeString()}
+                        </p>
+                      </div>
+
+                      {event.player && (
+                        <div className="flex-shrink-0">
+                          <div
+                            className="text-xs font-mono px-2 py-1 rounded border"
+                            style={{
+                              backgroundColor: "rgba(14, 16, 15, 0.5)",
+                              color: "rgba(251, 250, 249, 0.6)",
+                              borderColor: "rgba(251, 250, 249, 0.2)",
+                            }}
+                          >
+                            {event.player.slice(0, 6)}...{event.player.slice(-4)}
+                          </div>
+                        </div>
+                      )}
+
+                      {event.type === "win" && (
+                        <div className="flex-shrink-0">
+                          <span className="text-2xl">🏆</span>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+            </div>
           )}
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GameHistory;
+export default GameHistory
 ```
 
 ## 12. Menjalankan Aplikasi
@@ -1626,23 +2265,197 @@ const handlePull = async (isTeam1: boolean) => {
 
 ```css
 /* Dalam src/index.css */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+:root {
+  /* Monad Brand Colors */
+  --monad-off-white: #fbfaf9;
+  --monad-purple: #836ef9;
+  --monad-blue: #200052;
+  --monad-berry: #a0055d;
+  --monad-black: #0e100f;
+  --monad-white: #ffffff;
+
+  /* Derived colors for UI */
+  --monad-purple-light: rgba(131, 110, 249, 0.8);
+  --monad-purple-dark: rgba(131, 110, 249, 0.2);
+  --monad-berry-light: rgba(160, 5, 93, 0.8);
+  --monad-berry-dark: rgba(160, 5, 93, 0.2);
+  --monad-blue-light: rgba(32, 0, 82, 0.8);
+  --monad-blue-dark: rgba(32, 0, 82, 0.3);
+
+  /* UI System Colors */
+  --bg-primary: var(--monad-blue);
+  --bg-secondary: var(--monad-black);
+  --bg-tertiary: rgba(32, 0, 82, 0.6);
+  --text-primary: var(--monad-off-white);
+  --text-secondary: var(--monad-white);
+  --text-muted: rgba(251, 250, 249, 0.7);
+  --border-primary: rgba(131, 110, 249, 0.3);
+  --border-secondary: rgba(251, 250, 249, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, var(--monad-blue) 0%, var(--monad-black) 50%, #1a0040 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--monad-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--monad-purple);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--monad-berry);
+}
+
+/* Animations */
 @keyframes rope-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(0) translateY(-50%);
+  }
+  25% {
+    transform: translateX(-3px) translateY(-50%);
+  }
+  75% {
+    transform: translateX(3px) translateY(-50%);
+  }
 }
 
 .rope-shake {
-  animation: rope-shake 0.3s ease-in-out;
+  animation: rope-shake 0.4s ease-in-out;
 }
 
 @keyframes victory-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
 }
 
 .victory-pulse {
-  animation: victory-pulse 0.8s ease-in-out infinite;
+  animation: victory-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes glow-purple {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(131, 110, 249, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(131, 110, 249, 0.6), 0 0 30px rgba(131, 110, 249, 0.4);
+  }
+}
+
+@keyframes glow-berry {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(160, 5, 93, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(160, 5, 93, 0.6), 0 0 30px rgba(160, 5, 93, 0.4);
+  }
+}
+
+.glow-purple {
+  animation: glow-purple 2s ease-in-out infinite;
+}
+
+.glow-berry {
+  animation: glow-berry 2s ease-in-out infinite;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(14, 16, 15, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(251, 250, 249, 0.1);
+}
+
+.glass-dark {
+  background: rgba(32, 0, 82, 0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(131, 110, 249, 0.2);
+}
+
+/* Button hover effects */
+.btn-primary {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Monad brand gradients */
+.gradient-monad-primary {
+  background: linear-gradient(135deg, var(--monad-purple) 0%, var(--monad-berry) 100%);
+}
+
+.gradient-monad-secondary {
+  background: linear-gradient(135deg, var(--monad-blue) 0%, var(--monad-black) 100%);
+}
+
+.text-gradient-monad {
+  background: linear-gradient(135deg, var(--monad-purple) 0%, var(--monad-berry) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 ```
 

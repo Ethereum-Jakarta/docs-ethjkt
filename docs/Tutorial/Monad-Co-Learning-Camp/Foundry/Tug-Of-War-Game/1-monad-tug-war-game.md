@@ -1,3 +1,9 @@
+---
+sidebar_position: 1
+title: 1. Contracts TugWar Game dengan Foundry dan Template Monad
+description: Membuat Smart Contract Tug Of War Game dengan Foundry
+---
+
 # TugWar Game dengan Foundry dan Template Monad
 
 Dokumentasi lengkap untuk membuat TugWar Game smart contract menggunakan Foundry dengan template Monad oficial. Tutorial ini akan mengajarkan cara menggunakan toolkit Foundry yang modern dan efisien untuk pengembangan game smart contract di Monad Testnet.
