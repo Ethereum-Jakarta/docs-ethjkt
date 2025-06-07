@@ -718,218 +718,112 @@ npx hardhat ignition verify deployment-id --network sepolia
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-/**
- * @title BEMMultiSigWallet
- * @dev Multi-signature wallet untuk treasury BEM dengan quorum-based execution
- * Real use cases:
- * - Pembayaran vendor untuk event kampus
- * - Distribusi dana bantuan mahasiswa
- * - Pembelian equipment untuk kegiatan BEM
- */
-contract BEMMultiSigWallet {
-    // Events untuk transparency & off-chain monitoring
-    event Deposit(address indexed sender, uint amount, uint balance);
-    event SubmitTransaction(
-        address indexed owner,
-        uint indexed txIndex,
-        address indexed to,
-        uint value,
-        bytes data
-    );
-    event ConfirmTransaction(address indexed owner, uint indexed txIndex);
-    event RevokeConfirmation(address indexed owner, uint indexed txIndex);
-    event ExecuteTransaction(address indexed owner, uint indexed txIndex);
+contract BEMMultiSigSimple {
+    /* ========== EVENTS ========== */
+    event Deposit(address indexed sender, uint256 amount);
+    event SubmitTx(uint256 indexed txId, address indexed to, uint256 value, bytes data);
+    event ConfirmTx(address indexed owner, uint256 indexed txId);
+    event ExecuteTx(uint256 indexed txId, bool success);
 
-    // State variables
-    address[] public owners;
+    /* ========== STATE ========== */
+    address[3] public owners;
     mapping(address => bool) public isOwner;
-    uint public numConfirmationsRequired;
+    uint8  public constant QUORUM = 2;
 
-    struct Transaction {
+    struct TxInfo {
         address to;
-        uint value;
+        uint256 value;
         bytes data;
         bool executed;
-        uint numConfirmations;
-        string description; // Deskripsi untuk transparency
-        uint256 timestamp;  // Kapan disubmit
+        uint8 confirmations;               
     }
 
-    // TODO: Tambahkan mapping untuk tracking konfirmasi
-    // mapping(uint => mapping(address => bool)) public isConfirmed;
-    
-    Transaction[] public transactions;
+    TxInfo[] public txs;                    
+    mapping(uint256 => mapping(address => bool)) public confirmed; // txId => owner => bool
 
-    // Modifiers menggunakan pattern dari Solidity 104
+    /* ========== MODIFIERS ========== */
     modifier onlyOwner() {
-        // TODO: Implement dengan require dan error message yang jelas
-        // require(isOwner[msg.sender], "BEMMultiSig: caller is not an owner");
+        require(isOwner[msg.sender], "not owner");
         _;
     }
 
-    modifier txExists(uint _txIndex) {
-        // TODO: Validasi transaction index
+    modifier txExists(uint256 _id) {
+        require(_id < txs.length, "tx !exist");
         _;
     }
 
-    modifier notExecuted(uint _txIndex) {
-        // TODO: Pastikan belum dieksekusi
+    modifier notExecuted(uint256 _id) {
+        require(!txs[_id].executed, "already exec");
         _;
     }
 
-    modifier notConfirmed(uint _txIndex) {
-        // TODO: Pastikan caller belum confirm
+    modifier notConfirmed(uint256 _id) {
+        require(!confirmed[_id][msg.sender], "already confirm");
         _;
     }
 
-    constructor(address[] memory _owners, uint _numConfirmationsRequired) {
-        // TODO: Implement constructor dengan validasi lengkap
-        // Hints:
-        // 1. Validate _owners.length > 0
-        // 2. Validate _numConfirmationsRequired > 0 && <= _owners.length
-        // 3. Check no duplicate owners (use loop)
-        // 4. Check no zero addresses
-        // 5. Set up isOwner mapping
-        // 6. Consider: untuk BEM, minimal 3 owners (Ketua, Bendahara, Sekretaris)
+    /* ========== CONSTRUCTOR ========== */
+    constructor(address[3] memory _owners) {
+        for (uint8 i; i < 3; i++) {
+            address owner = _owners[i];
+            require(owner != address(0), "zero addr");
+            require(!isOwner[owner], "dup owner");
+            owners[i] = owner;
+            isOwner[owner] = true;
+        }
     }
 
+    /* ========== RECEIVE ETHER ========== */
     receive() external payable {
-        // TODO: Handle incoming ETH (sponsor payments, etc)
-        // emit Deposit(msg.sender, msg.value, address(this).balance);
+        emit Deposit(msg.sender, msg.value);
     }
 
-    /**
-     * @dev Submit transaction untuk approval
-     * Use cases: 
-     * - Pembayaran ke vendor event
-     * - Transfer dana ke panitia kegiatan
-     * - Pembelian inventaris BEM
-     */
-    function submitTransaction(
-        address _to,
-        uint _value,
-        bytes memory _data,
-        string memory _description
-    ) public onlyOwner {
-        // TODO: Create new transaction dengan description
-        // Consider adding validation:
-        // - _to != address(0)
-        // - _value <= address(this).balance
-        // - _description not empty for transparency
-    }
+    /* ========== CORE FUNCTIONS ========== */
 
-    /**
-     * @dev Confirm transaction oleh owner
-     * Real scenario: Bendahara submit, Ketua & Sekretaris confirm
-     */
-    function confirmTransaction(uint _txIndex)
-        public
-        onlyOwner
-        txExists(_txIndex)
-        notExecuted(_txIndex)
-        notConfirmed(_txIndex)
+    /// @notice Owner mengajukan transaksi
+    function submit(address _to, uint256 _value, bytes calldata _data)
+        external onlyOwner
     {
-        // TODO: Update confirmation status
-        // Track siapa saja yang sudah confirm untuk audit
+        uint256 txId = txs.length;
+        txs.push(TxInfo({to:_to,value:_value,data:_data,executed:false,confirmations:0}));
+        emit SubmitTx(txId, _to, _value, _data);
     }
 
-    /**
-     * @dev Execute transaction setelah cukup confirmations
-     * Use low-level call dari Solidity 105
-     */
-    function executeTransaction(uint _txIndex)
-        public
-        onlyOwner
-        txExists(_txIndex)
-        notExecuted(_txIndex)
+    /// @notice Owner mengonfirmasi transaksi
+    function confirm(uint256 _id)
+        external onlyOwner txExists(_id) notExecuted(_id) notConfirmed(_id)
     {
-        // TODO: Implement execution dengan pattern dari Solidity 105
-        // 1. Check cukup confirmations
-        // 2. Mark as executed BEFORE calling (prevent reentrancy)
-        // 3. Use low-level call: (bool success, ) = _to.call{value: _value}(_data);
-        // 4. Require success dengan informative error
-        // 5. Emit event dengan details
+        TxInfo storage txn = txs[_id];
+        confirmed[_id][msg.sender] = true;
+        txn.confirmations += 1;
+        emit ConfirmTx(msg.sender, _id);
     }
 
-    /**
-     * @dev Revoke confirmation sebelum execution
-     * Use case: Owner berubah pikiran atau menemukan error
-     */
-    function revokeConfirmation(uint _txIndex)
-        public
-        onlyOwner
-        txExists(_txIndex)
-        notExecuted(_txIndex)
+    /// @notice Eksekusi setelah ≥ QUORUM konfirmasi
+    function execute(uint256 _id)
+        external onlyOwner txExists(_id) notExecuted(_id)
     {
-        // TODO: Allow owner untuk revoke confirmation mereka
-        // Update numConfirmations accordingly
+        TxInfo storage txn = txs[_id];
+        require(txn.confirmations >= QUORUM, "quorum !met");
+        txn.executed = true; // ▸ set flag DULU (anti-reentrancy)
+
+        (bool ok, ) = txn.to.call{value: txn.value}(txn.data);
+        emit ExecuteTx(_id, ok);
+        require(ok, "exec failed");
     }
 
-    // View functions untuk UI/monitoring
-    function getOwners() public view returns (address[] memory) {
-        // TODO: Return list of owners
+    /* ========== GETTERS (view) ========== */
+
+    function txCount() external view returns (uint256) {
+        return txs.length;
     }
 
-    function getTransactionCount() public view returns (uint) {
-        // TODO: Return total transactions
-    }
-
-    function getTransaction(uint _txIndex)
-        public
-        view
-        returns (
-            address to,
-            uint value,
-            bytes memory data,
-            bool executed,
-            uint numConfirmations,
-            string memory description,
-            uint256 timestamp
-        )
+    function getTx(uint256 _id)
+        external view
+        returns (address to, uint256 value, bytes memory data, bool executed, uint8 conf)
     {
-        // TODO: Return complete transaction info
-    }
-
-    /**
-     * @dev Get pending transactions untuk dashboard
-     */
-    function getPendingTransactions() public view returns (uint[] memory) {
-        // TODO: Return array of unexecuted transaction indices
-        // Useful untuk BEM dashboard
-    }
-
-    /**
-     * @dev Check apakah owner sudah confirm specific transaction
-     */
-    function getConfirmationStatus(uint _txIndex, address _owner) 
-        public view returns (bool) 
-    {
-        // TODO: Return confirmation status
-    }
-
-    // Advanced features untuk BEM use case:
-    
-    /**
-     * @dev Emergency pause - hanya jika semua owners setuju
-     */
-    bool public paused;
-    function emergencyPause() public {
-        // TODO: Implement unanimous consent untuk pause
-    }
-
-    /**
-     * @dev Time-locked transactions untuk planning
-     */
-    mapping(uint => uint256) public executionTimelock;
-    function submitTimelocked(
-        address _to,
-        uint _value,
-        bytes memory _data,
-        string memory _description,
-        uint256 _executeAfter
-    ) public onlyOwner {
-        // TODO: Transaction yang hanya bisa diexecute setelah timestamp tertentu
-        // Use case: Planned payments untuk event mendatang
+        TxInfo storage t = txs[_id];
+        return (t.to, t.value, t.data, t.executed, t.confirmations);
     }
 }
 ```

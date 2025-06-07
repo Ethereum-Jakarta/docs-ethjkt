@@ -264,37 +264,45 @@ interface IERC1155 {
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.26;   // Gunakan 0.8.20+ agar cocok dengan OZ v5
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MyMultiToken is ERC1155, Ownable {
-    uint256 public constant GOLD = 0;
-    uint256 public constant SILVER = 1;
+    uint256 public constant GOLD         = 0;
+    uint256 public constant SILVER       = 1;
     uint256 public constant THORS_HAMMER = 2;
-    uint256 public constant SWORD = 3;
-    uint256 public constant SHIELD = 4;
+    uint256 public constant SWORD        = 3;
+    uint256 public constant SHIELD       = 4;
 
-    constructor() ERC1155("https://game.example/api/item/{id}.json") {
-        _mint(msg.sender, GOLD, 10**18, "");
-        _mint(msg.sender, SILVER, 10**27, "");
-        _mint(msg.sender, THORS_HAMMER, 1, "");
-        _mint(msg.sender, SWORD, 10**3, "");
-        _mint(msg.sender, SHIELD, 10**3, "");
+    // ➜ terima pemilik awal sebagai argumen, boleh juga hard-code msg.sender
+    constructor(address initialOwner)
+        ERC1155("https://game.example/api/item/{id}.json")
+        Ownable(initialOwner)              // <-- kirim ke Ownable
+    {
+        _mint(initialOwner, GOLD,         10 ** 18, "");
+        _mint(initialOwner, SILVER,       10 ** 27, "");
+        _mint(initialOwner, THORS_HAMMER, 1,         "");
+        _mint(initialOwner, SWORD,        10 ** 3,  "");
+        _mint(initialOwner, SHIELD,       10 ** 3,  "");
     }
 
-    function mint(address account, uint256 id, uint256 amount, bytes memory data)
-        public
-        onlyOwner
-    {
-        _mint(account, id, amount, data);
+    function mint(
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) external onlyOwner {
+        _mint(to, id, amount, data);
     }
 
-    function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
-        public
-        onlyOwner
-    {
+    function mintBatch(
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) external onlyOwner {
         _mintBatch(to, ids, amounts, data);
     }
 }
