@@ -624,45 +624,64 @@ Hardhat Ignition menyediakan declarative deployment system yang trackable dan re
 #### Setup Configuration
 
 ```javascript
-// hardhat.config.js
-require("@nomicfoundation/hardhat-ignition-ethers");
-require("dotenv").config();
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-verify";
+import { vars } from "hardhat/config";
+import "hardhat-gas-reporter";
+import "solidity-coverage";
 
-module.exports = {
+const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.26",
+    version: "0.8.28",
     settings: {
+      metadata: {
+        bytecodeHash: "none",      // ⬅ prevents IPFS-hash mismatch
+        useLiteralContent: true,   // ⬅ embeds the full source in metadata
+      },
       optimizer: {
         enabled: true,
         runs: 200
       }
     }
   },
+  sourcify: {
+    enabled: true,
+    apiUrl: "https://sourcify-api-monad.blockvision.org",
+    browserUrl: "https://testnet.monadexplorer.com",
+  },
   networks: {
-    sepolia: {
-      url: process.env.SEPOLIA_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: 11155111
-    },
+    // Konfigurasi untuk localhost development
     hardhat: {
-      chainId: 31337
+      chainId: 10143,
+    },
+    // Konfigurasi untuk Monad Testnet
+    monadTestnet: {
+      url: "https://testnet-rpc.monad.xyz/",
+      chainId: 10143,
+      accounts: vars.has("PRIVATE_KEY") ? [`0x${vars.get("PRIVATE_KEY")}`] : [],
+      gasPrice: "auto",
     }
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
+    enabled: false,
+  },
+  gasReporter: {
+    enabled: true,
+    currency: 'USD',
+    outputFile: "gas-report.txt",
+    noColors: true,
+  },
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts"
   }
 };
+
+export default config;
 ```
-
-#### Environment Setup
-
-```bash
-# .env file
-SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR-API-KEY
-PRIVATE_KEY=your-private-key-here
-ETHERSCAN_API_KEY=your-etherscan-api-key
-```
-
 #### Ignition Module Structure
 
 ```javascript
@@ -697,11 +716,11 @@ npx hardhat ignition deploy ignition/modules/MultiSigDeploy.js
 
 # Deploy ke Sepolia dengan parameters
 npx hardhat ignition deploy ignition/modules/MultiSigDeploy.js \
-  --network sepolia \
+  --network monadTestnet \
   --parameters '{"owners": ["0x...", "0x...", "0x..."], "required": 2}'
 
 # Verify contract setelah deployment
-npx hardhat ignition verify deployment-id --network sepolia
+npx hardhat ignition verify deployment-id --network monadTestnet
 ```
 
 ---
@@ -718,250 +737,105 @@ npx hardhat ignition verify deployment-id --network sepolia
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
+/* ===============================================================
+   📝  TUGAS BOOTCAMP
+   Implementasikan multisig 2-of-3 untuk treasury BEM.
+   Lengkapi bagian‐bagian bertanda  TODO:  di bawah ini.
+   ============================================================== */
 contract BEMMultiSigSimple {
     /* ========== EVENTS ========== */
+    // Sudah disiapkan, tidak perlu diubah
     event Deposit(address indexed sender, uint256 amount);
     event SubmitTx(uint256 indexed txId, address indexed to, uint256 value, bytes data);
     event ConfirmTx(address indexed owner, uint256 indexed txId);
     event ExecuteTx(uint256 indexed txId, bool success);
 
     /* ========== STATE ========== */
-    address[3] public owners;
-    mapping(address => bool) public isOwner;
-    uint8  public constant QUORUM = 2;
+    // TODO: 1) simpan 3 owner, 2) mapping isOwner, 3) constant QUORUM = 2
+    // Hint: gunakan  address[3]  agar fixed-size.
 
     struct TxInfo {
-        address to;
-        uint256 value;
-        bytes data;
-        bool executed;
-        uint8 confirmations;               
+        /* TODO:
+           - destination address
+           - ETH value
+           - calldata (bytes)
+           - executed flag
+           - jumlah konfirmasi (uint8)
+        */
     }
 
-    TxInfo[] public txs;                    
-    mapping(uint256 => mapping(address => bool)) public confirmed; // txId => owner => bool
+    // TODO: deklarasi array dynamic  txs  dan mapping  confirmed[txId][owner]
 
     /* ========== MODIFIERS ========== */
-    modifier onlyOwner() {
-        require(isOwner[msg.sender], "not owner");
-        _;
-    }
-
-    modifier txExists(uint256 _id) {
-        require(_id < txs.length, "tx !exist");
-        _;
-    }
-
-    modifier notExecuted(uint256 _id) {
-        require(!txs[_id].executed, "already exec");
-        _;
-    }
-
-    modifier notConfirmed(uint256 _id) {
-        require(!confirmed[_id][msg.sender], "already confirm");
-        _;
-    }
+    // TODO: onlyOwner, txExists, notExecuted, notConfirmed
+    // Hint: gunakan  require()  dengan pesan error singkat.
 
     /* ========== CONSTRUCTOR ========== */
+    /// @param _owners array 3 alamat (Ketua, Bendahara, Sekretaris)
     constructor(address[3] memory _owners) {
-        for (uint8 i; i < 3; i++) {
-            address owner = _owners[i];
-            require(owner != address(0), "zero addr");
-            require(!isOwner[owner], "dup owner");
-            owners[i] = owner;
-            isOwner[owner] = true;
-        }
+        /* TODO:
+           - Validasi alamat tidak 0x0
+           - Cek duplikat
+           - Set  owners[]  &  isOwner
+        */
     }
 
     /* ========== RECEIVE ETHER ========== */
     receive() external payable {
-        emit Deposit(msg.sender, msg.value);
+        // TODO: emit Deposit event
     }
 
     /* ========== CORE FUNCTIONS ========== */
 
-    /// @notice Owner mengajukan transaksi
+    /// @notice Owner mengajukan transaksi baru
+    /// @dev Simpan TxInfo & emit SubmitTx
     function submit(address _to, uint256 _value, bytes calldata _data)
-        external onlyOwner
+        external /* TODO: tambahkan modifier */
     {
-        uint256 txId = txs.length;
-        txs.push(TxInfo({to:_to,value:_value,data:_data,executed:false,confirmations:0}));
-        emit SubmitTx(txId, _to, _value, _data);
+        /* TODO:
+           - Buat txId (length array)
+           - push() struct ke array
+           - emit event
+        */
     }
 
-    /// @notice Owner mengonfirmasi transaksi
+    /// @notice Owner menandatangani transaksi
     function confirm(uint256 _id)
-        external onlyOwner txExists(_id) notExecuted(_id) notConfirmed(_id)
+        external /* TODO: lengkapi modifier chain */
     {
-        TxInfo storage txn = txs[_id];
-        confirmed[_id][msg.sender] = true;
-        txn.confirmations += 1;
-        emit ConfirmTx(msg.sender, _id);
+        /* TODO:
+           - tandai confirmed
+           - increment confirmations
+           - emit event
+        */
     }
 
-    /// @notice Eksekusi setelah ≥ QUORUM konfirmasi
+    /// @notice Eksekusi setelah konfirmasi ≥ QUORUM
     function execute(uint256 _id)
-        external onlyOwner txExists(_id) notExecuted(_id)
+        external /* TODO: lengkapi modifier chain */
     {
-        TxInfo storage txn = txs[_id];
-        require(txn.confirmations >= QUORUM, "quorum !met");
-        txn.executed = true; // ▸ set flag DULU (anti-reentrancy)
-
-        (bool ok, ) = txn.to.call{value: txn.value}(txn.data);
-        emit ExecuteTx(_id, ok);
-        require(ok, "exec failed");
+        /* TODO:
+           - pastikan quorum
+           - set  executed = true  SEBELUM call
+           - lakukan low-level call  .call{value:_value}(_data)
+           - emit event & revert jika gagal
+        */
     }
 
     /* ========== GETTERS (view) ========== */
 
     function txCount() external view returns (uint256) {
-        return txs.length;
+        // TODO: return panjang array txs
     }
 
     function getTx(uint256 _id)
         external view
         returns (address to, uint256 value, bytes memory data, bool executed, uint8 conf)
     {
-        TxInfo storage t = txs[_id];
-        return (t.to, t.value, t.data, t.executed, t.confirmations);
+        // TODO: kembalikan seluruh isi struct
     }
 }
 ```
-
-### Testing Strategy & Implementation
-
-```javascript
-// test/BEMMultiSigWallet.test.js
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-
-describe("BEMMultiSigWallet", function () {
-  let multiSig;
-  let ketuaBEM, bendahara, sekretaris, vendorEvent, mahasiswa;
-
-  beforeEach(async function () {
-    // TODO: Setup realistic BEM scenario
-    // Get signers dengan meaningful names
-    [ketuaBEM, bendahara, sekretaris, vendorEvent, mahasiswa] = await ethers.getSigners();
-    
-    // TODO: Deploy contract dengan 3 pengurus BEM
-    // Require 2-of-3 untuk execution
-  });
-
-  describe("Deployment", function () {
-    it("Should set correct BEM officers as owners", async function () {
-      // TODO: Verify ketua, bendahara, sekretaris adalah owners
-    });
-
-    it("Should reject invalid configurations", async function () {
-      // TODO: Test various invalid inputs:
-      // - Empty owners array
-      // - Required confirmations > owners
-      // - Duplicate owners
-      // - Zero address as owner
-    });
-  });
-
-  describe("Treasury Management", function () {
-    beforeEach(async function () {
-      // Fund treasury dengan sponsor money
-      await ketuaBEM.sendTransaction({
-        to: multiSig.address,
-        value: ethers.utils.parseEther("10.0")
-      });
-    });
-
-    it("Should handle sponsor deposits correctly", async function () {
-      // TODO: Test deposit event emission
-      // Verify balance update
-    });
-
-    it("Should allow bendahara to submit payment request", async function () {
-      // TODO: Bendahara submit pembayaran ke vendor
-      // Check transaction stored correctly
-      // Verify event emission
-    });
-
-    it("Should require multiple confirmations for execution", async function () {
-      // TODO: Test 2-of-3 confirmation flow
-      // 1. Bendahara submit transaction
-      // 2. Ketua confirm
-      // 3. Try execute - should fail (only 1 confirmation)
-      // 4. Sekretaris confirm
-      // 5. Execute - should succeed
-    });
-
-    it("Should handle revoke confirmation properly", async function () {
-      // TODO: Test scenario where owner changes mind
-      // 1. Submit and confirm
-      // 2. Revoke confirmation
-      // 3. Check confirmation count decreased
-    });
-  });
-
-  describe("Real-World Scenarios", function () {
-    it("Should handle event vendor payment", async function () {
-      // TODO: Simulate pembayaran vendor untuk event kampus
-      const vendorPayment = ethers.utils.parseEther("2.5");
-      
-      // Bendahara submit payment request
-      // Include description: "Pembayaran sound system untuk Pensi"
-      // Multiple owners confirm
-      // Execute and verify vendor received payment
-    });
-
-    it("Should manage student assistance distribution", async function () {
-      // TODO: Test distribusi bantuan ke multiple mahasiswa
-      // Use batch transaction dengan data encoding
-    });
-
-    it("Should enforce daily withdrawal limits", async function () {
-      // TODO: Implement daily limit logic
-      // Try multiple withdrawals in same day
-      // Should fail if exceeds limit
-    });
-  });
-
-  describe("Security Features", function () {
-    it("Should prevent non-owners from submitting transactions", async function () {
-      // TODO: Test access control
-      // Random address try submit - should fail
-    });
-
-    it("Should prevent double confirmation", async function () {
-      // TODO: Owner try confirm twice
-      // Second confirmation should fail
-    });
-
-    it("Should handle failed transaction execution", async function () {
-      // TODO: Test when low-level call fails
-      // Create scenario where target contract reverts
-    });
-
-    it("Should implement emergency pause", async function () {
-      // TODO: Test pause functionality
-      // Requires all owners agreement
-    });
-  });
-
-  describe("Advanced Features", function () {
-    it("Should support time-locked transactions", async function () {
-      // TODO: Test planned payment
-      // Submit with future execution time
-      // Try execute before time - should fail
-      // Execute after time - should succeed
-    });
-
-    it("Should provide comprehensive transaction history", async function () {
-      // TODO: Test view functions
-      // Get pending transactions
-      // Get confirmation status per owner
-      // Filter by execution status
-    });
-  });
-});
-```
-
 ---
 
 ## Kuliah — Smart Contract Modular Architecture (13:30 - 14:30)
@@ -1852,88 +1726,6 @@ module.exports = buildModule("TokenSuiteModule", (m) => {
   return { campusCredit, studentID, courseBadge };
 });
 ```
-
-### Testing Strategy untuk Token Suite
-
-```javascript
-// test/CampusCredit.test.js
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-
-describe("CampusCredit Token", function () {
-  let campusCredit;
-  let admin, minter, student1, student2, kafetaria;
-
-  beforeEach(async function () {
-    [admin, minter, student1, student2, kafetaria] = await ethers.getSigners();
-    
-    const CampusCredit = await ethers.getContractFactory("CampusCredit");
-    campusCredit = await CampusCredit.deploy();
-    
-    // Setup roles
-    await campusCredit.grantRole(
-      await campusCredit.MINTER_ROLE(),
-      minter.address
-    );
-  });
-
-  describe("Minting & Supply", function () {
-    it("Should allow minter to mint tokens", async function () {
-      // TODO: Test minting functionality
-    });
-
-    it("Should enforce role-based access", async function () {
-      // TODO: Test unauthorized minting fails
-    });
-  });
-
-  describe("Daily Spending Limits", function () {
-    it("Should enforce spending limits", async function () {
-      // TODO: Set limit, try exceed, should fail
-    });
-
-    it("Should reset limit daily", async function () {
-      // TODO: Test limit reset after 24 hours
-    });
-  });
-
-  describe("Merchant System", function () {
-    it("Should register and validate merchants", async function () {
-      // TODO: Register merchant, check payment flow
-    });
-
-    it("Should apply cashback correctly", async function () {
-      // TODO: Test cashback calculation and distribution
-    });
-  });
-
-  describe("Pause Functionality", function () {
-    it("Should pause all transfers when paused", async function () {
-      // TODO: Pause and try transfer
-    });
-  });
-});
-
-// test/StudentID.test.js
-describe("StudentID NFT", function () {
-  // Similar structure for StudentID tests
-  // Focus on:
-  // - Non-transferability
-  // - Expiry mechanism
-  // - NIM uniqueness
-  // - Renewal process
-});
-
-// test/CourseBadge.test.js
-describe("CourseBadge Multi-Token", function () {
-  // Test ERC-1155 functionality
-  // - Multiple token types
-  // - Batch operations
-  // - Role-based minting
-  // - URI management
-});
-```
-
 ---
 
 ## Sesi Evaluasi & Review (16:00 - 16:30)
