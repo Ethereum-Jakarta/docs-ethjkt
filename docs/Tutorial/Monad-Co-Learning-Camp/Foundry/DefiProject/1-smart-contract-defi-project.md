@@ -77,26 +77,6 @@ cd simple-defi
 # └── .env.example       # Environment variables
 ```
 
-### Konfigurasi Foundry
-
-Edit file `foundry.toml`:
-
-```toml
-[profile.default]
-src = "src"
-out = "out"
-libs = ["lib"]
-solc = "0.8.26"
-optimizer = true
-optimizer_runs = 200
-
-[rpc_endpoints]
-monad_testnet = "https://testnet-rpc.monad.xyz/"
-
-[etherscan]
-monad_testnet = { key = "${ETHERSCAN_API_KEY}", url = "https://testnet.monadexplorer.com/api/" }
-```
-
 ### Install Dependencies
 
 ```bash
