@@ -1230,7 +1230,7 @@ export const userStats = onchainTable(
 
 ### Event Handlers Implementation
 
-**`src/SimpleDEX.ts`**:
+**`src/index.ts`**:
 ```typescript
 import { ponder } from "ponder:registry";
 import { swaps, liquidityEvents, transfers, dailyVolumes, poolStats, userStats } from "ponder:schema";
