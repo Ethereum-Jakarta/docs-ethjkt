@@ -1230,8 +1230,6 @@ export const userStats = onchainTable(
 
 ### Event Handlers Implementation
 
-#### 1. Swap Event Handler
-
 **`src/SimpleDEX.ts`**:
 ```typescript
 import { ponder } from "ponder:registry";
@@ -1602,140 +1600,7 @@ async function updatePoolStats(context: any, event: any) {
 }
 ```
 
-#### 2. Liquidity Event Handlers
 
-```typescript
-// Liquidity Added event handler
-ponder.on("SimpleDEX:LiquidityAdded", async ({ event, context }) => {
-  const { provider, amountA, amountB, liquidity } = event.args;
-
-  // Calculate share of pool (simplified)
-  const shareOfPool = calculatePoolShare(liquidity);
-
-  await context.db.LiquidityEvent.create({
-    id: `${event.transaction.hash}-${event.log.logIndex}`,
-    data: {
-      type: "ADD",
-      provider: provider,
-      amountA: amountA,
-      amountB: amountB,
-      liquidity: liquidity,
-      shareOfPool: shareOfPool,
-      blockNumber: event.block.number,
-      timestamp: Number(event.block.timestamp),
-      transactionHash: event.transaction.hash,
-    },
-  });
-
-  // Update user stats for liquidity provision
-  await updateUserLiquidityStats(context, provider, liquidity, "ADD");
-});
-
-// Liquidity Removed event handler
-ponder.on("SimpleDEX:LiquidityRemoved", async ({ event, context }) => {
-  const { provider, amountA, amountB, liquidity } = event.args;
-
-  const shareOfPool = calculatePoolShare(liquidity);
-
-  await context.db.LiquidityEvent.create({
-    id: `${event.transaction.hash}-${event.log.logIndex}`,
-    data: {
-      type: "REMOVE", 
-      provider: provider,
-      amountA: amountA,
-      amountB: amountB,
-      liquidity: liquidity,
-      shareOfPool: shareOfPool,
-      blockNumber: event.block.number,
-      timestamp: Number(event.block.timestamp),
-      transactionHash: event.transaction.hash,
-    },
-  });
-
-  await updateUserLiquidityStats(context, provider, liquidity, "REMOVE");
-});
-
-function calculatePoolShare(liquidity: bigint): number {
-  // Simplified calculation - in reality you'd need total liquidity
-  return Number(liquidity) / 1e20; // Rough estimate
-}
-
-async function updateUserLiquidityStats(
-  context: any,
-  provider: string,
-  liquidity: bigint,
-  type: "ADD" | "REMOVE"
-) {
-  const existing = await context.db.UserStats.findUnique({
-    id: provider as `0x${string}`,
-  });
-
-  const liquidityChange = type === "ADD" ? liquidity : -liquidity;
-  const currentTime = Math.floor(Date.now() / 1000);
-
-  if (existing) {
-    await context.db.UserStats.update({
-      id: provider as `0x${string}`,
-      data: {
-        liquidityProvided: existing.liquidityProvided + liquidityChange,
-        lastActivity: currentTime,
-      },
-    });
-  } else {
-    await context.db.UserStats.create({
-      id: provider as `0x${string}`,
-      data: {
-        totalSwaps: 0,
-        totalVolumeUSD: 0,
-        liquidityProvided: liquidityChange,
-        feesEarned: 0,
-        firstSeen: currentTime,
-        lastActivity: currentTime,
-      },
-    });
-  }
-}
-```
-
-#### 3. ERC20 Transfer Handlers
-
-```typescript
-// CAMP Transfer handler
-ponder.on("CampusCoin:Transfer", async ({ event, context }) => {
-  const { from, to, value } = event.args;
-
-  await context.db.Transfer.create({
-    id: `${event.transaction.hash}-${event.log.logIndex}`,
-    data: {
-      token: context.contracts.CampusCoin.address,
-      from: from,
-      to: to,
-      amount: value,
-      blockNumber: event.block.number,
-      timestamp: Number(event.block.timestamp),
-      transactionHash: event.transaction.hash,
-    },
-  });
-});
-
-// USDC Transfer handler
-ponder.on("MockUSDC:Transfer", async ({ event, context }) => {
-  const { from, to, value } = event.args;
-
-  await context.db.Transfer.create({
-    id: `${event.transaction.hash}-${event.log.logIndex}`,
-    data: {
-      token: context.contracts.MockUSDC.address,
-      from: from,
-      to: to,
-      amount: value,
-      blockNumber: event.block.number,
-      timestamp: Number(event.block.timestamp),
-      transactionHash: event.transaction.hash,
-    },
-  });
-});
-```
 
 ### GraphQL API Generation
 
