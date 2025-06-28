@@ -84,7 +84,7 @@ npx create-ponder@latest simple-dex-indexer
 cd simple-dex-indexer
 
 # Install additional dependencies for frontend later
-npm install @urql/core
+npm install @apollo/client graphql
 ```
 
 #### 2. Configuration
@@ -1608,91 +1608,158 @@ Ponder automatically generates GraphQL API berdasarkan schema. Berikut contoh qu
 
 #### 1. Query Examples
 
-**Get Recent Swaps**:
+**GET_RECENT_SWAPS**:
 ```graphql
 query GetRecentSwaps($limit: Int = 10) {
-  swaps(
-    orderBy: { timestamp: desc }
-    limit: $limit
-  ) {
-    id
-    user
-    tokenIn
-    tokenOut
-    amountIn
-    amountOut
-    priceImpact
-    timestamp
-    transactionHash
+    swapss(
+      orderBy: "timestamp"
+      orderDirection: "desc"
+      limit: $limit
+    ) {
+      items {
+        id
+        user
+        tokenIn
+        tokenOut
+        amountIn
+        amountOut
+        priceImpact
+        gasUsed
+        blockNumber
+        timestamp
+        transactionHash
+      }
+    }
   }
-}
 ```
 
-**Get User Trading History**:
+**GET_RECENT_LIQUIDITY_EVENTS**:
 ```graphql
-query GetUserSwaps($userAddress: String!) {
-  swaps(
-    where: { user: { equals: $userAddress } }
-    orderBy: { timestamp: desc }
-  ) {
-    id
-    tokenIn
-    tokenOut
-    amountIn
-    amountOut
-    priceImpact
-    timestamp
+query GetRecentLiquidityEvents($limit: Int = 10) {
+    liquidityEventss(
+      orderBy: "timestamp"
+      orderDirection: "desc"
+      limit: $limit
+    ) {
+      items {
+        id
+        type
+        provider
+        amountA
+        amountB
+        liquidity
+        shareOfPool
+        blockNumber
+        timestamp
+        transactionHash
+      }
+    }
   }
-}
 ```
 
-**Get Daily Volume Stats**:
+**GET_VOLUME_ANALYTICSs**:
 ```graphql
-query GetDailyVolume($days: Int = 30) {
-  dailyVolumes(
-    orderBy: { date: desc }
-    limit: $days
-  ) {
-    date
-    volumeUSD
-    transactionCount
-    uniqueUsers
+query GetVolumeAnalytics($days: Int = 30) {
+    dailyVolumess(
+      orderBy: "date"
+      orderDirection: "desc"
+      limit: $days
+    ) {
+      items {
+        date
+        volumeUSD
+        transactionCount
+        uniqueUsers
+        avgGasPrice
+      }
+    }
   }
-}
 ```
 
-**Get Pool Statistics**:
-```graphql
-query GetPoolStats {
-  poolStats(id: "latest") {
-    reserveA
-    reserveB
-    totalLiquidity
-    price
-    tvlUSD
-    volume24h
-    lastUpdated
-  }
-}
-```
 
-**Get Top Traders**:
-```graphql
-query GetTopTraders($limit: Int = 10) {
-  userStats(
-    orderBy: { totalVolumeUSD: desc }
-    limit: $limit
-  ) {
-    id
-    totalSwaps
-    totalVolumeUSD
-    liquidityProvided
-    feesEarned
-  }
-}
-```
 
 ### Frontend Integration dengan React Query
+
+### 0. Setup GraphQL PROVIDER
+
+**`src/App.tsx`**:
+```typescript
+import Header from "./components/Header";
+import '@rainbow-me/rainbowkit/styles.css';
+
+import {
+  getDefaultConfig,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import type {
+  Chain
+} from 'wagmi/chains';
+import {
+  QueryClientProvider,
+  QueryClient,
+} from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
+import DEXContainer from "./components/DEXContainer";
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from './lib/graphql';
+
+// Konfigurasi Chain Monad Testnet
+const monadTestnet: Chain = {
+  id: 10143,
+  name: 'Monad Testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'MON',
+    symbol: 'MON',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://testnet-rpc.monad.xyz/'],
+    },
+    public: {
+      http: ['https://testnet-rpc.monad.xyz/'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'MonadScan',
+      url: 'https://testnet.monadexplorer.com',
+    },
+  },
+  testnet: true,
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const config = getDefaultConfig({
+  appName: 'Simple DEX',
+  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Dapatkan dari https://cloud.walletconnect.com
+  chains: [monadTestnet],
+  ssr: true,
+});
+
+function App() {
+  const queryClient = new QueryClient();
+  return (
+    <WagmiProvider config={config}>
+      <ApolloProvider client={apolloClient}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider>
+            <div className="min-h-screen">
+              <Header />
+              <DEXContainer />
+            </div>
+            <Toaster position="top-center" />
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </ApolloProvider>
+     
+    </WagmiProvider>
+  )
+}
+
+export default App
+```
 
 #### 1. Setup GraphQL Client
 
