@@ -1116,83 +1116,116 @@ export default createConfig({
 
 **`ponder.schema.ts`**:
 ```typescript
-import { createSchema } from "@ponder/core";
+import { onchainTable, onchainEnum, primaryKey, index } from "ponder";
 
-export default createSchema((p) => ({
-  // Swap Events
-  Swap: p.createTable({
-    id: p.string(),
-    user: p.hex(),
-    tokenIn: p.string(),
-    tokenOut: p.string(), 
-    amountIn: p.bigint(),
-    amountOut: p.bigint(),
-    priceImpact: p.float(),
-    gasUsed: p.bigint(),
-    blockNumber: p.bigint(),
-    timestamp: p.int(),
-    transactionHash: p.hex(),
-  }),
+// Define enum for liquidity event types
+export const liquidityEventType = onchainEnum("liquidity_event_type", ["ADD", "REMOVE"]);
 
-  // Liquidity Events  
-  LiquidityEvent: p.createTable({
-    id: p.string(),
-    type: p.enum("ADD", "REMOVE"),
-    provider: p.hex(),
-    amountA: p.bigint(),
-    amountB: p.bigint(),
-    liquidity: p.bigint(),
-    shareOfPool: p.float(),
-    blockNumber: p.bigint(),
-    timestamp: p.int(),
-    transactionHash: p.hex(),
+// Swap Events
+export const swaps = onchainTable(
+  "swaps",
+  (t) => ({
+    id: t.text().primaryKey(),
+    user: t.hex().notNull(),
+    tokenIn: t.text().notNull(),
+    tokenOut: t.text().notNull(),
+    amountIn: t.bigint().notNull(),
+    amountOut: t.bigint().notNull(),
+    priceImpact: t.real(),
+    gasUsed: t.bigint().notNull(),
+    blockNumber: t.bigint().notNull(),
+    timestamp: t.bigint().notNull(), // Use bigint for Unix timestamps
+    transactionHash: t.hex().notNull(),
   }),
+  (table) => ({
+    userIdx: index().on(table.user),
+    timestampIdx: index().on(table.timestamp),
+    blockIdx: index().on(table.blockNumber),
+  })
+);
 
-  // Token Transfer Events
-  Transfer: p.createTable({
-    id: p.string(),
-    token: p.hex(),
-    from: p.hex(),
-    to: p.hex(),
-    amount: p.bigint(),
-    blockNumber: p.bigint(),
-    timestamp: p.int(),
-    transactionHash: p.hex(),
+// Liquidity Events
+export const liquidityEvents = onchainTable(
+  "liquidity_events",
+  (t) => ({
+    id: t.text().primaryKey(),
+    type: liquidityEventType("type").notNull(),
+    provider: t.hex().notNull(),
+    amountA: t.bigint().notNull(),
+    amountB: t.bigint().notNull(),
+    liquidity: t.bigint().notNull(),
+    shareOfPool: t.real(),
+    blockNumber: t.bigint().notNull(),
+    timestamp: t.bigint().notNull(),
+    transactionHash: t.hex().notNull(),
   }),
+  (table) => ({
+    providerIdx: index().on(table.provider),
+    typeIdx: index().on(table.type),
+    timestampIdx: index().on(table.timestamp),
+  })
+);
 
-  // Daily Volume Statistics
-  DailyVolume: p.createTable({
-    id: p.string(), // YYYY-MM-DD
-    date: p.string(),
-    volumeUSD: p.float(),
-    transactionCount: p.int(),
-    uniqueUsers: p.int(),
-    avgGasPrice: p.bigint(),
+// Token Transfer Events
+export const transfers = onchainTable(
+  "transfers",
+  (t) => ({
+    id: t.text().primaryKey(),
+    token: t.hex().notNull(),
+    from: t.hex().notNull(),
+    to: t.hex().notNull(),
+    amount: t.bigint().notNull(),
+    blockNumber: t.bigint().notNull(),
+    timestamp: t.bigint().notNull(),
+    transactionHash: t.hex().notNull(),
   }),
+  (table) => ({
+    tokenIdx: index().on(table.token),
+    fromIdx: index().on(table.from),
+    toIdx: index().on(table.to),
+    timestampIdx: index().on(table.timestamp),
+  })
+);
 
-  // Pool Statistics
-  PoolStats: p.createTable({
-    id: p.string(), // "latest" untuk current stats
-    reserveA: p.bigint(),
-    reserveB: p.bigint(),
-    totalLiquidity: p.bigint(),
-    price: p.bigint(),
-    tvlUSD: p.float(),
-    volume24h: p.float(),
-    lastUpdated: p.int(),
-  }),
-
-  // User Statistics
-  UserStats: p.createTable({
-    id: p.hex(), // user address
-    totalSwaps: p.int(),
-    totalVolumeUSD: p.float(),
-    liquidityProvided: p.bigint(),
-    feesEarned: p.float(),
-    firstSeen: p.int(),
-    lastActivity: p.int(),
-  }),
+// Daily Volume Statistics
+export const dailyVolumes = onchainTable("daily_volumes", (t) => ({
+  id: t.text().primaryKey(), // YYYY-MM-DD format
+  date: t.text().notNull(),
+  volumeUSD: t.real().notNull().default(0),
+  transactionCount: t.integer().notNull().default(0),
+  uniqueUsers: t.integer().notNull().default(0),
+  avgGasPrice: t.bigint(),
 }));
+
+// Pool Statistics
+export const poolStats = onchainTable("pool_stats", (t) => ({
+  id: t.text().primaryKey(), // "latest" for current stats
+  reserveA: t.bigint().notNull(),
+  reserveB: t.bigint().notNull(),
+  totalLiquidity: t.bigint().notNull(),
+  price: t.bigint().notNull(),
+  tvlUSD: t.real(),
+  volume24h: t.real(),
+  lastUpdated: t.bigint().notNull(),
+}));
+
+// User Statistics
+export const userStats = onchainTable(
+  "user_stats",
+  (t) => ({
+    id: t.hex().primaryKey(), // user address
+    totalSwaps: t.integer().notNull().default(0),
+    totalVolumeUSD: t.real().notNull().default(0),
+    liquidityProvided: t.bigint().notNull().default(0n),
+    feesEarned: t.real().notNull().default(0),
+    firstSeen: t.bigint().notNull(),
+    lastActivity: t.bigint().notNull(),
+  }),
+  (table) => ({
+    lastActivityIdx: index().on(table.lastActivity),
+    totalVolumeIdx: index().on(table.totalVolumeUSD),
+  })
+);
 ```
 
 ### Event Handlers Implementation
