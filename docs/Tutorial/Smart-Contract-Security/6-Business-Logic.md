@@ -1,4 +1,4 @@
-# Pengertian
+# Business Logic
 
 Logic Error (Business Logic) adalah jenis kerentanan dalam smart contract yang terjadi ketika alur atau aturan bisnis yang diharapkan tidak dijalankan sesuai rancangan akibat kesalahan pada implementasi logika kode. Kesalahan ini tidak selalu menyebabkan runtime error atau kegagalan kompilasi, sehingga kontrak dapat tetap berjalan tetapi dengan perilaku yang salah atau dapat dieksploitasi.
 

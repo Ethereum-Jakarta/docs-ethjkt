@@ -1,4 +1,4 @@
-# Pengertian
+# Access Control
 
 Access control pada smart contract adalah mekanisme keamanan yang digunakan untuk membatasi dan mengatur siapa yang memiliki izin untuk menjalankan fungsi atau mengakses data tertentu di dalam kontrak. Tanpa pengaturan kontrol akses yang tepat, pihak yang tidak berwenang dapat memanggil fungsi sensitif seperti mencetak token baru, menarik dana dari kontrak, atau mengubah parameter penting protokol. Hal ini dapat berujung pada kerugian finansial, hilangnya kepercayaan pengguna, atau bahkan kehancuran total ekosistem yang dibangun.
 
