@@ -192,7 +192,7 @@ Siap untuk membangun? Mulai di sini:
 - [Telegram](https://t.me/web3_0glabs) - Update dan announcements
 
 :::tip Ready to Build?
-Lanjut ke tutorial selanjutnya tentang [0G Storage](./4-0g-storage.md) atau langsung mulai [development setup](./5-getting-started.md)!
+Lanjut ke tutorial selanjutnya tentang [0G Storage](./5-0g-storage.md) atau langsung mulai [development setup](./9-getting-started.md)!
 :::
 
 ---

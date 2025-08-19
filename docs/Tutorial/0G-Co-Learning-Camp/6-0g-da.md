@@ -216,9 +216,9 @@ Mulai dengan testnet integration untuk understand workflow, lalu implement di st
 ## Langkah Selanjutnya
 
 Ready untuk deep dive lebih jauh?
-- [Getting Started Tutorial](./7-getting-started.md) - Build aplikasi pertama dengan full 0G stack
-- [Advanced Architecture](./8-advanced-concepts.md) - Deep dive ke semua komponen 0G
-- [Node Operation](./9-node-operation.md) - Menjadi operator di ekosistem 0G
+- [AI Alignment Nodes](./7-ai-alignment-nodes.md) - Pelajari tentang AI safety monitoring
+- [Getting Started Tutorial](./9-getting-started.md) - Build aplikasi pertama dengan full 0G stack
+- [Testnet Setup](./10-testnet-overview.md) - Setup development environment
 
 ---
 

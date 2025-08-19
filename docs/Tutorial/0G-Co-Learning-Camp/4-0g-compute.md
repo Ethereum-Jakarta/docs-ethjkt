@@ -229,7 +229,7 @@ Mulai dengan testnet untuk experiment gratis, lalu pindah ke mainnet ketika suda
 
 Siap explore lebih lanjut?
 - [0G Storage](./5-0g-storage.md) - Pelajari tentang decentralized storage
-- [Hands-on Tutorial](./6-getting-started.md) - Build first AI app dengan 0G
+- [Hands-on Tutorial](./9-getting-started.md) - Build first AI app dengan 0G
 - [Join Workshop ETHJKT](https://ethjkt.com) - Workshop rutin setiap bulan
 
 ---

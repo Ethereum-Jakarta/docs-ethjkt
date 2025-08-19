@@ -172,9 +172,9 @@ AI Alignment adalah field yang sangat baru dan important. Early participation bi
 ## Langkah Selanjutnya
 
 Ready untuk deep dive ke AI safety?
-- [Getting Started Tutorial](./8-getting-started.md) - Build aplikasi dengan AI alignment monitoring
-- [Advanced AI Safety](./9-advanced-ai-safety.md) - Deep dive ke AI safety mechanisms
-- [Node Operation Guide](./10-node-operation.md) - Menjadi alignment node operator
+- [DePIN Providers](./8-depin-providers.md) - Pelajari tentang decentralized infrastructure
+- [Getting Started Tutorial](./9-getting-started.md) - Build aplikasi dengan AI alignment monitoring
+- [Testnet Setup](./10-testnet-overview.md) - Setup development environment
 
 ---
 

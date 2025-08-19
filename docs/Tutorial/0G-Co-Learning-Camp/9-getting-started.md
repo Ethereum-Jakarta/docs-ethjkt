@@ -354,9 +354,9 @@ Pilih service di atas dan mulai dalam hitungan menit, atau [join Discord Indones
 ## Langkah Selanjutnya
 
 Siap untuk deep dive?
-- [Advanced Tutorials](./10-advanced-tutorials.md) - Build complex applications
-- [Production Deployment](./11-production-guide.md) - Launch ke mainnet
-- [Community Contribution](./12-contributing.md) - Contribute ke ecosystem
+- [Testnet Setup](./10-testnet-overview.md) - Setup development environment
+- **[Official Advanced Guides](https://docs.0g.ai/developer-hub/building-on-0g)** - Build complex applications
+- [Community Contribution](https://discord.gg/p5b6RFEnnk) - Contribute ke ETHJKT ecosystem
 
 ---
 

@@ -313,8 +313,8 @@ Mulai dengan small dataset untuk testing, lalu scale up setelah familiar dengan 
 
 Siap untuk explore lebih jauh?
 - [0G Data Availability](./6-0g-da.md) - Pelajari tentang DA layer
-- [Getting Started Tutorial](./7-getting-started.md) - Build aplikasi pertama dengan 0G
-- [Advanced Concepts](./8-advanced-concepts.md) - Deep dive ke arsitektur
+- [Getting Started Tutorial](./9-getting-started.md) - Build aplikasi pertama dengan 0G
+- [Testnet Setup](./10-testnet-overview.md) - Setup development environment
 
 ---
 

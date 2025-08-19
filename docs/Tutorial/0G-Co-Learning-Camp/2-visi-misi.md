@@ -118,5 +118,5 @@ Bersama-sama dengan 0G, kita tidak hanya membangun teknologi – kita membentuk 
 - [Telegram](https://t.me/web3_0glabs) - Chat dengan fellow builders
 
 :::tip Mulai Perjalanan Anda
-Ready to be part of the revolution? Start dengan [memahami teknologi 0G](./1-memahami-0g.md) dan lanjut ke [getting started guide](./3-getting-started.md)!
+Ready to be part of the revolution? Start dengan [memahami teknologi 0G](./1-memahami-0g.md) dan lanjut ke [getting started guide](./9-getting-started.md)!
 :::

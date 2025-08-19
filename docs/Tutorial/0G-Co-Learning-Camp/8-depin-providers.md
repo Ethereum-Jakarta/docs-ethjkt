@@ -284,8 +284,8 @@ Start dengan hardware yang ada sekarang. Bahkan laptop gaming bisa contribute da
 
 Ready untuk explore DePIN lebih jauh?
 - [Getting Started Tutorial](./9-getting-started.md) - Build aplikasi dengan DePIN integration
-- [Advanced DePIN Concepts](./10-advanced-depin.md) - Deep dive ke technical aspects
-- [Become a Provider](./11-provider-setup.md) - Setup guide lengkap untuk providers
+- [Testnet Setup](./10-testnet-overview.md) - Setup development environment
+- **[Official Provider Guide](https://docs.0g.ai/developer-hub/building-on-0g/compute-network/inference-provider)** - Setup guide lengkap untuk providers
 
 ---
 
