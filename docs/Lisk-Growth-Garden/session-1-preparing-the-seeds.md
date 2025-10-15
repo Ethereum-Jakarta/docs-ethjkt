@@ -388,22 +388,22 @@ After the hackathon, the best projects can join the **Lisk Incubation Hub** powe
 
 ### Incubation Program Structure (16 Weeks)
 
-**Week 1** - Understand Lisk Ecosystem
-**Week 2** - Market Research & Validating Business Idea
-**Week 3** - Building MVP & Product Management
-**Week 4** - Capital Journey
-**Week 5** - Legal Framework
-**Week 6** - Tokenomics & Business Model
-**Week 7** - Hiring Mindset
-**Week 8** - Product Management & Understand Customers
-**Week 9** - Finance Management
-**Week 10** - Go to Market & Growth Strategy
-**Week 11** - Leadership & Culture
-**Week 12** - Community Growth
-**Week 13** - Partnership Development
-**Week 14** - Personal Brand & Project Brand Building
-**Week 15** - Mentoring Matching
-**Week 16** - Demo Pitch Day
+- **Week 1** - Understand Lisk Ecosystem
+- **Week 2** - Market Research & Validating Business Idea
+- **Week 3** - Building MVP & Product Management
+- **Week 4** - Capital Journey
+- **Week 5** - Legal Framework
+- **Week 6** - Tokenomics & Business Model
+- **Week 7** - Hiring Mindset
+- **Week 8** - Product Management & Understand Customers
+- **Week 9** - Finance Management
+- **Week 10** - Go to Market & Growth Strategy
+- **Week 11** - Leadership & Culture
+- **Week 12** - Community Growth
+- **Week 13** - Partnership Development
+- **Week 14** - Personal Brand & Project Brand Building
+- **Week 15** - Mentoring Matching
+- **Week 16** - Demo Pitch Day
 
 **Past Winners from Round 2:**
 - **1ST WINNER**: RAMPZ 🇵🇭
@@ -928,14 +928,11 @@ Explore projects or ideas that need your skills. Join as a contributor, early te
 
 **Indonesia 🇮🇩**
 - Instagram: [@liskindonesia](https://www.instagram.com/liskindonesia)
-- X (Twitter): [@LiskIndonesia](https://x.com/LiskIndonesia)
 
 **Vietnam 🇻🇳**
-- Instagram: [@liskvietnam](https://www.instagram.com/liskvietnam)
 - X (Twitter): [@LiskVietnam](https://x.com/LiskVietnam)
 
 **Southeast Asia 🌏**
-- Instagram: [@lisksea](https://www.instagram.com/lisksea)
 - X (Twitter): [@LiskSEA](https://x.com/LiskSEA)
 
 **Global 🌍**
@@ -989,9 +986,9 @@ Have questions about the bootcamp, the hackathon, or Lisk?
 
 Follow us on Instagram and X:
 
-**@LiskIndonesia** 🇮🇩
-**@LiskVietnam** 🇻🇳
-**@LiskSEA** 🌏
+- **[@LiskIndonesia](https://www.instagram.com/liskindonesia)** 🇮🇩
+- **[@LiskVietnam](https://x.com/LiskVietnam)** on X
+- **[@LiskSEA](https://x.com/LiskSEA)** on X
 
 **Welcome to the Lisk Growth Garden!**
 
