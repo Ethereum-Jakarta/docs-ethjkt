@@ -510,6 +510,8 @@ User Transaction
 
 ### Network Information
 
+import AddNetworkButton from '@site/src/components/AddNetworkButton';
+
 **Lisk Sepolia Testnet** (for development):
 - Network Name: Lisk Sepolia
 - RPC URL: `https://rpc.sepolia-api.lisk.com`
@@ -517,54 +519,20 @@ User Transaction
 - Currency Symbol: `ETH`
 - Block Explorer: `https://sepolia-blockscout.lisk.com`
 
-<button onClick={() => {
-  if (typeof window.ethereum !== 'undefined') {
-    window.ethereum.request({
-      method: 'wallet_addEthereumChain',
-      params: [{
-        chainId: '0x106A',
-        chainName: 'Lisk Sepolia',
-        nativeCurrency: {
-          name: 'Sepolia Ether',
-          symbol: 'ETH',
-          decimals: 18
-        },
-        rpcUrls: ['https://rpc.sepolia-api.lisk.com'],
-        blockExplorerUrls: ['https://sepolia-blockscout.lisk.com']
-      }]
-    }).catch((error) => {
-      console.error(error);
-    });
-  } else {
-    alert('Please install MetaMask to add this network');
-  }
-}} style={{
-  backgroundColor: '#0D102D',
-  color: 'white',
-  padding: '12px 24px',
-  border: 'none',
-  borderRadius: '8px',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  marginTop: '10px',
-  marginBottom: '20px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '10px',
-  transition: 'all 0.3s ease'
-}} onMouseEnter={(e) => {
-  e.currentTarget.style.backgroundColor = '#1a1f4d';
-  e.currentTarget.style.transform = 'translateY(-2px)';
-  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-}} onMouseLeave={(e) => {
-  e.currentTarget.style.backgroundColor = '#0D102D';
-  e.currentTarget.style.transform = 'translateY(0)';
-  e.currentTarget.style.boxShadow = 'none';
-}}>
-  <img src="/img/metamask.svg" alt="MetaMask" style={{width: '20px', height: '20px', flexShrink: '0'}} />
-  <span>Add Lisk Sepolia to MetaMask</span>
-</button>
+<AddNetworkButton
+  networkConfig={{
+    chainId: '0x106A',
+    chainName: 'Lisk Sepolia',
+    nativeCurrency: {
+      name: 'Sepolia Ether',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpc.sepolia-api.lisk.com'],
+    blockExplorerUrls: ['https://sepolia-blockscout.lisk.com']
+  }}
+  buttonText="Add Lisk Sepolia to MetaMask"
+/>
 
 **Lisk Mainnet** (for production):
 - Network Name: Lisk
@@ -573,54 +541,20 @@ User Transaction
 - Currency Symbol: `ETH`
 - Block Explorer: `https://blockscout.lisk.com`
 
-<button onClick={() => {
-  if (typeof window.ethereum !== 'undefined') {
-    window.ethereum.request({
-      method: 'wallet_addEthereumChain',
-      params: [{
-        chainId: '0x46F',
-        chainName: 'Lisk',
-        nativeCurrency: {
-          name: 'Ether',
-          symbol: 'ETH',
-          decimals: 18
-        },
-        rpcUrls: ['https://rpc.api.lisk.com'],
-        blockExplorerUrls: ['https://blockscout.lisk.com']
-      }]
-    }).catch((error) => {
-      console.error(error);
-    });
-  } else {
-    alert('Please install MetaMask to add this network');
-  }
-}} style={{
-  backgroundColor: '#0D102D',
-  color: 'white',
-  padding: '12px 24px',
-  border: 'none',
-  borderRadius: '8px',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  marginTop: '10px',
-  marginBottom: '20px',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '10px',
-  transition: 'all 0.3s ease'
-}} onMouseEnter={(e) => {
-  e.currentTarget.style.backgroundColor = '#1a1f4d';
-  e.currentTarget.style.transform = 'translateY(-2px)';
-  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-}} onMouseLeave={(e) => {
-  e.currentTarget.style.backgroundColor = '#0D102D';
-  e.currentTarget.style.transform = 'translateY(0)';
-  e.currentTarget.style.boxShadow = 'none';
-}}>
-  <img src="/img/metamask.svg" alt="MetaMask" style={{width: '20px', height: '20px', flexShrink: '0'}} />
-  <span>Add Lisk Mainnet to MetaMask</span>
-</button>
+<AddNetworkButton
+  networkConfig={{
+    chainId: '0x46F',
+    chainName: 'Lisk',
+    nativeCurrency: {
+      name: 'Ether',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpc.api.lisk.com'],
+    blockExplorerUrls: ['https://blockscout.lisk.com']
+  }}
+  buttonText="Add Lisk Mainnet to MetaMask"
+/>
 
 ### Essential Resources
 
@@ -638,6 +572,1112 @@ User Transaction
 - **Discord**: Join the Lisk developer community
 - **Twitter/X**: [@LiskHQ](https://twitter.com/LiskHQ)
 - **Forum**: Community discussions and support
+
+---
+
+## Part 11: Understanding Wallets - Your Gateway to Web3
+
+Before we dive into hands-on practice, let's understand the fundamental concepts that power your interaction with blockchain: wallets, keys, and accounts.
+
+### What is a Wallet?
+
+A **crypto wallet** is NOT like a physical wallet that holds money. Instead, it's a tool that:
+- **Stores your keys** (not your actual crypto)
+- **Manages your accounts** on the blockchain
+- **Signs transactions** to prove you own an account
+- **Interacts with blockchain networks**
+
+**Important**: Your crypto isn't "in" your wallet - it's on the blockchain. Your wallet just proves you own it!
+
+### Real-World Analogy: The Mailbox System
+
+Think of blockchain wallets like a mailbox system:
+
+```
+🏠 Your House = The Blockchain
+📬 Mailbox = Your Account/Address (0x123...)
+🔑 Mailbox Key = Your Private Key
+📮 Mailbox Number = Your Public Address
+```
+
+- **The mailbox (address)** is visible to everyone and where people send you mail (crypto)
+- **The mailbox key (private key)** is secret and only you can open the mailbox
+- **Anyone can see the mailbox number** to send you mail
+- **But only you with the key** can open it and take things out
+
+---
+
+## Part 12: Private Key, Public Key, and Address
+
+Understanding the relationship between these three concepts is crucial for blockchain security.
+
+### The Key Generation Process
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Step 1: Generate Private Key (Random Number)      │
+│                                                     │
+│  Private Key (Secret, 256-bit number):             │
+│  0xf8f8a2f43c8376ccb0871305060d7b27b0554d2cc72bccf41b2705608452f315│
+│                                                     │
+│  ⚠️  NEVER SHARE THIS - It's like your password!   │
+└─────────────────────────────────────────────────────┘
+                        │
+                        │ Cryptographic Math (ECDSA)
+                        ↓
+┌─────────────────────────────────────────────────────┐
+│  Step 2: Derive Public Key                         │
+│                                                     │
+│  Public Key (Can be shared):                       │
+│  0x04a598a8030da6d86c6bc7f2f5144544beb2dd0d4e8eef320e38a0c81ff9482c52ae7acf8374d4e8f7d6c7d8a7b6c5d4e3f2a1b9c8d7e6f5a4b3c2d1e0f│
+│                                                     │
+│  ✅ Can be shared publicly                         │
+└─────────────────────────────────────────────────────┘
+                        │
+                        │ Hashing (Keccak-256) + Take last 20 bytes
+                        ↓
+┌─────────────────────────────────────────────────────┐
+│  Step 3: Create Address                            │
+│                                                     │
+│  Address (Your public identifier):                 │
+│  0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4      │
+│                                                     │
+│  ✅ This is what you share to receive funds        │
+└─────────────────────────────────────────────────────┘
+```
+
+### Breaking Down Each Component
+
+#### 1. Private Key (Your Secret) 🔐
+
+**What it is**:
+- A 256-bit random number (64 hexadecimal characters)
+- Example: `0xf8f8a2f43c8376ccb0871305060d7b27b0554d2cc72bccf41b2705608452f315`
+
+**What it does**:
+- Proves you own an account
+- Signs transactions to authorize them
+- Can derive EVERYTHING else (public key, address)
+
+**Security Rules**:
+- ❌ NEVER share it with anyone
+- ❌ NEVER enter it on any website
+- ❌ NEVER take a screenshot of it
+- ❌ NEVER store it in cloud storage unencrypted
+- ✅ Store it offline (hardware wallet or encrypted backup)
+
+**Real-world analogy**: Your house key - if someone else gets it, they can enter your house and take everything.
+
+#### 2. Public Key (Derived from Private Key) 🔓
+
+**What it is**:
+- A point on an elliptic curve derived from your private key
+- 128 hexadecimal characters
+- Generated using **ECDSA** (Elliptic Curve Digital Signature Algorithm)
+
+**What it does**:
+- Used to verify your digital signatures
+- Proves a transaction was signed by the owner of the private key
+- Not typically shared directly (the address is used instead)
+
+**Key Property**:
+- You can derive the public key FROM the private key
+- But you CANNOT derive the private key from the public key
+- This is **one-way cryptography**!
+
+**Real-world analogy**: Your signature style - people can verify it's your signature, but they can't forge it without your hand.
+
+#### 3. Address (Your Public Identifier) 📮
+
+**What it is**:
+- A 40-character hexadecimal string (42 with '0x' prefix)
+- Example: `0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4`
+- Created by hashing your public key and taking the last 20 bytes
+
+**What it does**:
+- Identifies your account on the blockchain
+- Where others send you crypto
+- Displayed in block explorers and wallets
+
+**Usage**:
+- ✅ Safe to share publicly
+- ✅ Post on social media
+- ✅ Use to receive payments
+- ✅ Display on your website
+
+**Real-world analogy**: Your email address - everyone can see it and send you things, but only you can access what's inside.
+
+### The Mathematical Magic: One-Way Functions
+
+```
+Private Key --[ECDSA]--> Public Key --[Keccak-256]--> Address
+
+✅ Forward is easy and fast
+❌ Reverse is computationally impossible
+```
+
+**Why this matters**:
+- Even if someone knows your address, they can't work backwards to find your private key
+- This is the foundation of blockchain security
+- Protected by mathematics, not by trusting a company
+
+### Seed Phrase: The Master Backup 📝
+
+Most wallets use a **seed phrase** (also called recovery phrase or mnemonic):
+
+**What it is**:
+- A list of 12 or 24 random words
+- Example: `witch collapse practice feed shame open despair creek road again ice least`
+
+**How it works**:
+```
+Seed Phrase (12-24 words)
+        │
+        ├─> Account 1: 0x742d35Cc...
+        ├─> Account 2: 0x8f3b2e1d...
+        ├─> Account 3: 0xa2c4f7b9...
+        └─> ... (millions more possible)
+```
+
+**Important Properties**:
+- Can generate multiple accounts from one seed phrase
+- Wallets use a standard called **BIP-39** (Bitcoin Improvement Proposal 39)
+- The same seed phrase will ALWAYS generate the same accounts
+- This is how you "recover" your wallet on a new device
+
+**Security Rules**:
+- ❌ NEVER share it
+- ❌ NEVER store it digitally (no screenshots, no cloud)
+- ✅ Write it on paper
+- ✅ Store in a safe place
+- ✅ Consider metal backups for fire/water resistance
+
+---
+
+## Part 13: Wallet Implementation Types
+
+Not all wallets work the same way. Let's explore the different types based on how they store and manage your keys.
+
+### 1. Hot Wallets (Software Wallets) 🔥
+
+**Definition**: Wallets connected to the internet.
+
+#### Browser Extension Wallets
+
+**Examples**: MetaMask, Rabby, Coinbase Wallet
+
+**How they work**:
+- Install as browser extension
+- Store encrypted keys on your computer
+- Interact directly with websites
+- Inject web3 provider into browser
+
+**Pros**:
+- ✅ Convenient for daily use
+- ✅ Easy to interact with dApps
+- ✅ Quick transaction signing
+- ✅ Free to use
+
+**Cons**:
+- ❌ Vulnerable if computer is compromised
+- ❌ Subject to phishing attacks
+- ❌ Keys stored on internet-connected device
+
+**Best for**: Development, testing, small amounts, frequent transactions
+
+#### Mobile Wallets
+
+**Examples**: Trust Wallet, Argent, Rainbow
+
+**How they work**:
+- Mobile app on your phone
+- Keys stored in secure enclave (on iOS/Android)
+- QR code scanning for transactions
+- WalletConnect for dApp interaction
+
+**Pros**:
+- ✅ Portable and convenient
+- ✅ Biometric authentication (Face ID, fingerprint)
+- ✅ Hardware security features
+- ✅ Built-in dApp browser
+
+**Cons**:
+- ❌ Phone can be lost or stolen
+- ❌ Vulnerable to phone malware
+- ❌ Less secure than hardware wallets
+
+**Best for**: Medium amounts, mobile transactions, on-the-go access
+
+#### Web Wallets
+
+**Examples**: MyEtherWallet (MEW), MyCrypto
+
+**How they work**:
+- Access via web browser
+- Can work with hardware wallets
+- Generate keys in browser
+- Export private keys or keystore files
+
+**Pros**:
+- ✅ No installation required
+- ✅ Access from any device
+- ✅ Can integrate with hardware wallets
+
+**Cons**:
+- ❌ Vulnerable to phishing sites
+- ❌ Must trust the website
+- ❌ Risk of fake/malicious sites
+
+**Best for**: One-time transactions, working with hardware wallets
+
+### 2. Cold Wallets (Hardware Wallets) ❄️
+
+**Definition**: Wallets NOT connected to the internet.
+
+#### Hardware Wallets
+
+**Examples**: Ledger, Trezor, SafePal
+
+**How they work**:
+```
+┌─────────────────────┐
+│   Your Computer     │ ← Internet connected but NO private keys
+│   (MetaMask)        │
+└─────────────────────┘
+          │
+          │ USB/Bluetooth
+          │ (Transaction to sign)
+          ↓
+┌─────────────────────┐
+│  Hardware Wallet    │ ← Keys NEVER leave this device
+│  (Ledger/Trezor)    │
+│                     │
+│  [Confirm on Device]│ ← You physically press button
+└─────────────────────┘
+          │
+          │ Signed transaction (no keys exposed)
+          ↓
+     To Blockchain
+```
+
+**Pros**:
+- ✅ Private keys never touch internet-connected device
+- ✅ Physical confirmation required for transactions
+- ✅ Protected against malware
+- ✅ Best security for large amounts
+- ✅ Supports multiple cryptocurrencies
+
+**Cons**:
+- ❌ Costs money ($50-200+)
+- ❌ Less convenient for frequent transactions
+- ❌ Can be lost (but recoverable with seed phrase)
+- ❌ Requires physical device
+
+**Best for**: Large amounts, long-term storage, maximum security
+
+#### Paper Wallets
+
+**What they are**:
+- Private key/seed phrase written on paper
+- QR codes for easy scanning
+- Completely offline
+
+**Pros**:
+- ✅ Completely immune to hacking
+- ✅ No cost
+- ✅ Simple concept
+
+**Cons**:
+- ❌ Paper can be damaged/destroyed
+- ❌ Can be lost or stolen
+- ❌ Risk when generating (must be on secure computer)
+- ❌ Difficult to use (must import to software wallet)
+- ❌ Generally considered outdated
+
+**Best for**: Long-term storage, gifts, backups (use hardware wallet instead if possible)
+
+### 3. Custodial vs Non-Custodial Wallets
+
+#### Non-Custodial Wallets (Self-Custody) 🔐
+
+**Examples**: MetaMask, Ledger, Trust Wallet
+
+**How it works**:
+- **You control your private keys**
+- **You are responsible** for security
+- **No one else** can access your funds
+- **No one can recover** your keys if lost
+
+**The principle**: "Not your keys, not your crypto"
+
+**Pros**:
+- ✅ True ownership
+- ✅ No one can freeze your account
+- ✅ No permission needed to transact
+- ✅ Privacy
+
+**Cons**:
+- ❌ You're responsible for security
+- ❌ No recovery if you lose keys
+- ❌ Must understand how it works
+
+**Best for**: Those who want true ownership, understand security, and can manage keys responsibly
+
+#### Custodial Wallets (Third-Party Custody) 🏦
+
+**Examples**: Coinbase, Binance, Crypto.com
+
+**How it works**:
+- **Company controls your private keys**
+- **You trust them** to secure your funds
+- **They can freeze** your account
+- **They can help recover** if you forget password
+
+**Think of it like**: A traditional bank account
+
+**Pros**:
+- ✅ Easy to use
+- ✅ Customer support
+- ✅ Password recovery
+- ✅ Familiar experience
+- ✅ Often includes insurance
+
+**Cons**:
+- ❌ Not your keys, not your crypto
+- ❌ Can freeze/limit your account
+- ❌ Requires KYC (identity verification)
+- ❌ Subject to regulations and government seizure
+- ❌ Exchange could be hacked or go bankrupt
+
+**Best for**: Beginners, those who want convenience over control, trading frequently
+
+### Security Comparison Table
+
+| Wallet Type | Security Level | Convenience | Best For |
+|-------------|----------------|-------------|----------|
+| Hardware Wallet | ⭐⭐⭐⭐⭐ | ⭐⭐ | Large amounts, long-term |
+| Mobile Wallet | ⭐⭐⭐ | ⭐⭐⭐⭐ | Daily use, medium amounts |
+| Browser Extension | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | dApp interaction, development |
+| Custodial Exchange | ⭐⭐ | ⭐⭐⭐⭐⭐ | Trading, beginners |
+| Paper Wallet | ⭐⭐⭐⭐ | ⭐ | Long-term storage (outdated) |
+
+---
+
+## Part 14: Account Types on Ethereum
+
+Ethereum has two fundamentally different types of accounts, each serving different purposes.
+
+### The Two Account Types
+
+```
+┌─────────────────────────────────────────────────┐
+│          ETHEREUM ACCOUNTS                      │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌──────────────────────┐  ┌─────────────────┐│
+│  │ Externally Owned     │  │ Contract        ││
+│  │ Account (EOA)        │  │ Account         ││
+│  │                      │  │                 ││
+│  │ Controlled by        │  │ Controlled by   ││
+│  │ Private Key          │  │ Smart Contract  ││
+│  │                      │  │ Code            ││
+│  └──────────────────────┘  └─────────────────┘│
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+### 1. Externally Owned Account (EOA) 👤
+
+**Definition**: An account controlled by a private key (the one you've been using!).
+
+#### How EOAs Work
+
+```
+┌────────────────────────────────────┐
+│  EOA: 0x742d35Cc6634C0532925a...   │
+│                                    │
+│  ├─ Balance: 1.5 ETH               │
+│  ├─ Nonce: 42                      │
+│  │  (transaction count)            │
+│  └─ No Code                        │
+│                                    │
+│  Controlled by:                    │
+│  Private Key: 0xf8f8a2f43c...      │
+└────────────────────────────────────┘
+```
+
+#### Characteristics
+
+**Structure**:
+- Has an **address** (0x...)
+- Has a **balance** (amount of ETH)
+- Has a **nonce** (transaction counter)
+- Has **NO CODE**
+
+**Control**:
+- Controlled by whoever holds the **private key**
+- Can **initiate transactions**
+- Can **sign messages**
+
+**What it can do**:
+- ✅ Send ETH to other accounts
+- ✅ Deploy smart contracts
+- ✅ Call smart contract functions
+- ✅ Sign transactions
+- ✅ Hold tokens (ERC-20, NFTs)
+
+**Examples**:
+- Your MetaMask account
+- Hardware wallet account
+- Any wallet you create
+
+#### Real-World Analogy
+
+Think of an EOA like a **person with a debit card**:
+- You (private key holder) initiate actions
+- You sign transactions to approve them
+- You decide when and where to send money
+- The bank (blockchain) validates your signature
+
+### 2. Contract Account (Smart Contract) 📄
+
+**Definition**: An account controlled by smart contract code deployed on the blockchain.
+
+#### How Contract Accounts Work
+
+```
+┌────────────────────────────────────┐
+│  Contract: 0x3f5CE5FBFe3E9af...    │
+│                                    │
+│  ├─ Balance: 100 ETH               │
+│  ├─ Nonce: 1                       │
+│  ├─ Code: Smart Contract           │
+│  │         (Immutable Logic)       │
+│  └─ Storage: Contract State        │
+│                                    │
+│  No Private Key!                   │
+│  Executes when triggered           │
+└────────────────────────────────────┘
+```
+
+#### Characteristics
+
+**Structure**:
+- Has an **address** (0x...)
+- Has a **balance** (amount of ETH)
+- Has a **nonce** (deployment counter)
+- Has **CODE** (smart contract logic)
+- Has **STORAGE** (contract state/data)
+
+**Control**:
+- Controlled by its **code** (the smart contract)
+- **NO private key** exists
+- **Cannot initiate transactions** on its own
+- Only executes when **triggered by an EOA or another contract**
+
+**What it can do**:
+- ✅ Hold ETH and tokens
+- ✅ Execute code when called
+- ✅ Store data permanently
+- ✅ Call other contracts
+- ✅ Receive and send ETH (if coded to do so)
+- ✅ Emit events
+- ❌ Cannot initiate transactions on its own
+
+**Examples**:
+- ERC-20 token contracts (USDC, DAI)
+- NFT contracts (CryptoPunks, Bored Apes)
+- DeFi protocols (Uniswap, Aave)
+- Multi-signature wallets
+- DAO contracts
+
+#### Real-World Analogy
+
+Think of a contract account like a **vending machine**:
+- It has rules (code) that determine what it does
+- It holds money (ETH/tokens)
+- It only acts when someone interacts with it (you insert coins)
+- It follows its programming exactly
+- No one has a "key" to override it
+
+### Key Differences: EOA vs Contract Account
+
+| Feature | EOA (Externally Owned) | Contract Account |
+|---------|----------------------|------------------|
+| **Controlled By** | Private Key | Smart Contract Code |
+| **Can Initiate Transactions** | ✅ Yes | ❌ No |
+| **Has Code** | ❌ No | ✅ Yes |
+| **Creation Cost** | Free | Costs gas to deploy |
+| **Can Hold ETH** | ✅ Yes | ✅ Yes |
+| **Can Hold Tokens** | ✅ Yes | ✅ Yes |
+| **Address Format** | 0x... (derived from public key) | 0x... (derived from deployer + nonce) |
+| **Nonce Usage** | Counts transactions sent | Counts contracts created |
+| **Examples** | MetaMask wallet | Uniswap, USDC token |
+
+### How They Interact
+
+```
+User (You)
+    │
+    │ Controls with Private Key
+    ↓
+┌─────────────────┐
+│   EOA           │ ─────────→ Can send ETH directly
+│ (Your Wallet)   │              to another EOA
+└─────────────────┘
+    │
+    │ Calls/Triggers
+    ↓
+┌─────────────────┐
+│   Contract      │ ─────────→ Can call other
+│ (Smart Contract)│              contracts
+└─────────────────┘
+    │
+    │ Can trigger (if programmed)
+    ↓
+┌─────────────────┐
+│   Another       │
+│   Contract      │
+└─────────────────┘
+```
+
+**Important Flow**:
+1. **All transactions must originate from an EOA**
+2. EOAs can call contracts
+3. Contracts can call other contracts (when triggered)
+4. Contracts **cannot** initiate transactions on their own
+
+### Advanced: Account Abstraction & Smart Contract Wallets 🚀
+
+There's a new evolution happening: making wallets themselves be smart contracts!
+
+#### Traditional Account (EOA)
+
+```
+User → Private Key → Signs Transaction → Blockchain
+                      ↑
+                 Fixed Rules
+          (Must pay gas in ETH)
+        (Simple signature scheme)
+```
+
+#### Smart Contract Wallet (Account Abstraction)
+
+```
+User → Multiple Auth Methods → Smart Contract Wallet → Blockchain
+       (Keys, Biometrics,             ↑
+        Social Recovery)         Custom Logic!
+                            (Gas in any token)
+                       (Multi-sig, spending limits)
+                            (Social recovery)
+```
+
+#### Examples of Smart Contract Wallets
+
+**1. Multi-Signature Wallets (Multi-Sig)**
+
+**How it works**:
+- Requires multiple private keys to approve transactions
+- Example: 3 owners, need 2 signatures to send funds (2-of-3 multi-sig)
+
+**Use case**: Company treasury, shared funds, enhanced security
+
+**Example**: Gnosis Safe
+
+**2. Social Recovery Wallets**
+
+**How it works**:
+- Choose trusted "guardians" (friends, family)
+- If you lose your key, guardians can help you recover
+- No single person can steal your funds
+
+**Use case**: Better than seed phrases for average users
+
+**Example**: Argent wallet
+
+**3. Programmable Wallets**
+
+**Features**:
+- Daily spending limits
+- Automatic payments
+- DeFi automation
+- Gas paid in any token (not just ETH)
+- Batched transactions
+
+**Use case**: Advanced DeFi users, businesses
+
+**Example**: Safe\{Wallet\}, Argent
+
+#### Benefits of Smart Contract Wallets
+
+**Security**:
+- ✅ Multi-signature protection
+- ✅ Social recovery (no seed phrase to lose)
+- ✅ Spending limits
+- ✅ Whitelisted addresses
+- ✅ Time locks
+
+**User Experience**:
+- ✅ Pay gas in any token (USDC, DAI, etc.)
+- ✅ Batch multiple transactions
+- ✅ Automated transactions
+- ✅ Better recovery options
+
+**Flexibility**:
+- ✅ Upgradeable logic
+- ✅ Custom rules
+- ✅ Session keys (temporary permissions)
+
+#### Challenges & Trade-offs
+
+**Current Limitations**:
+- ❌ Higher gas costs (contract execution)
+- ❌ More complex to set up
+- ❌ Not all dApps support them yet
+- ❌ Requires initial deployment cost
+
+**The Future**: ERC-4337 (Account Abstraction Standard)
+- Making smart contract wallets work everywhere
+- Better user experience than traditional EOAs
+- Will gradually become the standard
+
+### Quick Decision Guide: Which Account Type?
+
+**Use an EOA (Traditional Wallet) if**:
+- ✅ You're just getting started
+- ✅ You want simplicity
+- ✅ You need broad compatibility
+- ✅ You're okay managing private keys
+
+**Use a Smart Contract Wallet if**:
+- ✅ You want social recovery
+- ✅ You need multi-signature
+- ✅ You want advanced features (spending limits, etc.)
+- ✅ You're managing significant funds
+- ✅ You want better security
+
+**Most people start with EOA (MetaMask) and later explore smart contract wallets for advanced needs!**
+
+---
+
+## Part 15: Understanding Gas and Transactions
+
+Now that you understand wallets and accounts, let's dive into how transactions actually work and what "gas" really means.
+
+### What is a Transaction?
+
+**Definition**: A signed message from an account that changes the state of the blockchain.
+
+#### Types of Transactions
+
+**1. Value Transfer**:
+```
+Send 0.5 ETH from 0xABC... to 0xXYZ...
+```
+
+**2. Contract Deployment**:
+```
+Deploy a new smart contract to the blockchain
+```
+
+**3. Contract Interaction**:
+```
+Call a function on a smart contract
+(e.g., swap tokens on Uniswap)
+```
+
+### Anatomy of a Transaction
+
+```
+┌─────────────────────────────────────────────┐
+│            TRANSACTION                      │
+├─────────────────────────────────────────────┤
+│                                             │
+│  From: 0x742d35Cc6634C0532925a3b844Bc...  │  ← Sender (your address)
+│  To: 0x3f5CE5FBFe3E9af3B33d4e456Cd3...    │  ← Receiver (address or contract)
+│  Value: 0.5 ETH                            │  ← Amount of ETH to send
+│  Data: 0xa9059cbb000000000000000...        │  ← Contract function call (if any)
+│  Gas Limit: 21000                          │  ← Max gas you're willing to use
+│  Max Fee: 50 Gwei                          │  ← Max price per gas unit
+│  Nonce: 42                                 │  ← Transaction number
+│  Signature: 0x8f3b2e1d4c5a6f7b8...        │  ← Proof you authorized this
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+**Let's break down each field**:
+
+#### 1. From (Sender)
+- Your account address
+- Automatically filled by your wallet
+- Must have enough balance for value + gas
+
+#### 2. To (Receiver)
+- Destination address
+- Can be another EOA or a contract
+- Empty (null) if deploying a new contract
+
+#### 3. Value
+- Amount of ETH to send
+- Can be 0 (for contract calls without payment)
+- Denominated in Wei (1 ETH = 10^18 Wei)
+
+#### 4. Data (Input Data)
+- Empty for simple ETH transfers
+- Contains **encoded function call** for contract interactions
+- Example: `transfer(address,uint256)` becomes `0xa9059cbb...`
+
+#### 5. Gas Limit
+- Maximum computational work you authorize
+- If set too low, transaction fails but you still pay gas
+- If set too high, only actual gas used is charged
+
+#### 6. Gas Price / Max Fee
+- How much you pay per unit of gas
+- Denominated in **Gwei** (1 Gwei = 10^-9 ETH)
+- Higher price = faster confirmation (miners prioritize)
+
+#### 7. Nonce
+- Transaction counter for your account
+- Prevents "replay attacks"
+- Must be sequential (0, 1, 2, 3...)
+
+#### 8. Signature
+- Cryptographic proof you authorized this transaction
+- Created by signing the transaction with your private key
+- Allows anyone to verify it came from you
+
+### What is Gas?
+
+**Definition**: Gas is the unit that measures the computational work required to execute operations on Ethereum.
+
+#### The Gas System: A Restaurant Analogy
+
+Think of gas like ordering food at a restaurant:
+
+```
+┌────────────────────────────────────────────┐
+│         🍽️  RESTAURANT ANALOGY             │
+├────────────────────────────────────────────┤
+│                                            │
+│  Menu Item       = Operation              │
+│  (Simple Salad)    (Simple transaction)   │
+│                                            │
+│  Price per Item  = Gas Price (Gwei)       │
+│  ($10/dish)        (50 Gwei per gas)      │
+│                                            │
+│  Number of Items = Gas Limit              │
+│  (Order 3 dishes)  (Need 21000 gas)       │
+│                                            │
+│  Total Bill      = Transaction Fee        │
+│  ($30 total)       (21000 × 50 Gwei)      │
+│                                            │
+│  Tip             = Priority Fee           │
+│  (Fast service)    (Faster confirmation)  │
+│                                            │
+└────────────────────────────────────────────┘
+```
+
+#### Gas Components
+
+**1. Gas Limit** (How much work is needed):
+- Each operation costs a specific amount of gas
+- Simple ETH transfer: **21,000 gas**
+- Token transfer: ~65,000 gas
+- Complex DeFi swap: 150,000-500,000 gas
+
+**Common Operations and Their Gas Costs**:
+```
+Operation                      Gas Cost
+─────────────────────────────────────────
+Send ETH (simple transfer)     21,000
+ERC-20 token transfer          ~65,000
+Uniswap token swap             ~150,000
+Deploy simple contract         ~200,000+
+Deploy complex contract        ~2,000,000+
+Mint an NFT                    ~80,000
+```
+
+**2. Gas Price** (How much you pay per unit):
+- Measured in **Gwei** (gigawei)
+- 1 Gwei = 0.000000001 ETH = 10^-9 ETH
+- Varies based on network congestion
+- Higher price = faster confirmation
+
+**Typical Gas Prices**:
+```
+Network State          Gas Price
+──────────────────────────────────
+🟢 Not Busy           5-20 Gwei
+🟡 Moderate           20-50 Gwei
+🔴 Congested          50-100 Gwei
+🔥 Very Busy          100+ Gwei
+```
+
+**3. Transaction Fee** (Your total cost):
+```
+Transaction Fee = Gas Used × Gas Price
+
+Example:
+─────────────────────────────────────
+Gas Used: 21,000
+Gas Price: 50 Gwei
+
+Fee = 21,000 × 50 Gwei
+    = 1,050,000 Gwei
+    = 0.00105 ETH
+
+If ETH = $2,000:
+Fee = $2.10
+```
+
+### EIP-1559: Modern Gas System
+
+Since August 2021, Ethereum uses a new gas system called **EIP-1559**:
+
+#### Old System (Pre-EIP-1559):
+```
+You set: Gas Price (one value)
+```
+
+#### New System (EIP-1559):
+```
+┌──────────────────────────────────────┐
+│  Base Fee (automatic)                │  ← Set by protocol (burned 🔥)
+│  +                                   │
+│  Priority Fee (your tip)             │  ← You set (goes to validators)
+│  =                                   │
+│  Max Fee Per Gas (your maximum)      │  ← You set (protection)
+└──────────────────────────────────────┘
+```
+
+**Components**:
+
+1. **Base Fee** (Required):
+   - Set automatically by the network
+   - Burned (removed from circulation) 🔥
+   - Increases when network is busy
+   - Decreases when network is idle
+
+2. **Priority Fee** (Your Tip):
+   - Extra you pay to validators
+   - Incentivizes faster inclusion
+   - You control this amount
+
+3. **Max Fee Per Gas** (Your Protection):
+   - Maximum you're willing to pay
+   - If base fee + priority fee < max fee, you only pay actual
+   - Prevents overpaying if network spikes
+
+**Example**:
+```
+Base Fee: 30 Gwei (burned)
+Priority Fee: 2 Gwei (to validator)
+Max Fee: 100 Gwei (your protection)
+
+Actual Fee Per Gas: 30 + 2 = 32 Gwei ✅
+(Lower than your max of 100 Gwei)
+
+Total Cost: 21,000 × 32 Gwei = 0.000672 ETH
+```
+
+### Gas on Layer 2 (Lisk)
+
+**Why L2 is cheaper**:
+
+```
+Layer 1 (Ethereum Mainnet):
+────────────────────────────────
+Send ETH: 21,000 gas × 50 Gwei
+Cost: $2-10+ per transaction 💸
+
+Layer 2 (Lisk):
+────────────────────────────────
+Send ETH: 21,000 gas × 0.001 Gwei
+Cost: $0.001-0.01 per transaction ✨
+```
+
+**Why the difference?**
+1. **Less competition**: Fewer users per L2 network
+2. **Batching**: Many L2 transactions combined into one L1 transaction
+3. **Optimized execution**: Better efficiency
+4. **Data compression**: Reduced data posted to L1
+
+### Real-World Transaction Examples
+
+#### Example 1: Simple ETH Transfer on Lisk
+
+```
+┌──────────────────────────────────────────────┐
+│  TRANSACTION: Send ETH to Friend             │
+├──────────────────────────────────────────────┤
+│  From: 0x742d...                            │
+│  To: 0x8f3b...                              │
+│  Amount: 0.1 ETH                            │
+│  Gas Limit: 21,000                          │
+│  Gas Price: 0.001 Gwei                      │
+│                                              │
+│  Cost Breakdown:                             │
+│  ─────────────────────────────────────       │
+│  Transfer Amount: 0.1 ETH                   │
+│  Gas Fee: 0.000000021 ETH                   │
+│  ─────────────────────────────────────       │
+│  Total: 0.100000021 ETH                     │
+│                                              │
+│  In USD (ETH = $2000): $200.00004           │
+│  Gas cost: Less than $0.0001! 🎉            │
+└──────────────────────────────────────────────┘
+```
+
+#### Example 2: Token Swap on Uniswap (L1 vs L2)
+
+```
+┌──────────────────────────────────────────────┐
+│  Ethereum L1                                 │
+├──────────────────────────────────────────────┤
+│  Swap: 1000 USDC → ETH                      │
+│  Gas Limit: 180,000                         │
+│  Gas Price: 50 Gwei                         │
+│  Fee: 180,000 × 50 = 9,000,000 Gwei        │
+│       = 0.009 ETH = $18 💸                  │
+└──────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────┐
+│  Lisk L2                                     │
+├──────────────────────────────────────────────┤
+│  Swap: 1000 USDC → ETH                      │
+│  Gas Limit: 180,000                         │
+│  Gas Price: 0.001 Gwei                      │
+│  Fee: 180,000 × 0.001 = 180 Gwei           │
+│       = 0.00000018 ETH = $0.00036 ✨       │
+└──────────────────────────────────────────────┘
+
+💡 L2 is ~50,000× cheaper in this example!
+```
+
+### Transaction Lifecycle
+
+Let's follow a transaction from creation to confirmation:
+
+```
+Step 1: Create Transaction
+│  User: "I want to send 0.5 ETH"
+│  Wallet fills in details (from, to, value, gas, nonce)
+↓
+
+Step 2: Sign Transaction
+│  Wallet: "Please confirm"
+│  User: Clicks "Confirm"
+│  Wallet signs with private key
+↓
+
+Step 3: Broadcast to Network
+│  Wallet sends to RPC node
+│  Node broadcasts to mempool
+│  Other nodes receive transaction
+↓
+
+Step 4: Waiting in Mempool
+│  Transaction sits in "pending" state
+│  Validators/Miners see it
+│  Higher gas price = higher priority
+↓
+
+Step 5: Included in Block
+│  Validator picks your transaction
+│  Executes the transaction
+│  Includes it in a block
+↓
+
+Step 6: Block Confirmation
+│  Block added to blockchain
+│  Your transaction has "1 confirmation"
+│  More blocks = more confirmations
+↓
+
+Step 7: Finalized
+│  After enough confirmations (varies by use case):
+│    - Exchanges: 12-20 confirmations
+│    - Small transactions: 1-3 confirmations
+│    - Large amounts: 20+ confirmations
+│  On Lisk L2: Usually 1-2 seconds!
+```
+
+### Transaction States
+
+```
+┌─────────────────────────────────────────┐
+│  PENDING (in mempool)                   │
+│  ⏳ Waiting to be included in a block   │
+│  ↓                                      │
+│  CONFIRMED (in block)                   │
+│  ✅ Included in the blockchain          │
+│  ↓                                      │
+│  FINAL (enough confirmations)           │
+│  🔒 Irreversible                        │
+└─────────────────────────────────────────┘
+
+Special States:
+─────────────────
+❌ FAILED: Transaction executed but reverted
+   (You still pay gas!)
+
+⏰ DROPPED: Transaction never included
+   (Usually due to low gas price or nonce issues)
+
+⚠️ REPLACED: You sent a new transaction with
+   same nonce but higher gas price
+```
+
+### Common Gas-Related Issues & Solutions
+
+#### Issue 1: "Out of Gas"
+```
+Problem: Gas limit too low for operation
+Solution: Increase gas limit
+         (MetaMask usually estimates correctly)
+```
+
+#### Issue 2: "Transaction Pending Forever"
+```
+Problem: Gas price too low during busy network
+Solution:
+  - Wait it out
+  - Speed up transaction (send with higher gas)
+  - Cancel transaction (send 0 ETH to yourself with same nonce)
+```
+
+#### Issue 3: "Nonce Too Low"
+```
+Problem: You already used that nonce
+Solution: Wait for pending transaction to confirm
+          or reset MetaMask account (Settings > Advanced > Reset Account)
+```
+
+#### Issue 4: "Transaction Failed But I Paid Gas"
+```
+Problem: Transaction was included but execution failed
+Explanation: Gas pays for computational work
+            Even failed computation uses resources
+Solution: Check contract/transaction details
+          Fix the issue and try again
+```
+
+### Gas Optimization Tips
+
+**For Users**:
+1. ✅ **Use Layer 2** (Lisk, Arbitrum, Optimism) whenever possible
+2. ✅ **Time your transactions** - use gas trackers (ethgasstation.info)
+3. ✅ **Batch transactions** when possible
+4. ✅ **Approve unlimited** for tokens you trust (saves gas on future transactions)
+5. ✅ **Avoid peak hours** (US business hours = more expensive)
+
+**For Developers**:
+1. ✅ Optimize contract code
+2. ✅ Use efficient data structures
+3. ✅ Minimize storage writes
+4. ✅ Use events instead of storage when possible
+5. ✅ Consider upgradeable patterns carefully
 
 ---
 
