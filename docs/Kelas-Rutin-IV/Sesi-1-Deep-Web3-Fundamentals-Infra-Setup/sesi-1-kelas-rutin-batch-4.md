@@ -554,6 +554,8 @@ Lisk adalah jaringan **Layer 2 (L2)** yang sangat efisien, sangat cepat, dan mud
 
 **Informasi Jaringan:**
 
+import AddNetworkButton from '@site/src/components/AddNetworkButton';
+
 **Lisk Sepolia Testnet** (untuk pengembangan):
 - Nama Jaringan: Lisk Sepolia
 - RPC URL: `https://rpc.sepolia-api.lisk.com`
@@ -561,12 +563,42 @@ Lisk adalah jaringan **Layer 2 (L2)** yang sangat efisien, sangat cepat, dan mud
 - Simbol Mata Uang: `ETH`
 - Block Explorer: `https://sepolia-blockscout.lisk.com`
 
+<AddNetworkButton
+  networkConfig={{
+    chainId: '0x106A',
+    chainName: 'Lisk Sepolia',
+    nativeCurrency: {
+      name: 'Sepolia Ether',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpc.sepolia-api.lisk.com'],
+    blockExplorerUrls: ['https://sepolia-blockscout.lisk.com']
+  }}
+  buttonText="Add Lisk Sepolia to MetaMask"
+/>
+
 **Lisk Mainnet** (untuk produksi):
 - Nama Jaringan: Lisk
 - RPC URL: `https://rpc.api.lisk.com`
 - Chain ID: `1135`
 - Simbol Mata Uang: `ETH`
 - Block Explorer: `https://blockscout.lisk.com`
+
+<AddNetworkButton
+  networkConfig={{
+    chainId: '0x46F',
+    chainName: 'Lisk',
+    nativeCurrency: {
+      name: 'Ether',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpc.api.lisk.com'],
+    blockExplorerUrls: ['https://blockscout.lisk.com']
+  }}
+  buttonText="Add Lisk Mainnet to MetaMask"
+/>
 
 ---
 
