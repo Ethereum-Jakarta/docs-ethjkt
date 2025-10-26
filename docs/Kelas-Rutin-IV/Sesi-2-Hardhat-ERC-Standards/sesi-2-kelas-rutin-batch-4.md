@@ -62,92 +62,575 @@ Modul ini dibagi menjadi dua bagian:
 
 ## PART A: Hardhat Quick Setup (30 menit)
 
-### 1.1 Mengapa Hardhat?
+Now let's set up a professional development environment using the latest Hardhat 3!
 
-**Remix vs Hardhat:**
+### Why Use Hardhat?
 
-| Aspek | Remix IDE | Hardhat |
-|-------|-----------|---------|
-| Belajar dasar | ✅ Sangat bagus | ⚠️ Butuh setup |
-| Testing | ⚠️ Manual | ✅ Automated |
-| Version control | ❌ Tidak ada | ✅ Git integration |
-| Team collaboration | ❌ Sulit | ✅ Mudah |
-| Professional workflow | ❌ Terbatas | ✅ Full featured |
+**Remix is great for learning, but Hardhat is better for:**
+- ✅ Writing automated tests
+- ✅ Deploying to multiple networks
+- ✅ Working with teams
+- ✅ Version control (Git)
+- ✅ Professional workflows
 
-**Kesimpulan**: Remix bagus untuk belajar, Hardhat untuk development serius.
+### Step 1: Install Prerequisites
+
+**You need:**
+- Node.js version 22 or higher
+- npm (comes with Node.js)
+- A code editor (VS Code recommended)
+
+**Check your version:**
+```bash
+node --version
+# Should show v22.0.0 or higher
+
+npm --version
+# Should show 7.0.0 or higher
+```
+
+**Don't have Node.js?**
+- Download from [https://nodejs.org](https://nodejs.org)
+- Choose the LTS version
+- Install it
+- Restart your terminal
 
 ---
 
-### 1.2 Setup Hardhat (Hands-on - 20 menit)
+### Step 2: Create Your Project
 
-> **⚠️ Catatan**: Pastikan Node.js v18+ sudah terinstall. Cek dengan `node --version`
-
-#### Step 1: Buat Project
-
+**1. Create a new folder:**
 ```bash
-# Buat folder dan masuk
-mkdir token-workshop
-cd token-workshop
+mkdir lisk-garden-hardhat
+cd lisk-garden-hardhat
+```
 
-# Init npm project
+**2. Initialize npm:**
+```bash
 npm init -y
-
-# Install Hardhat 3
-npm install --save-dev hardhat@^3.0.0
 ```
 
-#### Step 2: Init Hardhat
+**Explanation:**
+- `mkdir` = creates a new folder
+- `cd` = enters the folder
+- `npm init -y` = creates package.json (project config file)
+- `-y` = says "yes" to all questions automatically
 
+**3. Install Hardhat:**
 ```bash
-# Jalankan wizard
-npx hardhat init
+npm install --save-dev hardhat
 ```
 
-**Pilihan:**
-- Project type: `node-test-runner-viem`
-- ESM: `Y` (yes)
-- Install dependencies: `Y`
+**Explanation:**
+- `npm install` = downloads and installs packages
+- `--save-dev` = saves it as development dependency
+- Takes ~30 seconds to install
 
-#### Step 3: Konfigurasi Lisk Sepolia
+---
 
-**Install dotenv:**
+### Step 3: Initialize Hardhat Project
+
+**1. Run Hardhat initialization:**
+```bash
+npx hardhat --init
+```
+
+**2. You'll see the Hardhat 3 wizard:**
+
+```
+ _   _               _   _           _     _____
+| | | |             | | | |         | |   |____ |
+| |_| | __ _ _ __ __| |_| |__   __ _| |_      / /
+|  _  |/ _` | '__/ _` | '_ \ / _` | __|     \ \
+| | | | (_| | | | (_| | | | | (_| | |_  .___/ /
+\_| |_/\__,_|_|  \__,_|_| |_|\__,_|\__| \____/
+
+👷 Welcome to Hardhat v3.0.0 👷‍
+
+? Which version of Hardhat would you like to use? › hardhat-3
+? Where would you like to initialize the project? › .
+  Please provide either a relative or an absolute path: .
+
+? What type of project would you like to initialize? › node-test-runner-viem
+  Hardhat only supports ESM projects. Would you like to turn your project into ESM? (Y/n) › true
+✨ Template files copied ✨
+
+? You need to install the necessary dependencies using the following command:
+npm install --save-dev "@nomicfoundation/hardhat-toolbox-viem@^3.0.0" ...
+
+Do you want to run it now? (Y/n) › true
+```
+
+**3. Select these options:**
+- **Version**: Choose `hardhat-3` (latest!)
+- **Path**: Just press Enter (uses current directory)
+- **Project type**: Choose `node-test-runner-viem`
+- **Turn into ESM**: `Y` (yes - this is modern JavaScript)
+- **Install dependencies**: `Y` (yes)
+
+**Explanation:**
+- `hardhat-3` = the latest version (released 2025)
+- ESM = ECMAScript Modules (modern JavaScript standard)
+- `node-test-runner-viem` = uses Node.js built-in test runner + viem
+- Viem = modern, lightweight library (faster than ethers.js)
+
+**4. Wait for installation:**
+- Takes ~1-2 minutes
+- Installs 110+ packages
+- You'll see: `added 110 packages, and audited 170 packages in 37s`
+- Normal output - don't worry!
+
+**5. Installation complete when you see:**
+```
+✨ Dependencies installed ✨
+Give Hardhat a star on GitHub if you're enjoying it! 🌟✨
+
+https://github.com/NomicFoundation/hardhat
+```
+
+---
+
+### Step 4: Project Structure
+
+**After setup, you'll see:**
+```
+lisk-garden-hardhat/
+├── contracts/           # Your smart contracts go here
+│   └── Counter.sol     # Sample contract (delete this)
+│   └── Counter.t.sol   # Sample test in Solidity (delete this)
+├── ignition/           # Deployment scripts (Hardhat 3 Ignition)
+│   └── modules/
+│       └── Counter.ts  # Sample deployment (delete this)
+├── test/               # Test files in TypeScript
+│   └── Counter.ts      # Sample test (delete this)
+├── scripts/            # Custom scripts
+│   └── send-op-tx.ts   # Sample script (we'll create our own)
+├── node_modules/       # Installed packages (don't touch!)
+├── hardhat.config.ts   # Main configuration file
+├── package.json        # Project dependencies
+├── tsconfig.json       # TypeScript configuration
+└── .gitignore          # Git ignore file
+```
+
+**Explanation:**
+- `contracts/` = Solidity smart contracts go here
+- `Counter.sol` = sample contract using Hardhat 3 features
+- `Counter.t.sol` = Solidity test (Foundry-style, new in Hardhat 3!)
+- `ignition/modules/` = deployment scripts using Hardhat Ignition
+- `test/` = TypeScript/JavaScript tests
+- `scripts/` = custom automation scripts
+- `hardhat.config.ts` = network config, compiler settings (uses ESM imports)
+- `node_modules/` = installed packages (Git ignores this)
+
+**Note:** Hardhat 3 now supports both Solidity tests (`.t.sol`) AND TypeScript tests!
+
+---
+
+### Step 5: Add LiskGarden Contract
+
+**1. Delete the sample files:**
+```bash
+# Delete sample contracts
+rm contracts/Counter.sol
+rm contracts/Counter.t.sol
+
+# Delete sample deployment
+rm ignition/modules/Counter.ts
+
+# Delete sample test
+rm test/Counter.ts
+```
+
+**2. Create LiskGarden.sol:**
+```bash
+# On Windows:
+type nul > contracts/LiskGarden.sol
+
+# On Mac/Linux:
+touch contracts/LiskGarden.sol
+```
+
+**3. Copy your LiskGarden code:**
+- Open `contracts/LiskGarden.sol` in VS Code
+- Copy the complete LiskGarden contract from section 105 above
+- Paste it into the file
+- Save the file (Ctrl+S or Cmd+S)
+
+---
+
+### Step 6: Configure for Lisk Sepolia
+
+**1. Install dotenv (for secure keys):**
 ```bash
 npm install --save-dev dotenv
 ```
 
-**Buat file `.env`:**
-```env
-PRIVATE_KEY=your_private_key_tanpa_0x_prefix
+**Explanation:**
+- `dotenv` = loads secret keys from .env file
+- Keeps your private key safe (not in code!)
+
+**2. Create .env file:**
+```bash
+# On Windows:
+type nul > .env
+
+# On Mac/Linux:
+touch .env
 ```
 
-**Edit `hardhat.config.ts`:**
+**3. Add your private key to .env:**
+```env
+PRIVATE_KEY=your_private_key_here
+```
+
+**How to get your private key:**
+1. Open MetaMask
+2. Click the 3 dots → Account Details
+3. Click "Show private key"
+4. Enter your password
+5. Copy the private key
+6. Paste in .env file
+
+**⚠️ IMPORTANT:**
+- NEVER share your private key!
+- NEVER commit .env to Git!
+- The .gitignore already protects it
+
+**4. Update hardhat.config.ts:**
+
+Open `hardhat.config.ts` and replace everything with:
 
 ```typescript
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox-viem";
+import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
+import hardhatIgnitionViemPlugin from "@nomicfoundation/hardhat-ignition-viem";
+import hardhatVerify from "@nomicfoundation/hardhat-verify";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.30",
+  plugins: [hardhatToolboxViemPlugin, hardhatIgnitionViemPlugin, hardhatVerify],
+  solidity: {
+    version: "0.8.30",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   networks: {
     "lisk-sepolia": {
+      type: "http",
       url: "https://rpc.sepolia-api.lisk.com",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      accounts: [process.env.PRIVATE_KEY as string],
       chainId: 4202,
+    },
+  },
+  chainDescriptors: {
+    4202: {
+      name: "Lisk Sepolia",
+      blockExplorers: {
+        blockscout: {
+          name: "Blockscout",
+          url: "https://sepolia-blockscout.lisk.com/",
+          apiUrl: "https://sepolia-blockscout.lisk.com/api",
+        },
+      },
+    },
+  },
+  verify: {
+    blockscout: {
+      enabled: true,
     },
   },
 };
 
 export default config;
+
 ```
 
-**Test Setup:**
+**Explanation:**
+- `import` = loads packages (ESM/TypeScript style - new in Hardhat 3)
+- `hardhatToolboxViemPlugin` = viem-based toolbox for Hardhat 3
+- `hardhatIgnitionViemPlugin` = deployment plugin
+- `hardhatVerify` = verification plugin for block explorers
+- `plugins: [...]` = registers Hardhat 3 plugins
+- `dotenv.config()` = loads .env file
+- `solidity: "0.8.30"` = compiler version (matches our contract)
+- `optimizer: enabled: true` = makes contract use less gas
+- `type: "http"` = network type (required in Hardhat 3)
+- `networks: "lisk-sepolia"` = Lisk testnet configuration
+- `url` = RPC endpoint for Lisk Sepolia
+- `accounts` = your private key from .env
+- `chainId: 4202` = Lisk Sepolia chain ID
+- `chainDescriptors` = tells Hardhat about Lisk Sepolia's block explorer
+- `verify: { blockscout: { enabled: true } }` = enables Blockscout verification
+
+---
+
+### Step 7: Compile Your Contract
+
+**1. Compile:**
 ```bash
-# Compile contracts (akan error karena belum ada, tapi config sudah benar)
 npx hardhat compile
 ```
+
+**Explanation:**
+- Compiles your Solidity code to bytecode
+- Creates TypeScript types automatically
+- Checks for errors
+
+**2. You should see:**
+```
+Compiled 1 Solidity file successfully
+```
+
+**3. Check artifacts folder:**
+```
+artifacts/
+└── contracts/
+    └── LiskGarden.sol/
+        └── LiskGarden.json  # ABI and bytecode here!
+```
+
+---
+
+### Step 8: Write Deployment Script
+
+**1. Delete sample deployment:**
+```bash
+rm -rf ignition/modules/Lock.ts
+```
+
+**2. Create deployment script:**
+
+Create `ignition/modules/LiskGarden.ts`:
+
+```typescript
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+
+const LiskGardenModule = buildModule("LiskGardenModule", (m) => {
+  // Deploy LiskGarden contract
+  const liskGarden = m.contract("LiskGarden");
+
+  return { liskGarden };
+});
+
+export default LiskGardenModule;
+```
+
+**Explanation:**
+- `buildModule` = Hardhat Ignition's way to deploy
+- `m.contract("LiskGarden")` = deploys LiskGarden contract
+- No constructor parameters needed (our contract has empty constructor)
+- Returns the deployed contract instance
+
+---
+
+### Step 9: Get Test ETH
+
+**You need test ETH on Lisk Sepolia!**
+
+**Option 1: Direct Lisk Faucet**
+1. Go to [https://sepolia-faucet.lisk.com](https://sepolia-faucet.lisk.com)
+2. Paste your wallet address
+3. Click "Request tokens"
+4. Wait 30 seconds
+5. Check MetaMask!
+
+**Option 2: Bridge from Ethereum Sepolia**
+1. Get Sepolia ETH from [https://sepoliafaucet.com](https://sepoliafaucet.com)
+2. Go to [https://sepolia-bridge.lisk.com](https://sepolia-bridge.lisk.com)
+3. Bridge ETH from Sepolia to Lisk Sepolia
+4. Wait ~5 minutes
+
+---
+
+### Step 10: Deploy to Lisk Sepolia!
+
+**1. Deploy:**
+```bash
+npx hardhat ignition deploy ignition/modules/LiskGarden.ts --network lisk-sepolia
+```
+
+**Explanation:**
+- `ignition deploy` = Hardhat 3's new deployment system
+- `--network lisk-sepolia` = deploy to Lisk Sepolia (not local)
+
+**2. You'll see:**
+```
+✔ Confirm deploy to network lisk-sepolia (4202)? … yes
+
+Hardhat Ignition 🚀
+
+Deploying [ LiskGardenModule ]
+
+Batch #1
+  Executed LiskGardenModule#LiskGarden
+
+[ LiskGardenModule ] successfully deployed 🚀
+
+Deployed Addresses
+
+LiskGardenModule#LiskGarden - 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4
+```
+
+**3. SAVE YOUR CONTRACT ADDRESS!**
+- Copy the deployed address
+- You'll need it to interact with the contract
+
+---
+
+### Step 11: Verify Your Contract
+
+**Verify on block explorer so everyone can see your code:**
+
+```bash
+npx hardhat verify --network lisk-sepolia 0xYourContractAddress
+```
+
+**Replace `0xYourContractAddress` with your actual deployed address!**
+
+**You'll see:**
+```
+Successfully submitted source code for contract
+contracts/LiskGarden.sol:LiskGarden at 0x742d35Cc...
+https://sepolia-blockscout.lisk.com/address/0x742d35Cc...
+```
+
+**Explanation:**
+- `verify` = uploads source code to block explorer
+- People can read your code on Blockscout
+- Makes your contract trustworthy!
+
+---
+
+### Step 12: Interact with Your Contract
+
+**Create an interaction script:**
+
+Create `scripts/interact.ts`:
+
+```typescript
+import { ethers } from "hardhat";
+
+async function main() {
+  // Replace with your deployed contract address
+  const CONTRACT_ADDRESS = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4";
+
+  // Get contract instance
+  const LiskGarden = await ethers.getContractAt("LiskGarden", CONTRACT_ADDRESS);
+
+  console.log("LiskGarden contract:", CONTRACT_ADDRESS);
+  console.log("");
+
+  // Get plant counter
+  const plantCounter = await LiskGarden.plantCounter();
+  console.log("Total plants:", plantCounter.toString());
+
+  // Plant a seed (costs 0.001 ETH)
+  console.log("\n🌱 Planting a seed...");
+  const plantPrice = await LiskGarden.PLANT_PRICE();
+  const tx = await LiskGarden.plantSeed({ value: plantPrice });
+  await tx.wait();
+  console.log("✅ Seed planted! Transaction:", tx.hash);
+
+  // Get new plant ID
+  const newPlantCounter = await LiskGarden.plantCounter();
+  const plantId = newPlantCounter;
+  console.log("Your plant ID:", plantId.toString());
+
+  // Get plant details
+  const plant = await LiskGarden.getPlant(plantId);
+  console.log("\n🌿 Plant details:");
+  console.log("  - ID:", plant.id.toString());
+  console.log("  - Owner:", plant.owner);
+  console.log("  - Stage:", plant.stage, "(0=SEED, 1=SPROUT, 2=GROWING, 3=BLOOMING)");
+  console.log("  - Water Level:", plant.waterLevel.toString());
+  console.log("  - Is Alive:", plant.isAlive);
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+```
+
+**Run it:**
+```bash
+npx hardhat run scripts/interact.ts --network lisk-sepolia
+```
+
+**You'll see:**
+```
+LiskGarden contract: 0x742d35Cc...
+
+Total plants: 0
+
+🌱 Planting a seed...
+✅ Seed planted! Transaction: 0xabc123...
+Your plant ID: 1
+
+🌿 Plant details:
+  - ID: 1
+  - Owner: 0xYourAddress
+  - Stage: 0 (SEED)
+  - Water Level: 100
+  - Is Alive: true
+```
+
+---
+
+## Hardhat Commands Cheat Sheet
+
+```bash
+# Compile contracts
+npx hardhat compile
+
+# Run tests
+npx hardhat test
+
+# Deploy to Lisk Sepolia
+npx hardhat ignition deploy ignition/modules/LiskGarden.ts --network lisk-sepolia
+
+# Verify contract
+npx hardhat verify --network lisk-sepolia <address>
+
+# Run script
+npx hardhat run scripts/interact.ts --network lisk-sepolia
+
+# Clean artifacts
+npx hardhat clean
+
+# Get help
+npx hardhat help
+```
+
+---
+
+## What You Learned (Hardhat)
+
+**Professional Setup:**
+- ✅ Installed latest Hardhat 3
+- ✅ Created TypeScript project
+- ✅ Configured Lisk Sepolia network
+- ✅ Secured private keys with .env
+
+**Development Workflow:**
+- ✅ Compiled contracts
+- ✅ Deployed with Hardhat Ignition
+- ✅ Verified on block explorer
+- ✅ Interacted with TypeScript scripts
+
+**Best Practices:**
+- ✅ TypeScript for type safety
+- ✅ Environment variables for secrets
+- ✅ Compiler optimization enabled
+- ✅ Professional project structure
 
 ---
 
