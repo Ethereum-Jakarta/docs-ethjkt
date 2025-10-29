@@ -381,6 +381,8 @@ cd lisk-garden-dapp
 
 ### Step 2: Install Web3 Dependencies
 
+#### Step 2a: Install Core Web3 Libraries
+
 Install all Web3 libraries we need:
 
 ```bash
@@ -404,7 +406,7 @@ added 45 packages, and audited 412 packages in 12s
 found 0 vulnerabilities
 ```
 
-### Step 2b: Install Theme & Utility Libraries
+#### Step 2b: Install Theme & Utility Libraries
 
 Install additional packages for theming and utilities:
 
@@ -710,7 +712,7 @@ export const LISK_GARDEN_ABI = [
 - JavaScript `number` only safe up to 2^53-1
 - `bigint` handles large numbers accurately
 
-### Step 1b: Create Utility Functions
+### Step 2: Create Utility Functions
 
 Create `lib/utils.ts`:
 
@@ -748,11 +750,11 @@ The `cn()` function is a utility that intelligently merges Tailwind CSS classes.
 
 This utility is used throughout shadcn/ui components and makes it easy to handle conditional styling without class conflicts.
 
-### Step 2: Create Provider Components
+### Step 3: Create Provider Components
 
 Instead of creating separate providers, we'll use a centralized `Providers` component that combines Panna SDK, theme support, and toast notifications.
 
-#### Step 2a: Create Theme Provider
+#### Step 3a: Create Theme Provider
 
 Create `components/theme-provider.tsx`:
 
@@ -769,7 +771,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 
 **Purpose**: Wrapper for `next-themes` to enable dark/light mode switching with system theme detection.
 
-#### Step 2b: Create Centralized Providers
+#### Step 3b: Create Centralized Providers
 
 Create `components/providers.tsx`:
 
@@ -816,7 +818,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 - ✅ Better organization and maintainability
 - ✅ Toaster included globally for all pages
 
-### Step 3: Wrap App with Providers
+### Step 4: Wrap App with Providers
 
 Edit `app/layout.tsx`:
 
@@ -870,7 +872,7 @@ export default function RootLayout({
 - ✅ Theme switching (dark/light mode)
 - ✅ Toast notifications (for transaction feedback)
 
-### Step 4: Create useContract Hook
+### Step 5: Create useContract Hook
 
 Create `hooks/useContract.ts`:
 
@@ -919,7 +921,7 @@ export function useContract() {
 | `address` | string \| null | Wallet address | `'0x1234...5678'` |
 | `isConnected` | boolean | Connection status | `true` or `false` |
 
-### Step 5: Test Account Abstraction
+### Step 6: Test Account Abstraction
 
 Let's test our setup with a simple page using Panna SDK's built-in `<LoginButton>` component.
 
@@ -2126,14 +2128,7 @@ export default function PlantDetailsModal({ plant, isOpen, onClose }: PlantDetai
 }
 ```
 
-**Modal Features**:
-- ✅ Detailed plant information
-- ✅ Growth and water progress visualization
-- ✅ Stage sync detection and update button
-- ✅ Harvest button when blooming
-- ✅ Water button for growing plants
-- ✅ Dead plant warning
-- ✅ Loading states for all actions
+This modal shows everything you need to know about a plant - its current stage, how long since it was planted, when it was last watered, and progress bars for growth and water level. The buttons at the bottom change based on the plant's state: if it's ready to harvest, you'll see a harvest button; otherwise, you get a water button. Dead plants get a special treatment with a warning message. All actions show loading states while the blockchain transaction processes.
 
 ### Step 5: Create Garden Header (Production)
 
