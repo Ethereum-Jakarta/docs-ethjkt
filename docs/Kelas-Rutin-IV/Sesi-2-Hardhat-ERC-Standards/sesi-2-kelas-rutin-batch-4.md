@@ -260,9 +260,10 @@ touch contracts/LiskGarden.sol
 
 ### Step 6: Configure for Lisk Sepolia
 
-**1. Install dotenv (for secure keys):**
+**1. Install dotenv (for secure keys): & hardhat-ethers**
 ```bash
 npm install --save-dev dotenv
+npm install @nomicfoundation/hardhat-ethers
 ```
 
 **Explanation:**
@@ -305,12 +306,13 @@ import { HardhatUserConfig } from "hardhat/config";
 import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
 import hardhatIgnitionViemPlugin from "@nomicfoundation/hardhat-ignition-viem";
 import hardhatVerify from "@nomicfoundation/hardhat-verify";
+import hardhatEthers from "@nomicfoundation/hardhat-ethers";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  plugins: [hardhatToolboxViemPlugin, hardhatIgnitionViemPlugin, hardhatVerify],
+  plugins: [hardhatToolboxViemPlugin, hardhatIgnitionViemPlugin, hardhatVerify, hardhatEthers],
   solidity: {
     version: "0.8.30",
     settings: {
@@ -355,6 +357,7 @@ export default config;
 - `import` = loads packages (ESM/TypeScript style - new in Hardhat 3)
 - `hardhatToolboxViemPlugin` = viem-based toolbox for Hardhat 3
 - `hardhatIgnitionViemPlugin` = deployment plugin
+- `hardhatEthers` = hardhat ethers specific plugin
 - `hardhatVerify` = verification plugin for block explorers
 - `plugins: [...]` = registers Hardhat 3 plugins
 - `dotenv.config()` = loads .env file
@@ -514,9 +517,11 @@ https://sepolia-blockscout.lisk.com/address/0x742d35Cc...
 Create `scripts/interact.ts`:
 
 ```typescript
-import { ethers } from "hardhat";
+import { network } from "hardhat";
 
 async function main() {
+  const { ethers } = await network.connect();
+
   // Replace with your deployed contract address
   const CONTRACT_ADDRESS = "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4";
 
