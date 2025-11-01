@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/components/**)",
+      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/lib/**)",
+      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/hooks/**)",
+      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/types/**)",
+      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
