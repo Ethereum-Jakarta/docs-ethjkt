@@ -35,10 +35,9 @@
 ### **Judges Panel**
 
 **Confirmed Judges:**
-- **Alvin Evander** - VP Strategy & Sustainability, MDI Ventures
-- **Fini Charisa** - UI/UX Designer (@fin.designn)
 - **Lisk Representative** - [TBA]
-- **Ethereum Jakarta Core Team** - [TBA]
+- **Ethereum Jakarta Core Team** - Revo, Wildan
+- **BlockDevId Team** - Om Ron, Denis
 
 **Judging Criteria:**
 - Technical Implementation (30%)
@@ -65,9 +64,7 @@
 - 🌟 **Most Innovative**: Novel use of blockchain
 
 **All Participants Receive:**
-- 🎓 Certificate of Completion
 - 📸 Professional showcase opportunities
-- 🤝 Networking dengan Web3 ecosystem
 - 📈 Portfolio project untuk career
 
 ---
