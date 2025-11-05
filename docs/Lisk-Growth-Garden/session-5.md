@@ -640,14 +640,14 @@ contract PlantNFTBreeding is PlantNFT {
     // Breeding requirements
     uint256 public constant BREEDING_COOLDOWN = 7 days;
     uint256 public constant BREEDING_FEE = 100 * 10**18; // 100 SEED tokens
-    
+
     // Breeding tracking
     mapping(uint256 => uint256) public lastBreedTime;
     mapping(uint256 => uint256) public breedingCount;
-    
+
     // Reference to SEED token
     IERC20 public seedToken;
-    
+
     // Events
     event PlantBred(
         uint256 indexed parent1Id,
@@ -655,22 +655,22 @@ contract PlantNFTBreeding is PlantNFT {
         uint256 indexed childId,
         uint256 generation
     );
-    
+
     constructor(address _seedToken) {
         seedToken = IERC20(_seedToken);
     }
-    
+
     // Breed two plants to create new one
-    function breedPlants(uint256 parent1Id, uint256 parent2Id) 
-        external 
-        returns (uint256) 
+    function breedPlants(uint256 parent1Id, uint256 parent2Id)
+        external
+        returns (uint256)
     {
         // Validation
         require(ownerOf(parent1Id) == msg.sender, "Not owner of parent 1");
         require(ownerOf(parent2Id) == msg.sender, "Not owner of parent 2");
         require(parent1Id != parent2Id, "Can't breed with itself");
-        
-        // Check breeding cooldown (allow first breeding)
+
+        // Check breeding cooldown (0 means never bred before)
         require(
             lastBreedTime[parent1Id] == 0 || block.timestamp >= lastBreedTime[parent1Id] + BREEDING_COOLDOWN,
             "Parent 1 on cooldown"
@@ -679,30 +679,33 @@ contract PlantNFTBreeding is PlantNFT {
             lastBreedTime[parent2Id] == 0 || block.timestamp >= lastBreedTime[parent2Id] + BREEDING_COOLDOWN,
             "Parent 2 on cooldown"
         );
-        
+
         // Take breeding fee
         require(
             seedToken.transferFrom(msg.sender, address(this), BREEDING_FEE),
             "Breeding fee failed"
         );
-        
+
         // Get parent attributes
         PlantAttributes memory parent1 = plantAttributes[parent1Id];
         PlantAttributes memory parent2 = plantAttributes[parent2Id];
-        
+
         // Create child NFT
         _tokenIdCounter++;
         uint256 childId = _tokenIdCounter;
-        
+
         // Genetic inheritance (simplified)
         uint256 childRarity = _inheritRarity(parent1.rarity, parent2.rarity);
         string memory childSpecies = _inheritSpecies(parent1.species, parent2.species);
         uint256 childGeneration = _max(parent1.generation, parent2.generation) + 1;
-        
+
         // Enhanced stats for higher generations
         uint256 growthRate = 100 + (childRarity - 1) * 25 + (childGeneration - 1) * 10;
         uint256 yieldBonus = 100 + (childRarity - 1) * 50 + (childGeneration - 1) * 20;
-        
+
+        // Inherit image from parent with higher rarity
+        string memory childImageURI = parent1.rarity >= parent2.rarity ? parent1.imageURI : parent2.imageURI;
+
         // Create child plant
         plantAttributes[childId] = PlantAttributes({
             species: childSpecies,
@@ -710,43 +713,44 @@ contract PlantNFTBreeding is PlantNFT {
             growthRate: growthRate,
             yieldBonus: yieldBonus,
             birthTime: block.timestamp,
-            generation: childGeneration
+            generation: childGeneration,
+            imageURI: childImageURI
         });
-        
+
         // Mint to breeder
         _safeMint(msg.sender, childId);
-        
+
         // Update breeding records
         lastBreedTime[parent1Id] = block.timestamp;
         lastBreedTime[parent2Id] = block.timestamp;
         breedingCount[parent1Id]++;
         breedingCount[parent2Id]++;
-        
+
         emit PlantBred(parent1Id, parent2Id, childId, childGeneration);
-        
+
         return childId;
     }
-    
+
     // Inherit rarity (chance for upgrade!)
-    function _inheritRarity(uint256 rarity1, uint256 rarity2) 
-        private 
-        view 
-        returns (uint256) 
+    function _inheritRarity(uint256 rarity1, uint256 rarity2)
+        private
+        view
+        returns (uint256)
     {
         uint256 avgRarity = (rarity1 + rarity2) / 2;
         uint256 rand = uint256(keccak256(abi.encodePacked(
             block.timestamp,
             block.prevrandao
         ))) % 100;
-        
+
         // 20% chance to upgrade rarity
         if (rand < 20 && avgRarity < 4) {
             return avgRarity + 1;
         }
-        
+
         return avgRarity;
     }
-    
+
     // Combine species names
     function _inheritSpecies(string memory species1, string memory species2)
         private
@@ -757,10 +761,28 @@ contract PlantNFTBreeding is PlantNFT {
         // In production: Create hybrid names
         return species1;
     }
-    
+
     // Utility: Get max of two numbers
     function _max(uint256 a, uint256 b) private pure returns (uint256) {
         return a > b ? a : b;
+    }
+
+    // Check if plant can breed
+    function canBreed(uint256 plantId) external view returns (bool) {
+        return lastBreedTime[plantId] == 0 || block.timestamp >= lastBreedTime[plantId] + BREEDING_COOLDOWN;
+    }
+
+    // Get time until plant can breed again
+    function timeUntilBreedable(uint256 plantId) external view returns (uint256) {
+        if (lastBreedTime[plantId] == 0) {
+            return 0; // Never bred, can breed now
+        }
+
+        uint256 nextBreedTime = lastBreedTime[plantId] + BREEDING_COOLDOWN;
+        if (block.timestamp >= nextBreedTime) {
+            return 0;
+        }
+        return nextBreedTime - block.timestamp;
     }
 }
 ```
@@ -1142,6 +1164,8 @@ Create `GardenEcosystem.sol`:
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 interface ILiskGarden {
     function plantSeed() external payable returns (uint256);
     function waterPlant(uint256 plantId) external;
@@ -1154,7 +1178,7 @@ interface ISeedToken {
 }
 
 interface IPlantNFT {
-    function mintPlant(address to, string memory species) external returns (uint256);
+    function mintPlant(address to, string memory species, string memory imageURI) external returns (uint256);
 }
 
 interface IGardenItems {
@@ -1197,7 +1221,7 @@ contract GardenEcosystem is Ownable {
         
         // Milestone reward: NFT every 5th plant
         if (userPlantCount[msg.sender] % NFT_MINT_THRESHOLD == 0) {
-            plantNFT.mintPlant(msg.sender, "Milestone Rose");
+            plantNFT.mintPlant(msg.sender, "Milestone Rose", "https://cdn.artstation.com/p/thumbnails/000/870/175/thumb.jpg");
         }
         
         // Give some SEED tokens for planting
@@ -1217,7 +1241,7 @@ contract GardenEcosystem is Ownable {
         
         // Bonus NFT for 10th harvest
         if (userHarvestCount[msg.sender] % 10 == 0) {
-            plantNFT.mintPlant(msg.sender, "Harvest Master");
+            plantNFT.mintPlant(msg.sender, "Harvest Master", "https://cdn.artstation.com/p/thumbnails/000/870/175/thumb.jpg");
         }
     }
     
@@ -1639,6 +1663,17 @@ purchaseItem(uint256, uint256)
 
 ---
 
+## Next Session Preview
+
+**Session 6: Bearing Fruit - Advanced DeFi & Real-World Integration**
+- NFT Staking & Yield Farming (implementing Challenge 4)
+- Liquidity pools & AMM integration
+- Modular architecture & composability (implementing Challenge 5)
+- Oracle integration (Chainlink)
+- Flash loans & advanced DeFi strategies
+- Real-world deployment & security auditing
+
+---
 
 **Remember**: The best way to learn is by building! Pick a challenge and start coding. Break things, fix them, and learn from the process.
 
