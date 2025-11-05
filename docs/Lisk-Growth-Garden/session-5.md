@@ -127,41 +127,41 @@ contract SeedToken is ERC20, Ownable {
     // Constants
     uint256 public constant INITIAL_SUPPLY = 1000000 * 10**18; // 1M tokens
     uint256 public constant REWARD_RATE = 10 * 10**18; // 10 SEED per action
-    
+
     // Track rewards given
     mapping(address => uint256) public totalRewardsEarned;
-    
+
     // Events
     event RewardGiven(address indexed user, uint256 amount, string reason);
-    
+
     constructor() ERC20("Garden Seed", "SEED") Ownable(msg.sender) {
         // Mint initial supply to contract deployer
         _mint(msg.sender, INITIAL_SUPPLY);
     }
-    
+
     // Mint new tokens (only owner - for rewards)
     function mint(address to, uint256 amount) external onlyOwner {
         _mint(to, amount);
     }
-    
+
     // Burn tokens (anyone can burn their own)
     function burn(uint256 amount) external {
         _burn(msg.sender, amount);
     }
-    
+
     // Reward user for garden actions
     function rewardUser(address user, string memory reason) external onlyOwner {
         _mint(user, REWARD_RATE);
         totalRewardsEarned[user] += REWARD_RATE;
         emit RewardGiven(user, REWARD_RATE, reason);
     }
-    
+
     // Get token details
     function getTokenInfo() external view returns (
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        uint256 totalSupply
+        string memory tokenName,
+        string memory tokenSymbol,
+        uint8 tokenDecimals,
+        uint256 tokenTotalSupply
     ) {
         return (
             name(),
@@ -173,11 +173,45 @@ contract SeedToken is ERC20, Ownable {
 }
 ```
 
-**Key Points**:
-- Inherits from OpenZeppelin's `ERC20` (battle-tested code)
-- 18 decimals by default (1 token = 10^18 units)
-- Owner can mint rewards
-- Users can burn tokens (deflationary mechanic)
+**Explanation:**
+
+**Inheritance & Imports:**
+- `ERC20` - OpenZeppelin's standard token contract (handles all basic token functions)
+- `Ownable` - Adds owner-only functions (only deployer can mint rewards)
+- `import` - Reuse battle-tested code instead of writing from scratch
+
+**Constants:**
+- `INITIAL_SUPPLY = 1000000 * 10**18` - Creates 1 million tokens (with 18 decimals)
+- `REWARD_RATE = 10 * 10**18` - Each reward gives 10 SEED tokens
+- `constant` - Values that never change (saves gas!)
+
+**State Variables:**
+- `mapping(address => uint256) totalRewardsEarned` - Tracks lifetime rewards per user
+- Like a dictionary: user address → total rewards earned
+
+**Constructor:**
+- `ERC20("Garden Seed", "SEED")` - Sets token name and symbol
+- `Ownable(msg.sender)` - Makes deployer the owner
+- `_mint(msg.sender, INITIAL_SUPPLY)` - Creates all tokens and gives to deployer
+
+**Functions:**
+- `mint()` - Owner creates new tokens (for rewards)
+- `burn()` - Anyone destroys their own tokens (reduces supply)
+- `rewardUser()` - Owner gives rewards to users
+- `getTokenInfo()` - Anyone can check token details (FREE - it's a view function!)
+
+**How It Works:**
+1. Deploy → You get 1 million SEED tokens
+2. Call `rewardUser("0xUser", "planted seed")` → User gets 10 SEED
+3. User calls `burn(5 * 10**18)` → Destroys 5 of their tokens
+4. Call `balanceOf(address)` → Check anyone's balance
+
+**Try it:**
+1. Deploy the contract
+2. Call `getTokenInfo()` → See name="Garden Seed", symbol="SEED"
+3. Check your balance → 1,000,000 tokens!
+4. Call `rewardUser()` with a friend's address
+5. Check their balance → 10 tokens!
 
 ### Step 2: Advanced $SEED with Vesting
 
@@ -193,11 +227,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract SeedTokenAdvanced is ERC20, Ownable {
     // Vesting structure
     struct VestingSchedule {
-        uint256 totalAmount;
-        uint256 releasedAmount;
-        uint256 startTime;
-        uint256 duration;
-        uint256 cliffDuration;
+        uint256 totalAmount;      // Total tokens to vest
+        uint256 releasedAmount;   // Tokens already claimed
+        uint256 startTime;        // When vesting started
+        uint256 duration;         // Total vesting period
+        uint256 cliffDuration;    // Lock period before any release
     }
     
     // User vesting schedules
@@ -212,7 +246,6 @@ contract SeedTokenAdvanced is ERC20, Ownable {
     uint256 public rewardsDistributed;
     
     constructor() ERC20("Garden Seed", "SEED") Ownable(msg.sender) {
-        // Mint public sale allocation to owner
         _mint(msg.sender, PUBLIC_SALE);
     }
     
@@ -234,7 +267,6 @@ contract SeedTokenAdvanced is ERC20, Ownable {
             cliffDuration: cliffDuration
         });
         
-        // Mint vested tokens (locked initially)
         _mint(address(this), amount);
     }
     
@@ -272,56 +304,45 @@ contract SeedTokenAdvanced is ERC20, Ownable {
         schedule.releasedAmount += claimable;
         _transfer(address(this), msg.sender, claimable);
     }
-    
-    // Distribute rewards (called by garden contracts)
-    function distributeReward(address user, uint256 amount) external onlyOwner {
-        require(rewardsDistributed + amount <= REWARDS_ALLOCATION, "Exceeds allocation");
-        
-        rewardsDistributed += amount;
-        _mint(user, amount);
-    }
-    
-    // Emergency pause (optional security feature)
-    bool public paused;
-    
-    modifier whenNotPaused() {
-        require(!paused, "Contract paused");
-        _;
-    }
-    
-    function pause() external onlyOwner {
-        paused = true;
-    }
-    
-    function unpause() external onlyOwner {
-        paused = false;
-    }
-    
-    // Override transfer to respect pause
-    function transfer(address to, uint256 amount) 
-        public 
-        override 
-        whenNotPaused 
-        returns (bool) 
-    {
-        return super.transfer(to, amount);
-    }
 }
 ```
 
-**Advanced Features**:
-- **Token Vesting**: Team tokens locked with cliff and linear release
-- **Max Supply Cap**: Prevents infinite minting
-- **Allocation Buckets**: Separate pools for team/rewards/public
-- **Emergency Pause**: Circuit breaker for security
+**Explanation:**
 
-### Try It!
+**Vesting Structure:**
+- `totalAmount` - How many tokens will vest over time
+- `releasedAmount` - How many already claimed
+- `startTime` - When vesting began (timestamp)
+- `duration` - Total vesting period (e.g., 365 days)
+- `cliffDuration` - Initial lock period (e.g., 90 days)
 
-1. Deploy `SeedToken` on Remix
-2. Call `getTokenInfo()` → See token details
-3. Call `balanceOf(your_address)` → See 1M tokens!
-4. Try `transfer()` to send tokens
-5. Call `rewardUser()` to mint rewards
+**Token Economics:**
+- `MAX_SUPPLY` - Can never create more than 100M tokens
+- `TEAM_ALLOCATION` - 20M reserved for team (vested)
+- `REWARDS_ALLOCATION` - 30M for game rewards
+- `PUBLIC_SALE` - 50M for immediate distribution
+
+**Vesting Logic:**
+1. **Cliff Period**: No tokens available (e.g., first 3 months)
+2. **Linear Release**: Tokens unlock gradually over time
+3. **Full Vesting**: All tokens available after duration ends
+
+**How Vesting Works:**
+```
+Day 0:    Create vesting (1000 tokens, 365 days, 90 day cliff)
+Day 1-89: Can't claim anything (cliff period)
+Day 90:   Can claim ~247 tokens (90/365 * 1000)
+Day 180:  Can claim ~493 tokens total
+Day 365:  Can claim all 1000 tokens
+```
+
+**Try it:**
+1. Deploy contract → You get 50M tokens (public sale)
+2. Call `createVesting("0xTeamMember", 1000000, 31536000, 7776000)`
+   - 1M tokens, 365 days vesting, 90 days cliff
+3. Team member waits 90 days
+4. Call `calculateVestedAmount()` → See available tokens
+5. Call `claimVestedTokens()` → Receive unlocked tokens
 
 ---
 
@@ -352,13 +373,12 @@ pragma solidity ^0.8.30;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract PlantNFT is ERC721, ERC721URIStorage, Ownable {
-    using Counters for Counters.Counter;
-    
-    Counters.Counter private _tokenIds;
-    
+    uint256 internal _tokenIdCounter;
+
     // Plant attributes
     struct PlantAttributes {
         string species;      // "Rose", "Tulip", "Cactus"
@@ -367,52 +387,54 @@ contract PlantNFT is ERC721, ERC721URIStorage, Ownable {
         uint256 yieldBonus;  // Harvest reward multiplier (100 = 1x)
         uint256 birthTime;   // When minted
         uint256 generation;  // Breeding generation
+        string imageURI;     // IPFS or external image URL
     }
-    
+
     // Mapping from token ID to attributes
     mapping(uint256 => PlantAttributes) public plantAttributes;
-    
+
     // Rarity probabilities (out of 100)
     uint256[] public rarityWeights = [60, 25, 10, 5]; // Common, Rare, Epic, Legendary
-    
+
     // Events
     event PlantMinted(
-        address indexed owner, 
-        uint256 indexed tokenId, 
-        string species, 
+        address indexed owner,
+        uint256 indexed tokenId,
+        string species,
         uint256 rarity
     );
-    
+
     constructor() ERC721("Garden Plant NFT", "PLANT") Ownable(msg.sender) {}
-    
-    // Mint new plant NFT
-    function mintPlant(address to, string memory species) external returns (uint256) {
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
-        
+
+    // Mint new plant NFT with image URI
+    function mintPlant(address to, string memory species, string memory imageURI) external returns (uint256) {
+        _tokenIdCounter++;
+        uint256 newTokenId = _tokenIdCounter;
+
         // Random rarity (simplified - use Chainlink VRF in production!)
         uint256 rarity = _calculateRarity(newTokenId);
-        
+
         // Set attributes based on rarity
         uint256 growthRate = 100 + (rarity - 1) * 25; // 100, 125, 150, 175
         uint256 yieldBonus = 100 + (rarity - 1) * 50; // 100, 150, 200, 250
-        
+
         plantAttributes[newTokenId] = PlantAttributes({
             species: species,
             rarity: rarity,
             growthRate: growthRate,
             yieldBonus: yieldBonus,
             birthTime: block.timestamp,
-            generation: 1
+            generation: 1,
+            imageURI: imageURI
         });
-        
+
         _safeMint(to, newTokenId);
-        
+
         emit PlantMinted(to, newTokenId, species, rarity);
-        
+
         return newTokenId;
     }
-    
+
     // Simple pseudo-random rarity (NOT SECURE - use VRF!)
     function _calculateRarity(uint256 tokenId) private view returns (uint256) {
         uint256 rand = uint256(keccak256(abi.encodePacked(
@@ -420,7 +442,7 @@ contract PlantNFT is ERC721, ERC721URIStorage, Ownable {
             block.prevrandao,
             tokenId
         ))) % 100;
-        
+
         uint256 cumulative = 0;
         for (uint256 i = 0; i < rarityWeights.length; i++) {
             cumulative += rarityWeights[i];
@@ -430,7 +452,7 @@ contract PlantNFT is ERC721, ERC721URIStorage, Ownable {
         }
         return 1; // Default common
     }
-    
+
     // Get plant details
     function getPlantDetails(uint256 tokenId) external view returns (
         string memory species,
@@ -439,34 +461,81 @@ contract PlantNFT is ERC721, ERC721URIStorage, Ownable {
         uint256 yieldBonus,
         uint256 age
     ) {
-        require(_exists(tokenId), "Plant doesn't exist");
-        
+        require(_ownerOf(tokenId) != address(0), "Plant doesn't exist");
+
         PlantAttributes memory attr = plantAttributes[tokenId];
-        uint256 age = block.timestamp - attr.birthTime;
-        
+        uint256 plantAge = block.timestamp - attr.birthTime;
+
         return (
             attr.species,
             attr.rarity,
             attr.growthRate,
             attr.yieldBonus,
-            age
+            plantAge
         );
     }
-    
-    // Override required functions
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
+
+    // Get current token ID counter
+    function getCurrentTokenId() external view returns (uint256) {
+        return _tokenIdCounter;
     }
-    
+
+    // Generate dynamic tokenURI with metadata
     function tokenURI(uint256 tokenId)
         public
         view
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        return super.tokenURI(tokenId);
+        require(_ownerOf(tokenId) != address(0), "Plant doesn't exist");
+
+        PlantAttributes memory attr = plantAttributes[tokenId];
+
+        // Rarity names
+        string memory rarityName = _getRarityName(attr.rarity);
+
+        // Build JSON metadata
+        string memory json = string(abi.encodePacked(
+            '{"name":"',
+            attr.species,
+            ' #',
+            Strings.toString(tokenId),
+            '","description":"A ',
+            rarityName,
+            ' plant NFT from the Garden Ecosystem","image":"',
+            attr.imageURI,
+            '","attributes":[',
+            '{"trait_type":"Species","value":"',
+            attr.species,
+            '"},{"trait_type":"Rarity","value":"',
+            rarityName,
+            '"},{"trait_type":"Growth Rate","value":',
+            Strings.toString(attr.growthRate),
+            '},{"trait_type":"Yield Bonus","value":',
+            Strings.toString(attr.yieldBonus),
+            '},{"trait_type":"Generation","value":',
+            Strings.toString(attr.generation),
+            '},{"trait_type":"Birth Time","value":',
+            Strings.toString(attr.birthTime),
+            '}]}'
+        ));
+
+        // Encode to base64
+        return string(abi.encodePacked(
+            'data:application/json;base64,',
+            Base64.encode(bytes(json))
+        ));
     }
-    
+
+    // Helper function to get rarity name
+    function _getRarityName(uint256 rarity) private pure returns (string memory) {
+        if (rarity == 1) return "Common";
+        if (rarity == 2) return "Rare";
+        if (rarity == 3) return "Epic";
+        if (rarity == 4) return "Legendary";
+        return "Unknown";
+    }
+
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -475,19 +544,86 @@ contract PlantNFT is ERC721, ERC721URIStorage, Ownable {
     {
         return super.supportsInterface(interfaceId);
     }
-    
-    // Check if token exists
-    function _exists(uint256 tokenId) internal view returns (bool) {
-        return _ownerOf(tokenId) != address(0);
-    }
 }
 ```
 
-**Key Features**:
-- Each plant has unique attributes (species, rarity, bonuses)
-- Rarity system affects growth rate and yield
-- Generation tracking for breeding system
-- Age calculation from mint time
+**Explanation:**
+
+**NFT Libraries:**
+- `ERC721` - Standard NFT functionality (ownership, transfers)
+- `ERC721URIStorage` - Store metadata URIs for each token
+- `Strings` - Convert uint256 to string for JSON metadata
+- `Base64` - Encode JSON metadata as data URI
+
+**Plant Attributes Struct:**
+- `species` - Type of plant ("Rose", "Tulip", etc.)
+- `rarity` - 1=Common (60%), 2=Rare (25%), 3=Epic (10%), 4=Legendary (5%)
+- `growthRate` - How fast it grows (100=normal, 175=75% faster)
+- `yieldBonus` - Harvest multiplier (250=2.5x rewards)
+- `birthTime` - When NFT was created
+- `generation` - 1 for original, higher for bred plants
+- `imageURI` - IPFS or external URL for the plant image
+
+**Dynamic TokenURI Generation:**
+The `tokenURI()` function generates metadata on-chain:
+- Creates JSON with name, description, image, and attributes
+- Uses Base64 encoding for data URI format
+- Returns `data:application/json;base64,{encoded_metadata}`
+- Marketplaces (OpenSea, Rarible) automatically display the data
+
+**Metadata Structure:**
+```json
+{
+  "name": "Rose #1",
+  "description": "A Rare plant NFT from the Garden Ecosystem",
+  "image": "ipfs://QmXxx.../rose.png",
+  "attributes": [
+    {"trait_type": "Species", "value": "Rose"},
+    {"trait_type": "Rarity", "value": "Rare"},
+    {"trait_type": "Growth Rate", "value": 125},
+    {"trait_type": "Yield Bonus", "value": 150},
+    {"trait_type": "Generation", "value": 1},
+    {"trait_type": "Birth Time", "value": 1730000000}
+  ]
+}
+```
+
+**Rarity System:**
+```
+Random 0-59:   Common (60% chance)
+Random 60-84:  Rare (25% chance)
+Random 85-94:  Epic (10% chance)
+Random 95-99:  Legendary (5% chance)
+```
+
+**Bonuses by Rarity:**
+| Rarity | Growth Rate | Yield Bonus |
+|--------|-------------|-------------|
+| Common | 100% (1x) | 100% (1x) |
+| Rare | 125% (1.25x) | 150% (1.5x) |
+| Epic | 150% (1.5x) | 200% (2x) |
+| Legendary | 175% (1.75x) | 250% (2.5x) |
+
+**How It Works:**
+1. Call `mintPlant("0xUser", "Rose", "ipfs://QmXxx.../rose.png")` → Creates NFT #1
+2. Random number determines rarity (60% common, 5% legendary)
+3. Rarity determines growth and yield bonuses
+4. Image URI stored with attributes
+5. NFT minted to user with all attributes stored
+6. Call `tokenURI(1)` → Returns full metadata with image
+
+**Try it:**
+1. Deploy contract
+2. Upload plant image to IPFS (use Pinata or NFT.storage) OR use these example plant images:
+   - Common plant: `https://cdn.artstation.com/p/thumbnails/000/870/176/thumb.jpg`
+   - Rare plant: `https://cdn.artstation.com/p/thumbnails/000/870/173/thumb.jpg`
+   - Epic plant: `https://cdn.artstation.com/p/thumbnails/000/870/168/thumb.jpg`
+   - Legendary plant: `https://cdn.artstation.com/p/thumbnails/000/870/175/thumb.jpg`
+3. Call `mintPlant(your_address, "Rose", "https://cdn.artstation.com/p/thumbnails/000/870/176/thumb.jpg")`
+4. Check `plantAttributes(1)` → See all stats
+5. Call `tokenURI(1)` → Get base64-encoded metadata
+6. Decode the base64 → See full JSON
+7. View on OpenSea → Image and attributes display automatically!
 
 ### Step 2: Plant NFT with Breeding
 
@@ -497,7 +633,8 @@ Add genetic breeding mechanics:
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-// ... previous imports ...
+import "./PlantNFT.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract PlantNFTBreeding is PlantNFT {
     // Breeding requirements
@@ -533,13 +670,13 @@ contract PlantNFTBreeding is PlantNFT {
         require(ownerOf(parent2Id) == msg.sender, "Not owner of parent 2");
         require(parent1Id != parent2Id, "Can't breed with itself");
         
-        // Check breeding cooldown
+        // Check breeding cooldown (allow first breeding)
         require(
-            block.timestamp >= lastBreedTime[parent1Id] + BREEDING_COOLDOWN,
+            lastBreedTime[parent1Id] == 0 || block.timestamp >= lastBreedTime[parent1Id] + BREEDING_COOLDOWN,
             "Parent 1 on cooldown"
         );
         require(
-            block.timestamp >= lastBreedTime[parent2Id] + BREEDING_COOLDOWN,
+            lastBreedTime[parent2Id] == 0 || block.timestamp >= lastBreedTime[parent2Id] + BREEDING_COOLDOWN,
             "Parent 2 on cooldown"
         );
         
@@ -554,8 +691,8 @@ contract PlantNFTBreeding is PlantNFT {
         PlantAttributes memory parent2 = plantAttributes[parent2Id];
         
         // Create child NFT
-        _tokenIds.increment();
-        uint256 childId = _tokenIds.current();
+        _tokenIdCounter++;
+        uint256 childId = _tokenIdCounter;
         
         // Genetic inheritance (simplified)
         uint256 childRarity = _inheritRarity(parent1.rarity, parent2.rarity);
@@ -628,7 +765,7 @@ contract PlantNFTBreeding is PlantNFT {
 }
 ```
 
-**Breeding Mechanics**:
+**Breeding Mechanics:**
 - Two NFTs can breed to create offspring
 - Cooldown period prevents spam
 - Costs SEED tokens (economic sink)
@@ -658,6 +795,9 @@ pragma solidity ^0.8.30;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract GardenItems is ERC1155, Ownable {
     // Item IDs (like an enum)
@@ -667,127 +807,103 @@ contract GardenItems is ERC1155, Ownable {
     uint256 public constant RARE_SEED = 4;
     uint256 public constant LEGENDARY_SEED = 5;
     uint256 public constant HARVEST_TOOL = 6;
-    
+
     // Item metadata
     struct Item {
         string name;
         string description;
-        uint256 maxSupply;
-        uint256 currentSupply;
-        uint256 price;      // Price in SEED tokens
-        bool tradeable;
-        bool consumable;
+        uint256 maxSupply;      // Maximum that can exist
+        uint256 currentSupply;  // How many exist now
+        uint256 price;          // Price in SEED tokens
+        bool tradeable;         // Can be traded between users
+        bool consumable;        // Destroyed when used
     }
-    
+
     mapping(uint256 => Item) public items;
-    
+
     // Effects when used
-    mapping(uint256 => uint256) public itemEffects; // itemId => effect value
-    
-    // Crafting recipes
-    struct Recipe {
-        uint256[] inputIds;
-        uint256[] inputAmounts;
-        uint256 outputId;
-        uint256 outputAmount;
-    }
-    
-    mapping(uint256 => Recipe) public recipes;
-    uint256 public recipeCount;
-    
+    mapping(uint256 => uint256) public itemEffects;
+
     // Reference to SEED token
     IERC20 public seedToken;
-    
+
     // Events
     event ItemPurchased(address indexed buyer, uint256 indexed itemId, uint256 amount);
     event ItemUsed(address indexed user, uint256 indexed itemId, uint256 targetId);
-    event ItemCrafted(address indexed crafter, uint256 indexed recipeId, uint256 amount);
-    
+
     constructor(address _seedToken) ERC1155("") Ownable(msg.sender) {
         seedToken = IERC20(_seedToken);
         _initializeItems();
-        _initializeRecipes();
     }
-    
+
     function _initializeItems() private {
         items[WATER_CAN] = Item({
             name: "Water Can",
             description: "Instantly water your plant",
             maxSupply: 10000,
             currentSupply: 0,
-            price: 10 * 10**18, // 10 SEED
+            price: 10 * 10**18,  // 10 SEED
             tradeable: true,
             consumable: true
         });
-        
+
         items[FERTILIZER] = Item({
             name: "Fertilizer",
             description: "Double growth rate for 1 hour",
             maxSupply: 5000,
             currentSupply: 0,
-            price: 50 * 10**18, // 50 SEED
+            price: 50 * 10**18,  // 50 SEED
             tradeable: true,
             consumable: true
         });
-        
+
         items[GROWTH_BOOST] = Item({
             name: "Growth Boost",
             description: "Instantly advance one growth stage",
             maxSupply: 1000,
             currentSupply: 0,
-            price: 200 * 10**18, // 200 SEED
+            price: 200 * 10**18,  // 200 SEED
             tradeable: true,
             consumable: true
         });
-        
+
         items[RARE_SEED] = Item({
             name: "Rare Seed",
             description: "Guaranteed rare plant or better",
             maxSupply: 500,
             currentSupply: 0,
-            price: 500 * 10**18, // 500 SEED
+            price: 500 * 10**18,  // 500 SEED
             tradeable: true,
             consumable: true
         });
-        
+
         items[LEGENDARY_SEED] = Item({
             name: "Legendary Seed",
             description: "Guaranteed legendary plant",
             maxSupply: 100,
             currentSupply: 0,
-            price: 5000 * 10**18, // 5000 SEED
-            tradeable: false, // Can't trade!
+            price: 5000 * 10**18,  // 5000 SEED
+            tradeable: false,  // Can't trade!
             consumable: true
         });
-        
+
         items[HARVEST_TOOL] = Item({
             name: "Golden Sickle",
             description: "2x harvest rewards",
             maxSupply: 1000,
             currentSupply: 0,
-            price: 100 * 10**18, // 100 SEED
+            price: 100 * 10**18,  // 100 SEED
             tradeable: true,
-            consumable: false // Reusable!
+            consumable: false  // Reusable!
         });
-        
+
         // Set effects
         itemEffects[WATER_CAN] = 100;      // Restore 100% water
         itemEffects[FERTILIZER] = 200;     // 2x growth rate
         itemEffects[GROWTH_BOOST] = 1;     // Advance 1 stage
         itemEffects[HARVEST_TOOL] = 200;   // 2x harvest
     }
-    
-    function _initializeRecipes() private {
-        // Recipe: 3 Water Cans + 2 Fertilizer = 1 Growth Boost
-        recipes[0] = Recipe({
-            inputIds: [WATER_CAN, FERTILIZER],
-            inputAmounts: [3, 2],
-            outputId: GROWTH_BOOST,
-            outputAmount: 1
-        });
-        recipeCount = 1;
-    }
-    
+
     // Purchase items with SEED tokens
     function purchaseItem(uint256 itemId, uint256 amount) external {
         Item storage item = items[itemId];
@@ -796,67 +912,42 @@ contract GardenItems is ERC1155, Ownable {
             item.currentSupply + amount <= item.maxSupply,
             "Exceeds max supply"
         );
-        
+
         uint256 totalPrice = item.price * amount;
+
+        // Take payment
         require(
             seedToken.transferFrom(msg.sender, address(this), totalPrice),
             "Payment failed"
         );
-        
+
+        // Give items
         item.currentSupply += amount;
         _mint(msg.sender, itemId, amount, "");
-        
+
         emit ItemPurchased(msg.sender, itemId, amount);
     }
-    
+
     // Use consumable item
     function useItem(uint256 itemId, uint256 targetId) external {
         require(balanceOf(msg.sender, itemId) > 0, "Don't own item");
         require(items[itemId].consumable, "Item not consumable");
-        
+
         // Burn if consumable
         _burn(msg.sender, itemId, 1);
-        
+
         // Effect is handled by game contract
+        // targetId = which plant to use on
         emit ItemUsed(msg.sender, itemId, targetId);
     }
-    
-    // Craft items using recipe
-    function craftItem(uint256 recipeId, uint256 amount) external {
-        Recipe memory recipe = recipes[recipeId];
-        require(recipe.outputId > 0, "Invalid recipe");
-        
-        // Check user has required inputs
-        for (uint256 i = 0; i < recipe.inputIds.length; i++) {
-            require(
-                balanceOf(msg.sender, recipe.inputIds[i]) >= 
-                recipe.inputAmounts[i] * amount,
-                "Insufficient ingredients"
-            );
-        }
-        
-        // Burn inputs
-        for (uint256 i = 0; i < recipe.inputIds.length; i++) {
-            _burn(
-                msg.sender, 
-                recipe.inputIds[i], 
-                recipe.inputAmounts[i] * amount
-            );
-        }
-        
-        // Mint output
-        _mint(msg.sender, recipe.outputId, recipe.outputAmount * amount, "");
-        
-        emit ItemCrafted(msg.sender, recipeId, amount);
-    }
-    
+
     // Batch operations (gas efficient!)
     function purchaseMultipleItems(
         uint256[] memory itemIds,
         uint256[] memory amounts
     ) external {
         require(itemIds.length == amounts.length, "Length mismatch");
-        
+
         uint256 totalPrice = 0;
         for (uint256 i = 0; i < itemIds.length; i++) {
             Item storage item = items[itemIds[i]];
@@ -867,15 +958,15 @@ contract GardenItems is ERC1155, Ownable {
             totalPrice += item.price * amounts[i];
             item.currentSupply += amounts[i];
         }
-        
+
         require(
             seedToken.transferFrom(msg.sender, address(this), totalPrice),
             "Payment failed"
         );
-        
+
         _mintBatch(msg.sender, itemIds, amounts, "");
     }
-    
+
     // Get item details
     function getItemInfo(uint256 itemId) external view returns (
         string memory name,
@@ -893,398 +984,159 @@ contract GardenItems is ERC1155, Ownable {
             itemEffects[itemId]
         );
     }
-    
+
     // Check if item is tradeable
-    function canTrade(uint256 itemId) external view returns (bool) {
+    function isItemTradeable(uint256 itemId) external view returns (bool) {
         return items[itemId].tradeable;
     }
-}
-```
 
-**Key Features**:
-- Multiple item types in one contract
-- Items can be consumable or permanent
-- Crafting system to combine items
-- Batch operations for gas efficiency
-- Supply limits for scarcity
-
----
-
-## Part 5: Modular Architecture - Plugin System
-
-### Why Modular Design?
-
-**Traditional Approach**: Everything in one contract
-**Modular Approach**: Separate contracts that interact
-
-**Benefits**:
-- ✅ Upgradeable components
-- ✅ Gas optimization
-- ✅ Separation of concerns
-- ✅ Risk isolation
-
-### Garden Registry Pattern
-
-Create `GardenRegistry.sol`:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-import "@openzeppelin/contracts/access/AccessControl.sol";
-
-contract GardenRegistry is AccessControl {
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN");
-    bytes32 public constant GARDEN_ROLE = keccak256("GARDEN");
-    bytes32 public constant PLUGIN_ROLE = keccak256("PLUGIN");
-    
-    // Core contracts
-    address public liskGarden;
-    address public seedToken;
-    address public plantNFT;
-    address public gardenItems;
-    
-    // Plugin registry
-    mapping(string => address) public plugins;
-    mapping(address => bool) public isPlugin;
-    string[] public pluginList;
-    
-    // User data aggregation
-    struct UserStats {
-        uint256 plantsOwned;
-        uint256 seedBalance;
-        uint256 itemsOwned;
-        uint256 totalHarvests;
-        uint256 level;
-        uint256 experience;
+    // Override transfer to enforce tradeability
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) public override {
+        require(items[id].tradeable, "Item not tradeable");
+        super.safeTransferFrom(from, to, id, amount, data);
     }
-    
-    mapping(address => UserStats) public userStats;
-    
-    // Events
-    event PluginRegistered(string name, address pluginAddress);
-    event PluginRemoved(string name);
-    event ContractUpdated(string contractType, address newAddress);
-    
-    constructor() {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(ADMIN_ROLE, msg.sender);
+
+    // Override batch transfer to enforce tradeability
+    function safeBatchTransferFrom(
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) public override {
+        for (uint256 i = 0; i < ids.length; i++) {
+            require(items[ids[i]].tradeable, "Item not tradeable");
+        }
+        super.safeBatchTransferFrom(from, to, ids, amounts, data);
     }
-    
-    // Set core contracts
-    function setCoreContracts(
-        address _liskGarden,
-        address _seedToken,
-        address _plantNFT,
-        address _gardenItems
-    ) external onlyRole(ADMIN_ROLE) {
-        liskGarden = _liskGarden;
-        seedToken = _seedToken;
-        plantNFT = _plantNFT;
-        gardenItems = _gardenItems;
-        
-        // Grant roles
-        _grantRole(GARDEN_ROLE, _liskGarden);
+
+    // Get image URL for item
+    function _getImageURL(uint256 itemId) private pure returns (string memory) {
+        if (itemId == WATER_CAN) return "https://cdn-icons-png.flaticon.com/128/2470/2470075.png";
+        if (itemId == FERTILIZER) return "https://cdn-icons-png.flaticon.com/128/3072/3072498.png";
+        if (itemId == GROWTH_BOOST) return "https://cdn-icons-png.flaticon.com/128/8727/8727041.png";
+        if (itemId == RARE_SEED) return "https://cdn-icons-png.flaticon.com/128/346/346195.png";
+        if (itemId == LEGENDARY_SEED) return "https://cdn-icons-png.flaticon.com/128/346/346195.png";
+        if (itemId == HARVEST_TOOL) return "https://cdn-icons-png.flaticon.com/128/1421/1421599.png";
+        return "";
     }
-    
-    // Register new plugin
-    function registerPlugin(
-        string memory name,
-        address pluginAddress
-    ) external onlyRole(ADMIN_ROLE) {
-        require(plugins[name] == address(0), "Plugin exists");
-        
-        plugins[name] = pluginAddress;
-        isPlugin[pluginAddress] = true;
-        pluginList.push(name);
-        
-        _grantRole(PLUGIN_ROLE, pluginAddress);
-        
-        emit PluginRegistered(name, pluginAddress);
+
+    // Get rarity name for seeds
+    function _getRarityName(uint256 itemId) private pure returns (string memory) {
+        if (itemId == RARE_SEED) return "Rare";
+        if (itemId == LEGENDARY_SEED) return "Legendary";
+        return "Common";
     }
-    
-    // Remove plugin
-    function removePlugin(string memory name) external onlyRole(ADMIN_ROLE) {
-        address pluginAddress = plugins[name];
-        require(pluginAddress != address(0), "Plugin not found");
-        
-        delete plugins[name];
-        isPlugin[pluginAddress] = false;
-        
-        _revokeRole(PLUGIN_ROLE, pluginAddress);
-        
-        emit PluginRemoved(name);
-    }
-    
-    // Update user stats (called by authorized contracts)
-    function updateUserStats(
-        address user,
-        uint256 plantsChange,
-        uint256 seedChange,
-        uint256 itemsChange,
-        uint256 harvestsChange,
-        uint256 expChange
-    ) external onlyRole(GARDEN_ROLE) {
-        UserStats storage stats = userStats[user];
-        
-        stats.plantsOwned += plantsChange;
-        stats.seedBalance += seedChange;
-        stats.itemsOwned += itemsChange;
-        stats.totalHarvests += harvestsChange;
-        stats.experience += expChange;
-        
-        // Level calculation (every 100 XP = 1 level)
-        stats.level = stats.experience / 100;
-    }
-    
-    // Get all user data in one call
-    function getUserData(address user) external view returns (
-        UserStats memory stats,
-        address[] memory contracts
-    ) {
-        contracts = new address[](4);
-        contracts[0] = liskGarden;
-        contracts[1] = seedToken;
-        contracts[2] = plantNFT;
-        contracts[3] = gardenItems;
-        
-        return (userStats[user], contracts);
-    }
-    
-    // Check if address is authorized
-    function isAuthorized(address account) external view returns (bool) {
-        return hasRole(GARDEN_ROLE, account) || 
-               hasRole(PLUGIN_ROLE, account) ||
-               hasRole(ADMIN_ROLE, account);
+
+    // Generate dynamic tokenURI for ERC-1155
+    function uri(uint256 itemId) public view override returns (string memory) {
+        require(items[itemId].price > 0, "Item doesn't exist");
+
+        Item memory item = items[itemId];
+        string memory imageURL = _getImageURL(itemId);
+
+        // Build attributes based on item properties
+        string memory attributes = string(abi.encodePacked(
+            '[{"trait_type":"Type","value":"',
+            item.consumable ? "Consumable" : "Reusable",
+            '"},{"trait_type":"Tradeable","value":"',
+            item.tradeable ? "Yes" : "No",
+            '"},{"trait_type":"Effect","value":',
+            Strings.toString(itemEffects[itemId]),
+            '},{"trait_type":"Max Supply","value":',
+            Strings.toString(item.maxSupply),
+            '},{"trait_type":"Current Supply","value":',
+            Strings.toString(item.currentSupply),
+            '},{"trait_type":"Price (SEED)","value":',
+            Strings.toString(item.price / 10**18)
+        ));
+
+        // Add rarity for seeds
+        if (itemId == RARE_SEED || itemId == LEGENDARY_SEED) {
+            attributes = string(abi.encodePacked(
+                attributes,
+                '},{"trait_type":"Rarity","value":"',
+                _getRarityName(itemId),
+                '"'
+            ));
+        }
+
+        attributes = string(abi.encodePacked(attributes, '}]'));
+
+        // Build JSON metadata
+        string memory json = string(abi.encodePacked(
+            '{"name":"',
+            item.name,
+            '","description":"',
+            item.description,
+            '","image":"',
+            imageURL,
+            '","attributes":',
+            attributes,
+            '}'
+        ));
+
+        // Encode to base64
+        return string(abi.encodePacked(
+            'data:application/json;base64,',
+            Base64.encode(bytes(json))
+        ));
     }
 }
 ```
 
----
+**Explanation:**
 
-## Part 6: Staking & Rewards System
+**ERC-1155 Basics:**
+- One contract for ALL items (fungible AND non-fungible)
+- Each item type has an ID (WATER_CAN=1, FERTILIZER=2, etc.)
+- Users can own multiple of each item
+- More gas efficient than separate contracts
 
-### Plant NFT Staking
+**Item Structure:**
+- `name/description` - What the item is
+- `maxSupply` - Total that can ever exist (scarcity)
+- `currentSupply` - How many exist now
+- `price` - Cost in SEED tokens
+- `tradeable` - Can users trade it? (marketplace)
+- `consumable` - Is it destroyed when used?
 
-Create `PlantStaking.sol`:
+**Item Types & Effects:**
+| Item | Price | Effect | Consumable |
+|------|-------|---------|------------|
+| Water Can | 10 SEED | Restore 100% water | Yes |
+| Fertilizer | 50 SEED | 2x growth for 1 hour | Yes |
+| Growth Boost | 200 SEED | Skip to next stage | Yes |
+| Harvest Tool | 100 SEED | 2x harvest rewards | No (reusable!) |
 
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
+**How It Works:**
+1. User has 100 SEED tokens
+2. Calls `purchaseItem(WATER_CAN, 5)` → Buys 5 water cans for 50 SEED
+3. Later calls `useItem(WATER_CAN, plantId)` → Uses 1 water can
+4. Water can is burned, plant gets watered
+5. User has 4 water cans left
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-
-contract PlantStaking is ReentrancyGuard, Ownable {
-    IERC721 public plantNFT;
-    IERC20 public seedToken;
-    
-    // Staking info
-    struct Stake {
-        address owner;
-        uint256 timestamp;
-        uint256 plantId;
-        uint256 rarity;      // Higher rarity = more rewards
-        uint256 claimed;     // Rewards claimed so far
-    }
-    
-    // Staking state
-    mapping(uint256 => Stake) public stakes; // plantId => Stake
-    mapping(address => uint256[]) public userStakes; // user => plantIds[]
-    
-    // Reward configuration
-    uint256 public constant BASE_REWARD_RATE = 10 * 10**18; // 10 SEED per day
-    uint256 public constant RARITY_MULTIPLIER = 50; // +50% per rarity level
-    uint256 public constant MIN_STAKE_TIME = 1 days;
-    
-    // Pool info
-    uint256 public totalStaked;
-    uint256 public rewardPool;
-    
-    // Events
-    event PlantStaked(address indexed user, uint256 indexed plantId);
-    event PlantUnstaked(address indexed user, uint256 indexed plantId);
-    event RewardsClaimed(address indexed user, uint256 amount);
-    event RewardPoolFunded(uint256 amount);
-    
-    constructor(address _plantNFT, address _seedToken) Ownable(msg.sender) {
-        plantNFT = IERC721(_plantNFT);
-        seedToken = IERC20(_seedToken);
-    }
-    
-    // Stake plant NFT
-    function stakePlant(uint256 plantId, uint256 rarity) external nonReentrant {
-        require(plantNFT.ownerOf(plantId) == msg.sender, "Not owner");
-        require(stakes[plantId].owner == address(0), "Already staked");
-        
-        // Transfer NFT to this contract
-        plantNFT.transferFrom(msg.sender, address(this), plantId);
-        
-        // Record stake
-        stakes[plantId] = Stake({
-            owner: msg.sender,
-            timestamp: block.timestamp,
-            plantId: plantId,
-            rarity: rarity,
-            claimed: 0
-        });
-        
-        userStakes[msg.sender].push(plantId);
-        totalStaked++;
-        
-        emit PlantStaked(msg.sender, plantId);
-    }
-    
-    // Calculate pending rewards
-    function calculateRewards(uint256 plantId) public view returns (uint256) {
-        Stake memory stake = stakes[plantId];
-        if (stake.owner == address(0)) return 0;
-        
-        uint256 timeStaked = block.timestamp - stake.timestamp;
-        
-        // Base reward calculation
-        uint256 baseReward = (timeStaked * BASE_REWARD_RATE) / 1 days;
-        
-        // Apply rarity multiplier: 1x, 1.5x, 2x, 2.5x for rarity 1-4
-        uint256 multiplier = 100 + (stake.rarity - 1) * RARITY_MULTIPLIER;
-        uint256 totalReward = (baseReward * multiplier) / 100;
-        
-        // Subtract already claimed
-        return totalReward - stake.claimed;
-    }
-    
-    // Claim rewards without unstaking
-    function claimRewards(uint256 plantId) external nonReentrant {
-        Stake storage stake = stakes[plantId];
-        require(stake.owner == msg.sender, "Not stake owner");
-        
-        uint256 reward = calculateRewards(plantId);
-        require(reward > 0, "No rewards");
-        require(reward <= rewardPool, "Insufficient pool");
-        
-        stake.claimed += reward;
-        rewardPool -= reward;
-        
-        seedToken.transfer(msg.sender, reward);
-        
-        emit RewardsClaimed(msg.sender, reward);
-    }
-    
-    // Unstake plant and claim all rewards
-    function unstakePlant(uint256 plantId) external nonReentrant {
-        Stake memory stake = stakes[plantId];
-        require(stake.owner == msg.sender, "Not stake owner");
-        require(
-            block.timestamp >= stake.timestamp + MIN_STAKE_TIME,
-            "Min stake time not met"
-        );
-        
-        // Calculate and send rewards
-        uint256 reward = calculateRewards(plantId);
-        if (reward > 0 && reward <= rewardPool) {
-            rewardPool -= reward;
-            seedToken.transfer(msg.sender, reward);
-            emit RewardsClaimed(msg.sender, reward);
-        }
-        
-        // Return NFT
-        plantNFT.transferFrom(address(this), msg.sender, plantId);
-        
-        // Clean up state
-        delete stakes[plantId];
-        _removeFromUserStakes(msg.sender, plantId);
-        totalStaked--;
-        
-        emit PlantUnstaked(msg.sender, plantId);
-    }
-    
-    // Batch operations for gas efficiency
-    function stakeMultiple(uint256[] memory plantIds, uint256[] memory rarities) 
-        external 
-        nonReentrant 
-    {
-        require(plantIds.length == rarities.length, "Length mismatch");
-        
-        for (uint256 i = 0; i < plantIds.length; i++) {
-            // Reuse single stake logic
-            require(plantNFT.ownerOf(plantIds[i]) == msg.sender, "Not owner");
-            require(stakes[plantIds[i]].owner == address(0), "Already staked");
-            
-            plantNFT.transferFrom(msg.sender, address(this), plantIds[i]);
-            
-            stakes[plantIds[i]] = Stake({
-                owner: msg.sender,
-                timestamp: block.timestamp,
-                plantId: plantIds[i],
-                rarity: rarities[i],
-                claimed: 0
-            });
-            
-            userStakes[msg.sender].push(plantIds[i]);
-            totalStaked++;
-            
-            emit PlantStaked(msg.sender, plantIds[i]);
-        }
-    }
-    
-    // Fund reward pool (owner only)
-    function fundRewardPool(uint256 amount) external onlyOwner {
-        seedToken.transferFrom(msg.sender, address(this), amount);
-        rewardPool += amount;
-        emit RewardPoolFunded(amount);
-    }
-    
-    // Get all user stakes
-    function getUserStakes(address user) external view returns (uint256[] memory) {
-        return userStakes[user];
-    }
-    
-    // Get staking stats
-    function getStakingStats(address user) external view returns (
-        uint256 stakedCount,
-        uint256 totalPendingRewards,
-        uint256 totalClaimed
-    ) {
-        uint256[] memory stakeIds = userStakes[user];
-        stakedCount = stakeIds.length;
-        
-        for (uint256 i = 0; i < stakeIds.length; i++) {
-            totalPendingRewards += calculateRewards(stakeIds[i]);
-            totalClaimed += stakes[stakeIds[i]].claimed;
-        }
-        
-        return (stakedCount, totalPendingRewards, totalClaimed);
-    }
-    
-    // Internal helper
-    function _removeFromUserStakes(address user, uint256 plantId) private {
-        uint256[] storage stakeIds = userStakes[user];
-        for (uint256 i = 0; i < stakeIds.length; i++) {
-            if (stakeIds[i] == plantId) {
-                stakeIds[i] = stakeIds[stakeIds.length - 1];
-                stakeIds.pop();
-                break;
-            }
-        }
-    }
-}
-```
-
-**Staking Mechanics**:
-- Stake Plant NFTs to earn SEED tokens
-- Higher rarity = more rewards
-- Compound rewards or claim anytime
-- Minimum stake period for unstaking
+**Try it:**
+1. Deploy with SEED token address
+2. Approve SEED spending: `seedToken.approve(itemsAddress, 1000)`
+3. Call `purchaseItem(1, 3)` → Buy 3 water cans
+4. Check `balanceOf(your_address, 1)` → You have 3!
+5. Call `useItem(1, 123)` → Use on plant #123
+6. Check balance again → Now have 2!
 
 ---
 
-## Part 7: Composability - Connecting Everything
+## Part 5: Modular Architecture & Composability
 
 ### Master Garden Contract
 
-Connect all modules together:
+Create `GardenEcosystem.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -1383,9 +1235,91 @@ contract GardenEcosystem is Ownable {
 }
 ```
 
+**Explanation:**
+
+**What is Modular Architecture?**
+Modular architecture means breaking your application into separate, independent contracts that work together through well-defined interfaces.
+
+**Architecture Diagram:**
+```
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│  SeedToken   │    │  PlantNFT    │    │ GardenItems  │
+│  (ERC-20)    │◄───┤  (ERC-721)   │◄───┤  (ERC-1155)  │
+└──────────────┘    └──────────────┘    └──────────────┘
+        ▲                   ▲                   ▲
+        │                   │                   │
+        └───────────────────┴───────────────────┘
+                            │
+                    ┌───────────────┐
+                    │ GardenEcosystem│
+                    │  (Orchestrator)│
+                    └───────────────┘
+```
+
+**Key Concepts:**
+
+**1. Interfaces** - Contracts communicate through interfaces:
+```solidity
+interface ISeedToken {
+    function mint(address to, uint256 amount) external;
+}
+```
+- Define what functions exist without implementation details
+- Allow loose coupling between contracts
+- Make contracts swappable (upgrade SeedToken without changing Ecosystem)
+
+**2. Separation of Concerns** - Each contract has ONE job:
+- `SeedToken` → Only handles ERC-20 token logic
+- `PlantNFT` → Only handles NFT minting and attributes
+- `GardenItems` → Only handles ERC-1155 items
+- `GardenEcosystem` → Coordinates everything together
+
+**3. Composability** - Contracts work together like LEGO blocks:
+```solidity
+// Ecosystem orchestrates multiple contracts
+seedToken.mint(user, reward);           // Give tokens
+plantNFT.mintPlant(user, species);      // Mint NFT
+gardenItems.useItem(itemId, plantId);   // Use item
+```
+
+**Benefits:**
+
+| Aspect | Monolithic | Modular |
+|--------|-----------|---------|
+| **Upgradability** | ❌ Must redeploy everything | ✅ Upgrade individual modules |
+| **Gas Costs** | ❌ High deployment cost | ✅ Deploy only what you need |
+| **Testing** | ❌ Complex (test everything) | ✅ Easy (test each module) |
+| **Risk** | ❌ One bug breaks all | ✅ Isolated failures |
+| **Reusability** | ❌ Can't reuse parts | ✅ Use modules elsewhere |
+
+**How It Works:**
+
+1. **User calls Ecosystem**: `plantSeedEnhanced()`
+2. **Ecosystem orchestrates**:
+   - Calls `liskGarden.plantSeed()` → Creates plant
+   - Calls `seedToken.mint()` → Rewards 10 SEED
+   - Tracks user count
+   - If 5th plant → Calls `plantNFT.mintPlant()` → Bonus NFT!
+3. **User gets**: Plant + tokens + maybe NFT (all in one transaction!)
+
+**Advanced Pattern - Milestone Rewards:**
+```solidity
+// Every 5th plant = NFT
+if (userPlantCount[msg.sender] % NFT_MINT_THRESHOLD == 0) {
+    plantNFT.mintPlant(msg.sender, "Milestone Rose");
+}
+```
+
+**Try it:**
+1. Deploy all contracts (SeedToken, PlantNFT, GardenItems)
+2. Deploy GardenEcosystem with all addresses
+3. Grant minting permissions to Ecosystem contract
+4. Call `plantSeedEnhanced()` → Get rewards automatically!
+5. Plant 5 times → Get bonus NFT!
+
 ---
 
-## Part 8: Security Best Practices
+## Part 6: Security Best Practices
 
 ### Common Vulnerabilities & Solutions
 
@@ -1436,7 +1370,6 @@ function withdrawPayment() external {
 }
 ```
 
----
 
 ## Student Challenges 🏆
 
@@ -1464,13 +1397,13 @@ function withdrawPayment() external {
 contract GardenMarketplace {
     // List plant NFT for sale (price in SEED)
     function listPlant(uint256 plantId, uint256 price) external;
-    
+
     // Buy listed plant with SEED tokens
     function buyPlant(uint256 listingId) external;
-    
+
     // List garden items for sale
     function listItem(uint256 itemId, uint256 amount, uint256 pricePerUnit) external;
-    
+
     // Cancel listing
     function cancelListing(uint256 listingId) external;
 }
@@ -1485,7 +1418,7 @@ contract GardenMarketplace {
 
 **Achievements to implement**:
 - "First Plant" - Plant your first seed
-- "Green Thumb" - Own 10 plants simultaneously  
+- "Green Thumb" - Own 10 plants simultaneously
 - "Harvest Master" - Harvest 50 plants total
 - "Whale" - Own 10,000 SEED tokens
 - "Breeder" - Successfully breed plants
@@ -1498,7 +1431,61 @@ contract GardenMarketplace {
 
 ---
 
-### Challenge 4: Governance DAO (Advanced)
+### Challenge 4: Plant NFT Staking System (Advanced)
+**Goal**: Create staking contract where users lock Plant NFTs to earn SEED rewards
+
+**Requirements**:
+```solidity
+contract PlantStaking {
+    // Stake plant NFT to earn rewards
+    function stakePlant(uint256 plantId, uint256 rarity) external;
+
+    // Calculate pending rewards based on time and rarity
+    function calculateRewards(uint256 plantId) external view returns (uint256);
+
+    // Claim rewards without unstaking
+    function claimRewards(uint256 plantId) external;
+
+    // Unstake plant and claim all rewards
+    function unstakePlant(uint256 plantId) external;
+}
+```
+
+**Features to implement**:
+- Base reward rate: 10 SEED per day
+- Rarity multipliers: Common (1x), Rare (1.5x), Epic (2x), Legendary (2.5x)
+- Minimum stake time: 24 hours
+- Reward pool system (owner can fund)
+- ReentrancyGuard protection
+
+**Hints**:
+- Use `block.timestamp` for time calculations
+- Store stake info in a struct (owner, timestamp, plantId, rarity, claimed)
+- Calculate rewards: `(timeStaked * baseRate * rarityMultiplier) / 1 days`
+
+---
+
+### Challenge 5: Modular Registry & Composability (Advanced)
+**Goal**: Create a registry contract that connects all garden contracts together
+
+**Part A - Garden Registry**:
+```solidity
+contract GardenRegistry {
+    // Register core contracts (SeedToken, PlantNFT, GardenItems, etc.)
+    function setCoreContracts(...) external;
+
+    // Register plugins for extensibility
+    function registerPlugin(string memory name, address pluginAddress) external;
+
+    // Track user stats across all contracts
+    function updateUserStats(address user, ...) external;
+
+    // Get all user data in one call
+    function getUserData(address user) external view returns (...);
+}
+```
+
+### Challenge 6: Governance DAO (Expert)
 **Goal**: Create DAO for community governance
 
 **Features**:
@@ -1506,13 +1493,13 @@ contract GardenMarketplace {
 contract GardenDAO {
     // Propose changes (new items, reward rates, etc.)
     function propose(string memory description, bytes memory calldata) external;
-    
+
     // Vote with SEED tokens
     function vote(uint256 proposalId, bool support) external;
-    
+
     // Execute passed proposals
     function execute(uint256 proposalId) external;
-    
+
     // Delegate voting power
     function delegate(address delegatee) external;
 }
@@ -1526,7 +1513,7 @@ contract GardenDAO {
 
 ---
 
-### Challenge 5: Cross-Chain Bridge (Expert)
+### Challenge 7: Cross-Chain Bridge (Expert)
 **Goal**: Deploy on multiple chains with bridge
 
 **Tasks**:
@@ -1629,38 +1616,29 @@ purchaseItem(uint256, uint256)
 ## What You Learned
 
 ✅ **Token Standards**:
-- ERC-20 for fungible tokens
-- ERC-721 for NFTs
-- ERC-1155 for multi-tokens
+- ERC-20 for fungible tokens (SEED Token)
+- ERC-721 for NFTs (Plant NFTs with dynamic metadata)
+- ERC-1155 for multi-tokens (Garden Items)
 
-✅ **DeFi Mechanics**:
-- Staking & rewards
-- Token economics
-- Marketplace dynamics
+✅ **NFT Advanced Features**:
+- Dynamic on-chain metadata generation
+- Base64 encoding for data URIs
+- Image URI integration (IPFS support)
+- Attribute system for gaming NFTs
 
-✅ **Architecture Patterns**:
-- Modular design
-- Registry pattern
-- Plugin system
+✅ **Token Economics**:
+- Token vesting schedules
+- Reward distribution systems
+- Supply management (max supply, minting, burning)
 
-✅ **Advanced Features**:
-- Token vesting
-- NFT breeding
-- Item crafting
-- Batch operations
-
----
-
-## Next Session Preview
-
-**Session 6: Bearing Fruit - DeFi Integration & Yield Farming**
-- Liquidity pools
-- AMM integration  
-- Yield farming
-- Flash loans
-- Advanced DeFi strategies
+✅ **ERC-1155 Item System**:
+- Fungible and non-fungible in one contract
+- Consumable vs reusable items
+- Batch operations for gas efficiency
+- Item effects and metadata
 
 ---
+
 
 **Remember**: The best way to learn is by building! Pick a challenge and start coding. Break things, fix them, and learn from the process.
 
