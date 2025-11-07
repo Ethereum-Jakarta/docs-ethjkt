@@ -6,7 +6,9 @@ sidebar_position: 1
 
 # Belajar Solidity Basic - Step by Step
 
-Dalam tutorial ini, kita akan belajar Solidity step-by-step dari yang paling dasar. Setiap konsep akan dijelaskan satu per satu dengan contoh sederhana.
+Dalam tutorial ini, kita akan belajar Solidity step-by-step dari yang paling dasar menggunakan konteks mahasiswa. Setiap konsep akan dijelaskan satu per satu dengan contoh yang mudah dipahami.
+
+---
 
 ## Setup Awal
 
@@ -51,1469 +53,1049 @@ Sekarang Anda sudah siap untuk belajar Solidity!
 
 ---
 
-## Solidity 101: Mengenal Tipe Data
+## 4.1 Solidity 101: Tipe Data Dasar
 
-Mari kita mulai dengan memahami tipe data dasar di Solidity satu per satu.
+Kita akan belajar satu tipe data per waktu menggunakan contoh data mahasiswa.
 
-### 1. Tipe Data String
+### 1. String (Teks)
 
-**String** digunakan untuk menyimpan teks.
+**Apa itu:** Menyimpan teks seperti "Budi Santoso" atau "Teknik Informatika"
+
+**Mengapa penting:** Digunakan untuk nama, alamat, deskripsi, dan semua data berbentuk teks
+
+Buat file `LearnString.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract BelajarString {
-    // Variabel string untuk menyimpan nama
-    string public nama;
+contract LearnString {
+    // Variabel string untuk menyimpan nama mahasiswa
+    string public studentName;
 
-    // Constructor untuk mengisi nilai awal
+    // Constructor mengatur nilai awal
     constructor() {
-        nama = "Budi Santoso";
+        studentName = "Budi Santoso";
     }
 
     // Fungsi untuk mengubah nama
-    function ubahNama(string memory _namaBaru) public {
-        nama = _namaBaru;
+    function changeName(string memory _newName) public {
+        studentName = _newName;
     }
 }
 ```
 
 **Penjelasan:**
-- `string public nama` = membuat variabel string bernama "nama" yang bisa dibaca orang lain
-- `constructor()` = fungsi yang jalan sekali saat kontrak dibuat
-- `string memory _namaBaru` = parameter input bertipe string
+- `string public studentName` - membuat variabel string yang bisa dibaca orang lain
+- `constructor()` - fungsi yang jalan sekali saat kontrak dibuat
+- `string memory _newName` - parameter input bertipe string (temporary di memory)
+- `memory` - kata kunci untuk data temporary (tidak tersimpan permanent)
 
-### 2. Tipe Data Number (uint256)
+**Coba:**
+1. Deploy → Klik `studentName` → Lihat "Budi Santoso"
+2. Ketik "Ani Wijaya" → Klik `changeName`
+3. Klik `studentName` → Sekarang "Ani Wijaya"!
 
-**uint256** digunakan untuk menyimpan angka positif (0 sampai sangat besar).
+---
+
+### 2. Number (uint256)
+
+**Apa itu:** Menyimpan bilangan bulat positif dari 0 hingga sangat besar (2^256-1)
+
+**Mengapa penting:** Untuk ID, NIM, nilai, jumlah, score, dan semua data numerik
+
+Buat `LearnNumber.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract BelajarNumber {
-    // Variabel untuk menyimpan angka
-    uint256 public angka;
-    uint256 public umur;
+contract LearnNumber {
+    // Angka untuk data mahasiswa
+    uint256 public studentId;
+    uint256 public credits;
 
     constructor() {
-        angka = 100;
-        umur = 20;
+        studentId = 2101001;
+        credits = 0;
     }
 
-    // Fungsi untuk mengubah angka
-    function ubahAngka(uint256 _angkaBaru) public {
-        angka = _angkaBaru;
+    function changeStudentId(uint256 _newId) public {
+        studentId = _newId;
     }
 
-    // Fungsi untuk menambah umur
-    function tambahUmur() public {
-        umur = umur + 1;
-        // atau bisa ditulis: umur++;
+    function addCredits() public {
+        credits = credits + 3;
+        // Bisa juga ditulis: credits += 3;
     }
 }
 ```
 
 **Penjelasan:**
-- `uint256` = tipe data angka dari 0 sampai 2^256-1
-- `angka = 100` = mengisi nilai ke variabel angka
-- `umur++` = cara singkat untuk umur = umur + 1
+- `uint256` - unsigned integer 256-bit (0 sampai 2^256-1)
+- `studentId = 2101001` - mengisi nilai ke variabel
+- `credits += 3` - cara singkat untuk credits = credits + 3
 
-### 3. Tipe Data Boolean
+**Coba:**
+1. Deploy → Klik `credits` → Lihat 0
+2. Klik `addCredits` 4 kali
+3. Klik `credits` → Sekarang 12 (4 x 3)!
 
-**Boolean** hanya punya 2 nilai: `true` atau `false`.
+---
+
+### 3. Boolean (Benar/Salah)
+
+**Apa itu:** Hanya dua nilai - `true` atau `false`
+
+**Mengapa penting:** Untuk status aktif/tidak, lulus/tidak lulus, dan semua kondisi ya/tidak
+
+Buat `LearnBoolean.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract BelajarBoolean {
-    // Variabel boolean untuk status
-    bool public statusAktif;
-    bool public sudahLulus;
+contract LearnBoolean {
+    bool public isActive;
+    bool public hasGraduated;
 
     constructor() {
-        statusAktif = true;
-        sudahLulus = false;
+        isActive = true;
+        hasGraduated = false;
     }
 
     // Fungsi untuk mengubah status
-    function ubahStatus(bool _status) public {
-        statusAktif = _status;
+    function changeStatus(bool _status) public {
+        isActive = _status;
     }
 
     // Fungsi untuk lulus
-    function setLulus() public {
-        sudahLulus = true;
+    function graduate() public {
+        hasGraduated = true;
     }
 }
 ```
 
 **Penjelasan:**
-- `bool` = tipe data yang cuma bisa `true` atau `false`
-- `statusAktif = true` = mengisi nilai true
+- `bool` - tipe data yang hanya bisa `true` atau `false`
+- `isActive = true` - mengisi nilai boolean
 - Berguna untuk menyimpan status ya/tidak
 
-### 4. Gabungkan Semua Tipe Data
-
-Sekarang kita gabungkan semua tipe data dalam satu kontrak sederhana:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract DataPengguna {
-    // Variabel untuk menyimpan data pengguna
-    string public nama;
-    uint256 public umur;
-    string public alamat;
-    bool public statusAktif;
-
-    // Constructor untuk mengisi data awal
-    constructor() {
-        nama = "Budi Santoso";
-        umur = 25;
-        alamat = "Jakarta";
-        statusAktif = true;
-    }
-
-    // Fungsi untuk mengubah nama
-    function ubahNama(string memory _nama) public {
-        nama = _nama;
-    }
-
-    // Fungsi untuk mengubah umur
-    function ubahUmur(uint256 _umur) public {
-        umur = _umur;
-    }
-
-    // Fungsi untuk mengubah alamat
-    function ubahAlamat(string memory _alamat) public {
-        alamat = _alamat;
-    }
-
-    // Fungsi untuk mengubah status
-    function ubahStatus(bool _status) public {
-        statusAktif = _status;
-    }
-}
-```
-
-**Cara menggunakan:**
-1. Copy kode di atas ke Remix
-2. Compile dengan tombol "Compile"
-3. Deploy dengan tombol "Deploy"
-4. Coba panggil fungsi-fungsi yang ada
+**Coba:**
+1. Deploy → Klik `hasGraduated` → Lihat false
+2. Klik `graduate`
+3. Klik `hasGraduated` → Sekarang true!
 
 ---
 
-## Solidity 102: Mapping dan Fungsi
+### 4. Address (Alamat Wallet)
 
-### 1. Mengenal Mapping
+**Apa itu:** Menyimpan alamat wallet Ethereum (20 bytes, seperti 0x742d35Cc...)
 
-**Mapping** adalah seperti kamus atau daftar telepon - kita bisa cari data berdasarkan kunci tertentu.
+**Mengapa penting:** Untuk identifikasi kepemilikan, pengirim transaksi, dan tujuan pembayaran
 
-#### Mapping Sederhana
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract BelajarMapping {
-    // Mapping dari ID ke Nama
-    mapping(uint256 => string) public idKeNama;
-
-    // Fungsi untuk menambah data
-    function tambahPengguna(uint256 _id, string memory _nama) public {
-        idKeNama[_id] = _nama;
-    }
-
-    // Fungsi untuk mengambil nama berdasarkan ID
-    function getNama(uint256 _id) public view returns (string memory) {
-        return idKeNama[_id];
-    }
-}
-```
-
-**Penjelasan:**
-- `mapping(uint256 => string)` = kamus dari angka ID ke nama
-- `idKeNama[1] = "Budi"` = mengisi data
-- `idKeNama[1]` = mengambil data
-
-#### Mapping untuk Menyimpan Saldo
+Buat `LearnAddress.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract SaldoPengguna {
-    // Mapping dari address ke saldo
-    mapping(address => uint256) public saldo;
-
-    // Fungsi untuk tambah saldo
-    function tambahSaldo(uint256 _jumlah) public {
-        saldo[msg.sender] = saldo[msg.sender] + _jumlah;
-    }
-
-    // Fungsi untuk cek saldo
-    function cekSaldo() public view returns (uint256) {
-        return saldo[msg.sender];
-    }
-}
-```
-
-**Penjelasan:**
-- `msg.sender` = address yang memanggil fungsi
-- Kita bisa simpan saldo setiap address yang berbeda
-
-### 2. Fungsi dan Parameter
-
-Mari pelajari cara membuat fungsi yang lebih baik:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract BelajarFungsi {
-    uint256 public totalPengguna = 0;
-    mapping(uint256 => string) public daftarPengguna;
-
-    // Fungsi dengan parameter
-    function tambahPengguna(uint256 _id, string memory _nama) public {
-        daftarPengguna[_id] = _nama;
-        totalPengguna = totalPengguna + 1;
-    }
-
-    // Fungsi tanpa parameter
-    function resetTotal() public {
-        totalPengguna = 0;
-    }
-
-    // Fungsi yang mengembalikan nilai (returns)
-    function hitungPengguna() public view returns (uint256) {
-        return totalPengguna;
-    }
-
-    // Fungsi dengan multiple parameter
-    function cekDataLengkap(
-        string memory _nama,
-        uint256 _id,
-        uint256 _umur
-    ) public pure returns (bool) {
-        // Cek apakah data lengkap
-        if (bytes(_nama).length > 0 && _id > 0 && _umur > 17) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-```
-
-**Penjelasan Jenis Fungsi:**
-- `public` = bisa dipanggil dari luar kontrak
-- `view` = hanya membaca data, tidak mengubah
-- `pure` = tidak membaca dan tidak mengubah data
-- `returns` = fungsi mengembalikan nilai
-
----
-
-## Solidity 103: Struct dan Array
-
-### 1. Mengenal Struct
-
-**Struct** adalah cara untuk mengelompokkan beberapa data jadi satu.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract BelajarStruct {
-    // Buat struct untuk data pengguna
-    struct Pengguna {
-        string nama;
-        uint256 id;
-        uint256 umur;
-        bool aktif;
-    }
-
-    // Variabel dengan tipe struct
-    Pengguna public penggunaPertama;
-
-    // Fungsi untuk mengisi data struct
-    function isiDataPengguna() public {
-        penggunaPertama = Pengguna({
-            nama: "Budi Santoso",
-            id: 1,
-            umur: 20,
-            aktif: true
-        });
-    }
-
-    // Fungsi untuk mengubah nama saja
-    function ubahNama(string memory _namaBaru) public {
-        penggunaPertama.nama = _namaBaru;
-    }
-}
-```
-
-**Penjelasan:**
-- `struct Pengguna { ... }` = membuat template data pengguna
-- `Pengguna public penggunaPertama` = membuat variabel dengan tipe struct
-- `penggunaPertama.nama` = mengakses bagian tertentu dari struct
-
-### 2. Mapping dengan Struct
-
-Sekarang kita gabungkan Mapping dengan Struct:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract DataBanyakPengguna {
-    // Struct untuk data pengguna
-    struct Pengguna {
-        string nama;
-        string email;
-        uint256 umur;
-        bool aktif;
-    }
-
-    // Mapping dari ID ke data pengguna
-    mapping(uint256 => Pengguna) public daftarPengguna;
-
-    // Fungsi untuk tambah pengguna baru
-    function tambahPengguna(
-        uint256 _id,
-        string memory _nama,
-        string memory _email,
-        uint256 _umur
-    ) public {
-        daftarPengguna[_id] = Pengguna({
-            nama: _nama,
-            email: _email,
-            umur: _umur,
-            aktif: true
-        });
-    }
-
-    // Fungsi untuk nonaktifkan pengguna
-    function nonaktifkanPengguna(uint256 _id) public {
-        daftarPengguna[_id].aktif = false;
-    }
-}
-```
-
-### 3. Mengenal Array
-
-**Array** adalah daftar atau list yang bisa menyimpan banyak data dengan tipe yang sama.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract BelajarArray {
-    // Array untuk menyimpan daftar ID
-    uint256[] public daftarID;
-
-    // Array untuk menyimpan nama-nama pengguna
-    string[] public daftarNama;
-
-    // Fungsi untuk tambah ID ke array
-    function tambahID(uint256 _id) public {
-        daftarID.push(_id);
-    }
-
-    // Fungsi untuk tambah nama ke array
-    function tambahNama(string memory _nama) public {
-        daftarNama.push(_nama);
-    }
-
-    // Fungsi untuk melihat berapa banyak data
-    function jumlahPengguna() public view returns (uint256) {
-        return daftarID.length;
-    }
-
-    // Fungsi untuk mengambil ID berdasarkan urutan
-    function getIDUrutan(uint256 _index) public view returns (uint256) {
-        return daftarID[_index];
-    }
-
-    // Fungsi untuk mengambil semua ID
-    function getAllID() public view returns (uint256[] memory) {
-        return daftarID;
-    }
-}
-```
-
-**Penjelasan:**
-- `uint256[] public daftarID` = array untuk menyimpan banyak angka ID
-- `daftarID.push(_id)` = menambah data ke array
-- `daftarID.length` = menghitung jumlah data dalam array
-- `daftarID[0]` = mengambil data urutan pertama (dimulai dari 0)
-
-### 4. Gabungkan Struct, Mapping, dan Array
-
-Mari buat sistem yang lebih lengkap:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract SistemPengguna {
-    // Struct untuk data pengguna
-    struct Pengguna {
-        string nama;
-        string email;
-        bool aktif;
-    }
-
-    // Mapping untuk menyimpan data detail pengguna
-    mapping(uint256 => Pengguna) public dataPengguna;
-
-    // Array untuk menyimpan daftar semua ID yang terdaftar
-    uint256[] public semuaID;
-
-    // Fungsi untuk daftar pengguna baru
-    function daftarPengguna(
-        uint256 _id,
-        string memory _nama,
-        string memory _email
-    ) public {
-        // Simpan data ke mapping
-        dataPengguna[_id] = Pengguna({
-            nama: _nama,
-            email: _email,
-            aktif: true
-        });
-
-        // Tambah ID ke array
-        semuaID.push(_id);
-    }
-
-    // Fungsi untuk melihat total pengguna
-    function totalPengguna() public view returns (uint256) {
-        return semuaID.length;
-    }
-
-    // Fungsi untuk melihat pengguna ke-berapa
-    function getPenggunaKe(uint256 _urutan) public view returns (
-        uint256 id,
-        string memory nama,
-        string memory email,
-        bool aktif
-    ) {
-        uint256 id_pengguna = semuaID[_urutan];
-        Pengguna memory usr = dataPengguna[id_pengguna];
-
-        return (id_pengguna, usr.nama, usr.email, usr.aktif);
-    }
-
-    // Fungsi untuk nonaktifkan pengguna
-    function nonaktifkanPengguna(uint256 _id) public {
-        dataPengguna[_id].aktif = false;
-    }
-}
-```
-
-**Penjelasan:**
-- Kita pakai Mapping untuk simpan data detail pengguna
-- Kita pakai Array untuk track semua ID yang terdaftar
-- Dengan kombinasi ini, kita bisa akses data dengan 2 cara:
-  - Berdasarkan ID (lewat mapping)
-  - Berdasarkan urutan (lewat array)
-
----
-
-## Solidity 103: Flow Control, Enum, dan Events
-
-### 1. Flow Control (if-else, for loops)
-
-**Flow Control** mengatur alur eksekusi program berdasarkan kondisi.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract FlowControl {
-    // Function dengan if-else
-    function cekNilai(uint256 _nilai) public pure returns (string memory) {
-        if (_nilai >= 80) {
-            return "A - Sangat Baik";
-        } else if (_nilai >= 70) {
-            return "B - Baik";
-        } else if (_nilai >= 60) {
-            return "C - Cukup";
-        } else if (_nilai >= 50) {
-            return "D - Kurang";
-        } else {
-            return "E - Gagal";
-        }
-    }
-
-    // Function dengan for loop
-    function hitungTotal(uint256[] memory _angka) public pure returns (uint256) {
-        uint256 total = 0;
-
-        for (uint256 i = 0; i < _angka.length; i++) {
-            total += _angka[i];
-        }
-
-        return total;
-    }
-
-    // Function dengan while loop
-    function hitungSampai(uint256 _target) public pure returns (uint256) {
-        uint256 hasil = 0;
-        uint256 counter = 0;
-
-        while (counter < _target) {
-            hasil += counter;
-            counter++;
-        }
-
-        return hasil;
-    }
-}
-```
-
-**Penjelasan:**
-- `if-else` = membuat keputusan berdasarkan kondisi
-- `for loop` = mengulang kode sejumlah tertentu
-- `while loop` = mengulang selama kondisi terpenuhi
-
-### 2. Mengenal Enum
-
-**Enum** adalah tipe data dengan nilai yang sudah ditentukan.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract BelajarEnum {
-    // Enum untuk status pesanan
-    enum StatusPesanan {
-        Pending,        // 0
-        Diproses,       // 1
-        Dikirim,        // 2
-        Selesai,        // 3
-        Dibatalkan      // 4
-    }
-
-    // Struct untuk pesanan
-    struct Pesanan {
-        uint256 id;
-        string namaProduk;
-        StatusPesanan status;
-        address pembeli;
-    }
-
-    // Mapping dari ID ke pesanan
-    mapping(uint256 => Pesanan) public pesanan;
-    uint256 public pesananCounter = 0;
-
-    // Function untuk buat pesanan baru
-    function buatPesanan(string memory _namaProduk) public {
-        pesananCounter++;
-
-        pesanan[pesananCounter] = Pesanan({
-            id: pesananCounter,
-            namaProduk: _namaProduk,
-            status: StatusPesanan.Pending,
-            pembeli: msg.sender
-        });
-    }
-
-    // Function untuk update status
-    function updateStatus(uint256 _id, StatusPesanan _status) public {
-        pesanan[_id].status = _status;
-    }
-
-    // Function untuk get status dalam string
-    function getStatusString(uint256 _id) public view returns (string memory) {
-        StatusPesanan status = pesanan[_id].status;
-
-        if (status == StatusPesanan.Pending) return "Pending";
-        if (status == StatusPesanan.Diproses) return "Diproses";
-        if (status == StatusPesanan.Dikirim) return "Dikirim";
-        if (status == StatusPesanan.Selesai) return "Selesai";
-        if (status == StatusPesanan.Dibatalkan) return "Dibatalkan";
-
-        return "Status Tidak Dikenal";
-    }
-}
-```
-
-**Penjelasan:**
-- `enum` = tipe data dengan nilai predefined
-- Lebih aman dari uint256 biasa
-- Membuat kode lebih mudah dibaca
-
-### 3. Events (Logging)
-
-**Events** digunakan untuk logging aktivitas di blockchain.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract BelajarEvents {
-    // Definisi Events
-    event PenggunaDidaftarkan(
-        address indexed pengguna,
-        uint256 indexed id,
-        string nama,
-        uint256 timestamp
-    );
-
-    event DataDiubah(
-        address indexed pengguna,
-        uint256 indexed id,
-        string dataLama,
-        string dataBaru
-    );
-
-    // State variables
-    mapping(uint256 => string) public dataPengguna;
-    mapping(address => uint256) public addressKeID;
-    uint256 public penggunaCounter = 0;
-
-    // Function yang emit event
-    function daftarPengguna(string memory _nama) public {
-        penggunaCounter++;
-
-        dataPengguna[penggunaCounter] = _nama;
-        addressKeID[msg.sender] = penggunaCounter;
-
-        // Emit event
-        emit PenggunaDidaftarkan(
-            msg.sender,
-            penggunaCounter,
-            _nama,
-            block.timestamp
-        );
-    }
-
-    // Function untuk ubah data
-    function ubahData(uint256 _id, string memory _dataBaru) public {
-        string memory dataLama = dataPengguna[_id];
-        dataPengguna[_id] = _dataBaru;
-
-        // Emit event
-        emit DataDiubah(msg.sender, _id, dataLama, _dataBaru);
-    }
-}
-```
-
-**Penjelasan:**
-- `event` = deklarasi event untuk logging
-- `indexed` = parameter bisa di-filter saat query
-- `emit` = trigger event
-- Events dicatat di blockchain log (tidak di state)
-- Lebih murah dari storage
-
-### 4. Contoh Lengkap: Sistem Manajemen dengan Enum, Events, dan Modifiers
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract SistemManajemen {
-    // Enum untuk status
-    enum StatusPengguna {
-        Tidak_Terdaftar,    // 0
-        Aktif,              // 1
-        Cuti,               // 2
-        Alumni,             // 3
-        Drop_Out            // 4
-    }
-
-    // Struct untuk pengguna
-    struct Pengguna {
-        string nama;
-        uint256 id;
-        string email;
-        uint8 level;
-        StatusPengguna status;
-    }
-
-    // State variables
-    mapping(uint256 => Pengguna) public pengguna;
-    mapping(address => uint256) public addressKeID;
+contract LearnAddress {
     address public admin;
-    uint256 public maxLevel = 10;
+    address public student;
 
-    // Events
-    event PenggunaDidaftarkan(uint256 indexed id, string nama);
-    event StatusDiubah(uint256 indexed id, StatusPengguna statusLama, StatusPengguna statusBaru);
-    event LevelDinaikkan(uint256 indexed id, uint8 levelLama, uint8 levelBaru);
-
-    // Modifier untuk akses control
-    modifier hanyaAdmin() {
-        require(msg.sender == admin, "Hanya admin yang bisa mengakses");
-        _;
+    constructor() {
+        admin = msg.sender;  // msg.sender = alamat wallet Anda
     }
 
-    modifier penggunaAktif(uint256 _id) {
-        require(pengguna[_id].status == StatusPengguna.Aktif, "Pengguna tidak aktif");
-        _;
+    function setStudent(address _student) public {
+        student = _student;
     }
+}
+```
+
+**Poin Penting:**
+- `address` - menyimpan alamat wallet (0x742d35Cc...)
+- `msg.sender` - alamat yang memanggil fungsi
+- Digunakan untuk kepemilikan, pembayaran, kontrol akses
+
+**Coba:**
+1. Deploy → Klik `admin` → Lihat alamat wallet Anda!
+2. Salin alamat lain → Paste di `setStudent`
+3. Klik `student` → Lihat alamat tersebut
+
+---
+
+### 5. 🎯 TANTANGAN: Buat StudentData Sendiri!
+
+**Apa yang dipelajari:** Menggabungkan semua tipe data dalam satu contract
+
+**Tujuan:** Tulis contract `StudentData.sol` SENDIRI tanpa copy-paste!
+
+#### 📋 Spesifikasi Contract:
+
+**State Variables yang dibutuhkan:**
+1. `studentName` (tipe: string, public) → nama mahasiswa
+2. `studentId` (tipe: uint256, public) → NIM
+3. `isActive` (tipe: bool, public) → status aktif
+4. `wallet` (tipe: address, public) → alamat wallet
+5. `registeredTime` (tipe: uint256, public) → waktu pendaftaran
+
+**Constructor:**
+- Set `studentName` = "Budi Santoso"
+- Set `studentId` = 2101001
+- Set `isActive` = true
+- Set `wallet` = alamat yang deploy (gunakan `msg.sender`)
+- Set `registeredTime` = waktu sekarang (gunakan `block.timestamp`)
+
+**Fungsi yang dibutuhkan:**
+1. `updateCredits()` - Tipe: public - Aksi: Menambah state variable `credits` (uint256) sebesar 3
+2. `getAge()` - Tipe: public view - Return: uint256 - Aksi: Hitung lama terdaftar (waktu sekarang - waktu daftar)
+
+#### 🔨 Mulai Coding:
+
+Buat file baru `StudentData.sol` di Remix dan mulai dari template ini:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract StudentData {
+    // TODO 1: Deklarasikan 6 state variables
+    // Hint: string public studentName;
+    // Hint: uint256 public studentId;
+    // ... tulis 4 lainnya!
+
+
+
+
+
+
+    // TODO 2: Buat constructor
+    constructor() {
+        // Set nilai awal untuk semua variables
+        // Hint: studentName = "Budi Santoso";
+        // Hint: wallet = msg.sender;
+
+
+
+    }
+
+    // TODO 3: Buat fungsi updateCredits()
+    // Hint: function updateCredits() public { ... }
+
+
+    // TODO 4: Buat fungsi getAge()
+    // Hint: function getAge() public view returns (uint256) { ... }
+    // Hint: return block.timestamp - registeredTime;
+
+
+}
+```
+
+#### ✅ Checklist Verifikasi:
+
+Setelah selesai, cek apakah contract Anda memenuhi ini:
+
+- [ ] Ada 6 state variables (string, uint256, bool, address, uint256, uint256)
+- [ ] Semua variables adalah public
+- [ ] Constructor mengatur semua nilai awal
+- [ ] Fungsi `updateCredits()` menambah credits sebesar 3
+- [ ] Fungsi `getAge()` adalah view dan return uint256
+- [ ] Fungsi `getAge()` menghitung selisih waktu
+- [ ] Contract dapat di-compile tanpa error
+
+#### 🧪 Test Contract Anda:
+
+**1. Deploy**
+- Klik "Deploy" di Remix
+- Lihat contract muncul di "Deployed Contracts"
+
+**2. Test Variables**
+- Klik `studentName` → Harus tampil "Budi Santoso"
+- Klik `studentId` → Harus tampil 2101001
+- Klik `isActive` → Harus tampil true
+- Klik `wallet` → Harus tampil alamat wallet Anda
+- Klik `registeredTime` → Harus tampil angka (Unix timestamp)
+
+**3. Test Fungsi updateCredits()**
+- Klik `updateCredits` → Popup MetaMask muncul
+- Confirm transaksi
+- Klik `credits` → Harus tampil 3
+
+**4. Test Fungsi getAge()**
+- Klik `getAge` → Langsung tampil angka (GRATIS!)
+- Tunggu 1 menit
+- Klik `getAge` lagi → Angka bertambah ~60 detik!
+
+#### 🎓 Penjelasan Konsep:
+
+**Variabel Khusus Solidity:**
+- `msg.sender` - alamat wallet yang memanggil fungsi
+- `block.timestamp` - waktu blok saat ini (Unix timestamp dalam detik)
+
+**Modifier Fungsi:**
+- `public` - siapa saja dapat memanggil fungsi
+- `view` - hanya membaca, tidak mengubah state → GRATIS!
+- `returns (uint256)` - fungsi mengembalikan angka
+
+**Cara Kerja:**
+- Constructor berjalan sekali saat deploy
+- State variables tersimpan permanen di blockchain
+- Fungsi view GRATIS dipanggil dari luar (no gas!)
+- Fungsi yang mengubah state butuh gas (popup MetaMask)
+
+#### 💡 Tips Debugging:
+
+**Error Umum:**
+
+```
+"ParserError: Expected ';' but got '}'"
+→ Lupa titik koma di akhir statement
+
+"TypeError: Member 'sender' not found"
+→ Salah ketik: msg.sender (huruf kecil semua!)
+
+"DeclarationError: Undeclared identifier"
+→ Variabel belum dideklarasikan atau typo nama
+
+"TypeError: Different number of arguments"
+→ Cek parameter fungsi, apakah sudah sesuai?
+```
+
+**Jika Stuck:**
+1. Cek kembali 4 contract sebelumnya (String, Number, Boolean, Address)
+2. Lihat pattern yang sama
+3. Kombinasikan pattern tersebut
+4. Jangan menyerah! Ini proses belajar 💪
+
+#### 🏆 Setelah Berhasil:
+
+Selamat! Anda sudah menguasai:
+- ✅ 4 tipe data dasar (string, uint256, bool, address)
+- ✅ State variables
+- ✅ Constructor
+- ✅ Public functions
+- ✅ View functions (read-only)
+- ✅ Global variables (msg.sender, block.timestamp)
+
+**Selanjutnya:** Pelajari Struct & Enum untuk data yang lebih kompleks!
+
+---
+
+## 4.2 Solidity 102: Struct & Enum
+
+Sekarang kita akan belajar cara mengelompokkan data dengan Struct dan Enum.
+
+### 1. Enum (Angka Bernama)
+
+**Apa itu:** Tipe data dengan nilai yang sudah ditentukan sebelumnya
+
+**Mengapa penting:** Membuat kode lebih mudah dibaca dan mencegah nilai yang tidak valid
+
+Buat `LearnEnum.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnEnum {
+    enum StudentStatus {
+        NotRegistered,  // 0
+        Active,         // 1
+        OnLeave,        // 2
+        Graduated,      // 3
+        Dropped         // 4
+    }
+
+    StudentStatus public currentStatus;
+
+    constructor() {
+        currentStatus = StudentStatus.NotRegistered;
+    }
+
+    function register() public {
+        currentStatus = StudentStatus.Active;
+    }
+
+    function takeLeave() public {
+        if (currentStatus == StudentStatus.Active) {
+            currentStatus = StudentStatus.OnLeave;
+        }
+    }
+
+    function graduate() public {
+        if (currentStatus == StudentStatus.Active) {
+            currentStatus = StudentStatus.Graduated;
+        }
+    }
+}
+```
+
+**Penjelasan:**
+- `enum StudentStatus { ... }` - mendefinisikan tipe data dengan nilai fixed
+- `NotRegistered` = 0, `Active` = 1, dst (otomatis increment)
+- `currentStatus = StudentStatus.Active` - mengisi nilai enum
+- Lebih aman dan mudah dibaca daripada menggunakan angka langsung
+
+**Coba:**
+1. Deploy → Klik `currentStatus` → Lihat 0 (NotRegistered)
+2. Klik `register` → Status berubah ke 1 (Active)
+3. Klik `graduate` → Status berubah ke 3 (Graduated)
+
+---
+
+### 2. Struct (Kelompok Data)
+
+**Apa itu:** Cara untuk mengelompokkan beberapa variabel menjadi satu tipe data kustom
+
+**Mengapa penting:** Mengorganisir data yang saling berhubungan, membuat kode lebih rapi
+
+Buat `LearnStruct.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnStruct {
+    enum StudentStatus { NotRegistered, Active, OnLeave, Graduated }
+
+    struct Student {
+        uint256 id;
+        string name;
+        address wallet;
+        StudentStatus status;
+        uint8 credits;
+        bool isActive;
+    }
+
+    Student public myStudent;
+
+    constructor() {
+        myStudent = Student({
+            id: 2101001,
+            name: "Budi Santoso",
+            wallet: msg.sender,
+            status: StudentStatus.Active,
+            credits: 0,
+            isActive: true
+        });
+    }
+
+    function addCredits() public {
+        myStudent.credits += 3;
+    }
+
+    function changeStatus(StudentStatus _status) public {
+        myStudent.status = _status;
+    }
+}
+```
+
+**Penjelasan:**
+- `struct Student { ... }` - membuat tipe kustom baru yang mengelompokkan data
+- Seperti membuat template: setiap Student memiliki id, name, wallet, dll
+- `Student public myStudent` - membuat variabel bertipe Student
+- `myStudent = Student({ ... })` - mengisi struct dengan data
+- `myStudent.credits += 3` - akses dan ubah field tertentu
+
+**Coba:**
+1. Deploy
+2. Klik `myStudent` → Lihat semua data tergabung
+3. Klik `addCredits` → Credits bertambah 3
+4. Klik `myStudent` lagi → Lihat perubahan!
+
+---
+
+## 4.3 Solidity 103: Mapping & Array
+
+Pelajari cara mengelola banyak mahasiswa.
+
+### 1. Mapping (Kamus)
+
+**Apa itu:** Seperti kamus - memetakan kunci ke nilai (studentId → data)
+
+**Mengapa penting:** Mengasosiasikan data dengan identifier unik, pencarian cepat berdasarkan kunci
+
+Buat `LearnMapping.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnMapping {
+    // Mapping: studentId => name
+    mapping(uint256 => string) public studentName;
+
+    // Mapping: studentId => credits
+    mapping(uint256 => uint256) public studentCredits;
+
+    function addStudent(uint256 _id, string memory _name) public {
+        studentName[_id] = _name;
+        studentCredits[_id] = 0;
+    }
+
+    function addCredits(uint256 _id, uint256 _amount) public {
+        studentCredits[_id] += _amount;
+    }
+}
+```
+
+**Penjelasan:**
+- `mapping(uint256 => string)` - seperti kamus, map studentId (key) ke name (value)
+- `mapping(uint256 => uint256)` - map studentId ke credits
+- `studentName[_id] = _name` - set nama untuk student ID tertentu
+- `public` pada mapping otomatis membuat fungsi getter
+
+**Coba:**
+1. Deploy
+2. Ketik 2101001, "Budi" → Klik `addStudent`
+3. Ketik 2101002, "Ani" → Klik `addStudent`
+4. Ketik 2101001 di `studentName` → Lihat "Budi"
+5. Ketik 2101002 di `studentName` → Lihat "Ani"
+6. Sekarang Anda punya 2 mahasiswa!
+
+---
+
+### 2. Array (Daftar)
+
+**Apa itu:** Daftar berurutan yang dapat bertambah ukurannya
+
+**Mengapa penting:** Menyimpan koleksi yang dapat diiterasi, mendapatkan semua item sekaligus
+
+Buat `LearnArray.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnArray {
+    // Array untuk menyimpan student ID
+    uint256[] public allStudentIds;
+
+    // Tambah mahasiswa
+    function addStudent(uint256 _id) public {
+        allStudentIds.push(_id);
+    }
+
+    // Dapatkan total mahasiswa
+    function getTotalStudents() public view returns (uint256) {
+        return allStudentIds.length;
+    }
+
+    // Dapatkan semua student ID
+    function getAllStudents() public view returns (uint256[] memory) {
+        return allStudentIds;
+    }
+
+    // Dapatkan student tertentu by index
+    function getStudentByIndex(uint256 _index) public view returns (uint256) {
+        return allStudentIds[_index];
+    }
+}
+```
+
+**Penjelasan:**
+- `uint256[]` - array dinamis yang dapat bertambah ukurannya
+- `allStudentIds.push(_id)` - menambahkan elemen ke akhir array
+- `allStudentIds.length` - mengembalikan jumlah elemen
+- `allStudentIds[0]` - akses elemen pertama (array dimulai dari indeks 0!)
+- `returns (uint256[] memory)` - mengembalikan seluruh array
+
+**Coba:**
+1. Deploy
+2. Tambah student dengan ID: 2101001, 2101002, 2101003
+3. Klik `getTotalStudents` → Lihat 3
+4. Klik `getAllStudents` → Lihat [2101001, 2101002, 2101003]
+5. Ketik 0 di `getStudentByIndex` → Lihat 2101001 (index pertama!)
+
+---
+
+### 3. Mapping + Struct (Banyak Mahasiswa)
+
+**Apa itu:** Menggabungkan mapping dengan struct untuk menyimpan banyak item kompleks
+
+**Mengapa penting:** Mengelola banyak item dengan data kompleks, pola smart contract dunia nyata
+
+Buat `MultipleStudents.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract MultipleStudents {
+    enum StudentStatus { NotRegistered, Active, OnLeave, Graduated }
+
+    struct Student {
+        uint256 id;
+        string name;
+        address wallet;
+        StudentStatus status;
+        uint8 credits;
+        bool exists;
+    }
+
+    // Mapping untuk menyimpan mahasiswa
+    mapping(uint256 => Student) public students;
+
+    // Counter
+    uint256 public studentCounter;
+
+    // Tambah mahasiswa baru
+    function addStudent(string memory _name) public returns (uint256) {
+        studentCounter++;
+
+        students[studentCounter] = Student({
+            id: studentCounter,
+            name: _name,
+            wallet: msg.sender,
+            status: StudentStatus.Active,
+            credits: 0,
+            exists: true
+        });
+
+        return studentCounter;
+    }
+
+    // Tambah credits
+    function addCredits(uint256 _id, uint8 _amount) public {
+        students[_id].credits += _amount;
+    }
+
+    // Dapatkan info mahasiswa
+    function getStudent(uint256 _id) public view returns (Student memory) {
+        return students[_id];
+    }
+
+    // Check apakah mahasiswa exist
+    function studentExists(uint256 _id) public view returns (bool) {
+        return students[_id].exists;
+    }
+}
+```
+
+**Penjelasan:**
+- `mapping(uint256 => Student) public students` - map studentId ke Student struct
+- `studentCounter++` - increment counter (membuat ID unik)
+- `students[studentCounter] = Student({ ... })` - simpan mahasiswa baru di mapping
+- `returns (uint256)` - fungsi mengembalikan ID mahasiswa baru
+- `returns (Student memory)` - fungsi mengembalikan copy Student struct
+- Menggabungkan mapping + struct untuk kelola banyak mahasiswa!
+
+**Coba:**
+1. Deploy
+2. Ketik "Budi" → Klik `addStudent` → Return studentId=1
+3. Ketik "Ani" → Klik `addStudent` → Return studentId=2
+4. Ketik 1 di `getStudent` → Lihat data mahasiswa #1
+5. Ketik 2 di `getStudent` → Lihat data mahasiswa #2
+6. Ketik 1, 6 di `addCredits` → Tambah 6 credits untuk mahasiswa #1
+7. Ketik 1 di `getStudent` → Lihat credits bertambah!
+
+---
+
+## 4.4 Solidity 104: Modifier & Event
+
+Tambahkan keamanan dan komunikasi.
+
+### 1. Require (Validasi)
+
+**Apa itu:** Penjaga keamanan yang memeriksa kondisi sebelum menjalankan kode
+
+**Mengapa penting:** Mencegah tindakan tidak sah, validasi input, penting untuk keamanan
+
+Buat `LearnRequire.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnRequire {
+    mapping(uint256 => address) public studentOwner;
+    mapping(uint256 => uint256) public studentCredits;
+
+    function registerStudent(uint256 _id) public {
+        studentOwner[_id] = msg.sender;
+        studentCredits[_id] = 0;
+    }
+
+    function addCredits(uint256 _id, uint256 _amount) public {
+        // Cek apakah caller adalah pemilik student
+        require(studentOwner[_id] == msg.sender, "Bukan student Anda!");
+
+        // Cek amount valid
+        require(_amount > 0, "Amount harus lebih dari 0");
+
+        studentCredits[_id] += _amount;
+    }
+}
+```
+
+**Penjelasan:**
+- `require(condition, "error message")` - cek apakah kondisi benar
+- Jika kondisi FALSE → transaksi gagal dan tampilkan pesan error
+- Jika kondisi TRUE → kode lanjut ke baris berikutnya
+- `studentOwner[_id] == msg.sender` - cek apakah caller adalah pemilik
+- Digunakan untuk validasi dan security checks
+
+**Coba:**
+1. Deploy
+2. Ketik 2101001 → Klik `registerStudent`
+3. Ketik 2101001, 3 → Klik `addCredits` → BERHASIL (Anda pemiliknya)
+4. Ganti ke akun lain di MetaMask
+5. Ketik 2101001, 3 → Coba `addCredits` → GAGAL "Bukan student Anda!"
+6. Ketik 2101001, 0 → Coba `addCredits` → GAGAL "Amount harus lebih dari 0"
+
+---
+
+### 2. Modifier (Pemeriksaan Reusable)
+
+**Apa itu:** Pembungkus validasi yang dapat digunakan kembali untuk banyak fungsi
+
+**Mengapa penting:** Hindari pengulangan require, kode lebih bersih, prinsip DRY
+
+Buat `LearnModifier.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnModifier {
+    address public admin;
+    mapping(uint256 => address) public studentOwner;
+    mapping(uint256 => uint256) public studentCredits;
+    uint256 public adminActionCount;
 
     constructor() {
         admin = msg.sender;
     }
 
-    // Function untuk registrasi pengguna
-    function registrasiPengguna(
-        uint256 _id,
-        string memory _nama,
-        string memory _email
-    ) public hanyaAdmin {
-        require(pengguna[_id].status == StatusPengguna.Tidak_Terdaftar, "Pengguna sudah terdaftar");
-
-        pengguna[_id] = Pengguna({
-            nama: _nama,
-            id: _id,
-            email: _email,
-            level: 1,
-            status: StatusPengguna.Aktif
-        });
-
-        emit PenggunaDidaftarkan(_id, _nama);
+    // Modifier: hanya admin yang bisa call
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Hanya admin!");
+        _;
     }
 
-    // Function untuk mengubah status pengguna
-    function ubahStatusPengguna(uint256 _id, StatusPengguna _statusBaru) public hanyaAdmin {
-        StatusPengguna statusLama = pengguna[_id].status;
-        pengguna[_id].status = _statusBaru;
-
-        emit StatusDiubah(_id, statusLama, _statusBaru);
+    // Modifier: harus pemilik student
+    modifier onlyStudentOwner(uint256 _id) {
+        require(studentOwner[_id] == msg.sender, "Bukan student Anda!");
+        _;
     }
 
-    // Function untuk naikkan level
-    function naikkanLevel(uint256 _id) public penggunaAktif(_id) {
-        require(pengguna[_id].level < maxLevel, "Sudah mencapai level maksimal");
-
-        uint8 levelLama = pengguna[_id].level;
-        pengguna[_id].level++;
-
-        emit LevelDinaikkan(_id, levelLama, pengguna[_id].level);
+    function registerStudent(uint256 _id) public {
+        studentOwner[_id] = msg.sender;
+        studentCredits[_id] = 0;
     }
 
-    // Function untuk cek eligibilitas
-    function cekEligibilitas(uint256 _id) public view returns (bool eligible, string memory alasan) {
-        Pengguna memory usr = pengguna[_id];
-
-        if (usr.status != StatusPengguna.Aktif) {
-            return (false, "Status pengguna tidak aktif");
-        } else if (usr.level < 5) {
-            return (false, "Level belum mencapai minimal");
-        } else {
-            return (true, "Memenuhi syarat");
-        }
+    // Hanya admin yang bisa call ini
+    function adminFunction() public onlyAdmin {
+        adminActionCount++;
     }
 
-    // Function untuk mendapatkan status dalam string
-    function getStatusString(uint256 _id) public view returns (string memory) {
-        StatusPengguna status = pengguna[_id].status;
-
-        if (status == StatusPengguna.Tidak_Terdaftar) return "Tidak Terdaftar";
-        if (status == StatusPengguna.Aktif) return "Aktif";
-        if (status == StatusPengguna.Cuti) return "Cuti";
-        if (status == StatusPengguna.Alumni) return "Alumni";
-        if (status == StatusPengguna.Drop_Out) return "Drop Out";
-
-        return "Status Tidak Dikenal";
+    // Hanya pemilik student yang bisa add credits
+    function addCredits(uint256 _id, uint256 _amount) public onlyStudentOwner(_id) {
+        require(_amount > 0, "Amount harus lebih dari 0");
+        studentCredits[_id] += _amount;
     }
 }
 ```
 
-**Konsep Penting:**
-- **Enum**: Tipe data khusus dengan nilai yang sudah ditentukan
-- **Modifier**: Fungsi untuk mengecek kondisi sebelum menjalankan function
-- **require()**: Untuk validasi input dan kondisi
-- **Events**: Untuk logging aktivitas di blockchain
-- **Flow Control**: if-else, for loop untuk kontrol alur program
+**Penjelasan:**
+- `modifier onlyAdmin() { ... }` - membuat check yang reusable
+- `_` - placeholder di mana kode fungsi akan berjalan
+- `function adminFunction() public onlyAdmin` - apply modifier
+- Modifier berjalan SEBELUM fungsi (check kondisi dulu)
+- `adminActionCount++` - tambah counter (hanya admin bisa)
+- Lebih bersih daripada menulis require di setiap fungsi!
+- Dapat gunakan beberapa modifier pada satu fungsi
+
+**Coba:**
+1. Deploy
+2. Klik `adminActionCount` → Lihat 0
+3. Klik `adminFunction` → BERHASIL (Anda admin)
+4. Klik `adminActionCount` → Sekarang 1!
+5. Ganti akun → Coba `adminFunction` → GAGAL "Hanya admin!"
+6. Ketik 2101001 → `registerStudent` → BERHASIL
+7. Ketik 2101001, 3 → `addCredits` → BERHASIL
+8. Ganti akun → Ketik 2101001, 3 → `addCredits` → GAGAL "Bukan student Anda!"
 
 ---
 
-## Solidity 104: Error Handling dan Modifiers
+### 3. Event (Komunikasi)
 
-### 1. Error Handling dengan require()
+**Apa itu:** Menyiarkan log tentang apa yang terjadi di contract (disimpan di blockchain)
 
-**require()** digunakan untuk mengecek kondisi. Jika kondisi salah, transaksi akan dibatalkan.
+**Mengapa penting:** Frontend listen real-time updates, track history, debugging tool
 
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract PengecekanError {
-    mapping(uint256 => string) public namaPengguna;
-    mapping(uint256 => uint256) public saldoPengguna;
-
-    // Fungsi dengan pengecekan error
-    function tambahPengguna(uint256 _id, string memory _nama) public {
-        // Cek apakah nama tidak kosong
-        require(bytes(_nama).length > 0, "Nama tidak boleh kosong");
-
-        // Cek apakah ID belum ada
-        require(bytes(namaPengguna[_id]).length == 0, "ID sudah terdaftar");
-
-        namaPengguna[_id] = _nama;
-    }
-
-    // Fungsi untuk isi saldo dengan pengecekan
-    function isiSaldo(uint256 _id, uint256 _saldo) public {
-        // Cek apakah pengguna sudah terdaftar
-        require(bytes(namaPengguna[_id]).length > 0, "Pengguna tidak ditemukan");
-
-        // Cek apakah saldo valid
-        require(_saldo > 0, "Saldo harus lebih dari 0");
-
-        saldoPengguna[_id] = _saldo;
-    }
-}
-```
-
-**Penjelasan:**
-- `require(kondisi, "pesan error")` = jika kondisi false, transaksi gagal
-- `bytes(_nama).length > 0` = cara mengecek apakah string kosong
-- Error handling membuat kontrak lebih aman
-
-### 2. Access Control dengan Modifiers
-
-**Modifiers** adalah cara untuk mengatur siapa yang boleh memanggil fungsi tertentu.
+Buat `LearnEvents.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract AksesKontrol {
-    address public admin;
-    mapping(uint256 => string) public dataPengguna;
+contract LearnEvents {
+    // Deklarasi event
+    event StudentRegistered(address indexed owner, uint256 indexed studentId, string name);
+    event CreditsAdded(uint256 indexed studentId, uint256 credits, uint256 totalCredits);
 
-    constructor() {
-        admin = msg.sender; // Yang deploy kontrak jadi admin
+    mapping(uint256 => address) public studentOwner;
+    mapping(uint256 => string) public studentName;
+    mapping(uint256 => uint256) public studentCredits;
+    uint256 public studentCounter;
+
+    function registerStudent(string memory _name) public {
+        studentCounter++;
+        studentOwner[studentCounter] = msg.sender;
+        studentName[studentCounter] = _name;
+        studentCredits[studentCounter] = 0;
+
+        // Emit event
+        emit StudentRegistered(msg.sender, studentCounter, _name);
     }
 
-    // Modifier untuk cek admin
-    modifier hanyaAdmin() {
-        require(msg.sender == admin, "Hanya admin yang bisa mengakses");
-        _; // Lanjutkan eksekusi fungsi
-    }
+    function addCredits(uint256 _id, uint256 _amount) public {
+        require(studentOwner[_id] == msg.sender, "Bukan student Anda!");
+        require(_amount > 0, "Amount harus lebih dari 0");
 
-    // Fungsi yang hanya bisa dipanggil admin
-    function tambahData(uint256 _id, string memory _data) public hanyaAdmin {
-        dataPengguna[_id] = _data;
-    }
+        studentCredits[_id] += _amount;
 
-    // Fungsi untuk ganti admin
-    function gantiAdmin(address _adminBaru) public hanyaAdmin {
-        admin = _adminBaru;
-    }
-
-    // Fungsi public yang bisa dipanggil siapa saja
-    function lihatData(uint256 _id) public view returns (string memory) {
-        return dataPengguna[_id];
-    }
-}
-```
-
-**Penjelasan:**
-- `modifier hanyaAdmin()` = membuat modifier untuk cek admin
-- `_` = placeholder tempat kode fungsi akan dieksekusi
-- `hanyaAdmin` di fungsi = fungsi hanya bisa dipanggil oleh admin
-
-### 3. Custom Errors (Gas Efficient)
-
-**Custom Errors** lebih hemat gas dibanding require string.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-contract CustomErrors {
-    // Define custom errors
-    error PenggunaNotFound(uint256 id);
-    error InvalidData(string reason);
-    error UnauthorizedAccess(address caller);
-
-    mapping(uint256 => string) public data;
-    address public owner;
-
-    constructor() {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        if (msg.sender != owner) {
-            revert UnauthorizedAccess(msg.sender);
-        }
-        _;
-    }
-
-    function setData(uint256 _id, string memory _data) public onlyOwner {
-        if (bytes(_data).length == 0) {
-            revert InvalidData("Data tidak boleh kosong");
-        }
-        data[_id] = _data;
-    }
-
-    function getData(uint256 _id) public view returns (string memory) {
-        if (bytes(data[_id]).length == 0) {
-            revert PenggunaNotFound(_id);
-        }
-        return data[_id];
+        // Emit event
+        emit CreditsAdded(_id, _amount, studentCredits[_id]);
     }
 }
 ```
 
 **Penjelasan:**
-- `error ErrorName(params)` = define custom error
-- `revert ErrorName(value)` = trigger error dengan parameter
-- Lebih gas efficient dari `require()`
-- Bisa include parameter untuk debugging
+- `event StudentRegistered(...)` - deklarasi event (data apa yang dicatat)
+- `indexed` - membuat parameter searchable (max 3 indexed parameters)
+- `emit StudentRegistered(msg.sender, studentCounter, _name)` - trigger event
+- Event disimpan di blockchain tapi TIDAK menghabiskan gas untuk dibaca
+- Frontend dapat listen event secara real-time
+- Digunakan untuk: logging, notifications, track history
 
-### 4. Library (Code Reusability)
-
-**Library** adalah kumpulan fungsi yang bisa digunakan berulang.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-// Library untuk operasi matematika
-library MathUtils {
-    // Function untuk mencari nilai maksimum
-    function max(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a >= b ? a : b;
-    }
-
-    // Function untuk mencari nilai minimum
-    function min(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a < b ? a : b;
-    }
-
-    // Function untuk menghitung rata-rata
-    function average(uint256 a, uint256 b) internal pure returns (uint256) {
-        return (a + b) / 2;
-    }
-}
-
-// Library untuk operasi string
-library StringUtils {
-    // Function untuk cek string kosong
-    function isEmpty(string memory str) internal pure returns (bool) {
-        return bytes(str).length == 0;
-    }
-
-    // Function untuk compare strings
-    function isEqual(string memory a, string memory b) internal pure returns (bool) {
-        return keccak256(bytes(a)) == keccak256(bytes(b));
-    }
-}
-
-// Contract yang menggunakan library
-contract UsingLibrary {
-    using MathUtils for uint256;
-    using StringUtils for string;
-
-    function compareNumbers(uint256 a, uint256 b) public pure returns (
-        uint256 maximum,
-        uint256 minimum,
-        uint256 avg
-    ) {
-        maximum = MathUtils.max(a, b);
-        minimum = MathUtils.min(a, b);
-        avg = MathUtils.average(a, b);
-
-        return (maximum, minimum, avg);
-    }
-
-    function compareStrings(string memory a, string memory b) public pure returns (bool) {
-        return a.isEqual(b);
-    }
-
-    function checkEmpty(string memory str) public pure returns (bool) {
-        return str.isEmpty();
-    }
-}
-```
-
-**Penjelasan:**
-- `library` = kumpulan fungsi reusable
-- `using LibraryName for Type` = attach library ke tipe data
-- `internal` = fungsi hanya bisa dipanggil dari dalam contract/library
-- Gas efficient karena tidak deploy ulang kode yang sama
-
-### 5. Interface (Contract Interaction)
-
-**Interface** mendefinisikan fungsi yang harus diimplementasikan.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-// Interface untuk token
-interface IToken {
-    function balanceOf(address account) external view returns (uint256);
-    function transfer(address to, uint256 amount) external returns (bool);
-}
-
-// Interface untuk data storage
-interface IDataStorage {
-    function storeData(uint256 id, string calldata data) external;
-    function getData(uint256 id) external view returns (string memory);
-}
-
-// Contract yang implement interface
-contract DataStorage is IDataStorage {
-    mapping(uint256 => string) private data;
-
-    function storeData(uint256 id, string calldata _data) external override {
-        data[id] = _data;
-    }
-
-    function getData(uint256 id) external view override returns (string memory) {
-        return data[id];
-    }
-}
-
-// Contract yang berinteraksi dengan interface
-contract DataConsumer {
-    IDataStorage public dataStorage;
-
-    constructor(address _dataStorageAddress) {
-        dataStorage = IDataStorage(_dataStorageAddress);
-    }
-
-    function saveData(uint256 id, string calldata data) public {
-        dataStorage.storeData(id, data);
-    }
-
-    function readData(uint256 id) public view returns (string memory) {
-        return dataStorage.getData(id);
-    }
-}
-```
-
-**Penjelasan:**
-- `interface` = contract tanpa implementasi
-- Semua fungsi `external`
-- Tidak bisa punya state variables
-- Digunakan untuk interact dengan contract lain
-
-### 6. Inheritance (Pewarisan)
-
-**Inheritance** memungkinkan contract mewarisi dari contract lain.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-// Base contract (parent)
-contract Ownable {
-    address public owner;
-
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-    constructor() {
-        owner = msg.sender;
-        emit OwnershipTransferred(address(0), msg.sender);
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
-        _;
-    }
-
-    function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Invalid address");
-        emit OwnershipTransferred(owner, newOwner);
-        owner = newOwner;
-    }
-}
-
-// Another base contract
-contract Pausable {
-    bool public paused;
-
-    event Paused(address account);
-    event Unpaused(address account);
-
-    modifier whenNotPaused() {
-        require(!paused, "Contract is paused");
-        _;
-    }
-
-    modifier whenPaused() {
-        require(paused, "Contract is not paused");
-        _;
-    }
-
-    function _pause() internal {
-        paused = true;
-        emit Paused(msg.sender);
-    }
-
-    function _unpause() internal {
-        paused = false;
-        emit Unpaused(msg.sender);
-    }
-}
-
-// Contract yang inherit dari multiple contracts
-contract MyContract is Ownable, Pausable {
-    mapping(uint256 => string) public data;
-
-    // Function dengan multiple modifiers
-    function setData(uint256 id, string memory _data) public onlyOwner whenNotPaused {
-        data[id] = _data;
-    }
-
-    // Override function dari parent
-    function transferOwnership(address newOwner) public override onlyOwner {
-        super.transferOwnership(newOwner);
-        // Tambahan logic custom
-    }
-
-    // Function untuk pause contract
-    function pause() public onlyOwner {
-        _pause();
-    }
-
-    // Function untuk unpause contract
-    function unpause() public onlyOwner {
-        _unpause();
-    }
-}
-```
-
-**Penjelasan:**
-- `is ParentContract` = inherit dari parent
-- `virtual` = fungsi bisa di-override
-- `override` = override fungsi dari parent
-- `super` = call fungsi dari parent
-- Multiple inheritance = `is Parent1, Parent2`
-
-### 7. Abstract Contract
-
-**Abstract Contract** tidak bisa di-deploy, harus di-inherit.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
-
-// Abstract contract
-abstract contract BaseContract {
-    // State variable
-    uint256 public value;
-
-    // Implemented function
-    function setValue(uint256 _value) public {
-        value = _value;
-    }
-
-    // Abstract function (harus diimplementasikan di child)
-    function getValue() public view virtual returns (uint256);
-
-    // Abstract function dengan logic tambahan
-    function processValue() public virtual returns (uint256);
-}
-
-// Contract yang implement abstract contract
-contract ConcreteContract is BaseContract {
-    // Implement abstract function
-    function getValue() public view override returns (uint256) {
-        return value;
-    }
-
-    function processValue() public override returns (uint256) {
-        return value * 2;
-    }
-}
-```
-
-**Penjelasan:**
-- `abstract contract` = contract yang tidak lengkap
-- Tidak bisa di-deploy langsung
-- Minimal punya 1 fungsi tanpa implementasi
-- Child contract harus implement semua abstract functions
+**Coba:**
+1. Deploy
+2. Ketik "Budi" → Klik `registerStudent`
+3. Lihat transaksi di console Remix
+4. Klik "logs" → Lihat event StudentRegistered!
+5. Ketik 1, 3 → Klik `addCredits`
+6. Lihat event CreditsAdded di logs!
 
 ---
 
-## Solidity 105: Konsep Lanjutan (Opsional)
+## 4.5 Solidity 105: Payable & Time-Based
 
-### 1. Payable Functions (Menerima Ether)
+Akhirnya, tambahkan uang (ETH) dan logic berbasis waktu!
 
-**Payable** memungkinkan fungsi menerima Ether.
+### 1. Fungsi Payable
+
+**Apa itu:** Keyword yang memungkinkan fungsi menerima ETH (msg.value)
+
+**Mengapa penting:** Menerima pembayaran, donasi, hadiah. Tanpa ini, kirim ETH akan gagal
+
+Buat `LearnPayable.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract PayableContract {
-    address public owner;
-    mapping(address => uint256) public balances;
+contract LearnPayable {
+    uint256 public studentCounter;
+    mapping(uint256 => address) public studentOwner;
 
-    event Deposit(address indexed from, uint256 amount);
-    event Withdrawal(address indexed to, uint256 amount);
+    // Fungsi payable dapat menerima ETH
+    function registerStudent() public payable returns (uint256) {
+        require(msg.value >= 0.001 ether, "Perlu 0.001 ETH untuk registrasi");
 
-    constructor() {
-        owner = msg.sender;
+        studentCounter++;
+        studentOwner[studentCounter] = msg.sender;
+
+        return studentCounter;
     }
 
-    // Function payable untuk menerima Ether
-    function deposit() public payable {
-        require(msg.value > 0, "Must send ETH");
-        balances[msg.sender] += msg.value;
-        emit Deposit(msg.sender, msg.value);
-    }
-
-    // Function untuk withdraw
-    function withdraw(uint256 amount) public {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] -= amount;
-
-        // Transfer ETH menggunakan call (recommended)
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
-        require(success, "Transfer failed");
-
-        emit Withdrawal(msg.sender, amount);
-    }
-
-    // Receive function untuk plain ETH transfer
-    receive() external payable {
-        balances[msg.sender] += msg.value;
-        emit Deposit(msg.sender, msg.value);
-    }
-
-    // Fallback function
-    fallback() external payable {
-        balances[msg.sender] += msg.value;
-        emit Deposit(msg.sender, msg.value);
-    }
-
-    // Check contract balance
-    function getContractBalance() public view returns (uint256) {
+    // Cek saldo contract
+    function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
 }
 ```
 
 **Penjelasan:**
-- `payable` = fungsi bisa menerima Ether
-- `msg.value` = jumlah Ether yang dikirim
-- `address(this).balance` = balance contract
-- `receive()` = dipanggil saat ETH dikirim tanpa data
-- `fallback()` = dipanggil saat fungsi tidak ditemukan
+- `payable` - keyword yang allow fungsi terima ETH
+- `msg.value` - jumlah ETH yang dikirim dengan transaksi (dalam wei)
+- `0.001 ether` - compiler convert ke wei (1 ether = 10^18 wei)
+- `require(msg.value >= 0.001 ether)` - check minimum payment
+- `address(this).balance` - saldo ETH contract
+- Tanpa `payable`, kirim ETH akan gagal!
 
-### 2. Time-based Logic
+**Coba:**
+1. Deploy
+2. Di Remix, cari field "VALUE" (di atas tombol Deploy)
+3. Masukkan 1 dan pilih milliether (= 0.001 ETH)
+4. Klik `registerStudent` → Konfirmasi di MetaMask
+5. Klik `getBalance` → Lihat 0.001 ETH di contract!
 
-**Block timestamp** untuk logic berbasis waktu.
+---
+
+### 2. Mengirim ETH
+
+**Apa itu:** Mengirim ETH dari contract ke alamat menggunakan `.call{value: amount}("")`
+
+**Mengapa penting:** Membayar hadiah, refund, withdrawal. Selalu check success!
+
+Buat `LearnSendETH.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract TimeBasedContract {
-    uint256 public startTime;
-    uint256 public constant DURATION = 7 days;
-
-    mapping(address => uint256) public lastClaim;
-    mapping(address => uint256) public rewards;
+contract LearnSendETH {
+    address public admin;
+    mapping(address => uint256) public scholarships;
 
     constructor() {
-        startTime = block.timestamp;
+        admin = msg.sender;
     }
 
-    // Check apakah periode sudah selesai
-    function isEnded() public view returns (bool) {
-        return block.timestamp >= startTime + DURATION;
+    // Terima ETH untuk scholarship fund
+    function deposit() public payable {}
+
+    // Kirim scholarship ke student
+    function sendScholarship(address _student, uint256 _amount) public {
+        require(msg.sender == admin, "Hanya admin");
+        require(address(this).balance >= _amount, "Saldo tidak cukup");
+
+        // Kirim ETH
+        (bool success, ) = _student.call{value: _amount}("");
+        require(success, "Transfer gagal");
+
+        scholarships[_student] += _amount;
     }
 
-    // Check waktu tersisa
-    function timeRemaining() public view returns (uint256) {
-        if (isEnded()) {
-            return 0;
-        }
-        return (startTime + DURATION) - block.timestamp;
-    }
-
-    // Claim reward (maksimal 1x per hari)
-    function claimReward() public {
-        require(block.timestamp >= lastClaim[msg.sender] + 1 days, "Harus tunggu 1 hari");
-        require(!isEnded(), "Event sudah berakhir");
-
-        lastClaim[msg.sender] = block.timestamp;
-        rewards[msg.sender] += 100;
+    // Cek saldo
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
     }
 }
 ```
 
 **Penjelasan:**
-- `block.timestamp` = waktu block saat ini (Unix timestamp)
-- `1 days`, `1 hours`, `1 minutes` = time units
-- ⚠️ Bisa dimanipulasi miner (±15 detik)
+- `function deposit() public payable {}` - terima ETH tanpa kode
+- `_student.call{value: _amount}("")` - kirim ETH ke alamat
+- `(bool success, ) = ...` - tangkap apakah transfer berhasil
+- `require(success, "Transfer gagal")` - revert jika kirim gagal
+- `.call` adalah cara modern dan aman untuk kirim ETH
+- Cara lama: `.transfer()` dan `.send()` TIDAK recommended
 
-### 3. Gas Optimization Tips
+**Coba:**
+1. Deploy
+2. Kirim ETH menggunakan `deposit` dengan field VALUE (misal: 10 milliether)
+3. Klik `getBalance` → Lihat deposit Anda
+4. Ketik alamat student dan amount (misal: 1000000000000000 = 0.001 ETH)
+5. Klik `sendScholarship` → ETH terkirim!
 
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.30;
+---
 
-contract GasOptimization {
-    // ❌ Expensive: storage variable in loop
-    function sumBad(uint256[] memory numbers) public returns (uint256) {
-        uint256 total;  // Default di storage
-        for (uint256 i = 0; i < numbers.length; i++) {
-            total += numbers[i];  // Storage write setiap iteration
-        }
-        return total;
-    }
+### 3. Time-Based Logic
 
-    // ✅ Cheap: memory variable
-    function sumGood(uint256[] memory numbers) public pure returns (uint256) {
-        uint256 total = 0;  // Memory variable
-        for (uint256 i = 0; i < numbers.length; i++) {
-            total += numbers[i];  // Memory write (lebih murah)
-        }
-        return total;
-    }
+**Apa itu:** Menggunakan block timestamp untuk logic berbasis waktu
 
-    // ✅ Use calldata untuk read-only array parameters
-    function processCalldata(uint256[] calldata numbers) external pure returns (uint256) {
-        uint256 total = 0;
-        for (uint256 i = 0; i < numbers.length; i++) {
-            total += numbers[i];
-        }
-        return total;
-    }
+**Mengapa penting:** Untuk deadline, cooldown, durasi event, aging system
 
-    // ✅ Cache array length
-    function sumOptimized(uint256[] memory numbers) public pure returns (uint256) {
-        uint256 total = 0;
-        uint256 length = numbers.length;  // Cache length
-        for (uint256 i = 0; i < length; i++) {
-            total += numbers[i];
-        }
-        return total;
-    }
-
-    // ✅ Use unchecked untuk save gas (hanya jika yakin tidak overflow)
-    function sumUnchecked(uint256[] memory numbers) public pure returns (uint256) {
-        uint256 total = 0;
-        unchecked {
-            for (uint256 i = 0; i < numbers.length; i++) {
-                total += numbers[i];
-            }
-        }
-        return total;
-    }
-}
-```
-
-**Gas Optimization Tips:**
-- ✅ Use `memory` untuk temporary data
-- ✅ Use `calldata` untuk read-only function parameters
-- ✅ Cache array length di loops
-- ✅ Use `unchecked` jika yakin tidak overflow
-- ✅ Minimize storage writes
-- ✅ Use events untuk data yang tidak perlu di-query on-chain
-- ✅ Batch operations
-- ❌ Hindari storage writes dalam loop
-
-### 4. Security Best Practices
+Buat `LearnTime.sol`:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-contract SecurityBestPractices {
-    mapping(address => uint256) public balances;
+contract LearnTime {
+    mapping(uint256 => uint256) public studentRegisteredTime;
+    mapping(uint256 => uint256) public lastSubmission;
 
-    // ✅ GOOD: Checks-Effects-Interactions pattern
-    function withdrawGood(uint256 amount) public {
-        // 1. Checks
-        require(balances[msg.sender] >= amount, "Insufficient balance");
+    uint256 public constant ASSIGNMENT_COOLDOWN = 1 days;
 
-        // 2. Effects (update state dulu)
-        balances[msg.sender] -= amount;
-
-        // 3. Interactions (external call terakhir)
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
-        require(success, "Transfer failed");
+    function registerStudent(uint256 _id) public {
+        studentRegisteredTime[_id] = block.timestamp;
     }
 
-    // ❌ BAD: Vulnerable to reentrancy
-    function withdrawBad(uint256 amount) public {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-
-        // External call sebelum update state = DANGEROUS!
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
-        require(success, "Transfer failed");
-
-        balances[msg.sender] -= amount;  // Too late!
+    // Check berapa lama sudah terdaftar (dalam detik)
+    function getStudentAge(uint256 _id) public view returns (uint256) {
+        require(studentRegisteredTime[_id] > 0, "Student belum terdaftar");
+        return block.timestamp - studentRegisteredTime[_id];
     }
 
-    // ✅ Use ReentrancyGuard
-    bool private locked;
+    // Submit assignment (max 1x per hari)
+    function submitAssignment(uint256 _id) public {
+        require(
+            block.timestamp >= lastSubmission[_id] + ASSIGNMENT_COOLDOWN,
+            "Harus tunggu 1 hari"
+        );
 
-    modifier nonReentrant() {
-        require(!locked, "No reentrancy");
-        locked = true;
-        _;
-        locked = false;
+        lastSubmission[_id] = block.timestamp;
     }
 
-    function withdrawSafe(uint256 amount) public nonReentrant {
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] -= amount;
+    // Check kapan bisa submit lagi
+    function timeUntilNextSubmission(uint256 _id) public view returns (uint256) {
+        if (lastSubmission[_id] == 0) {
+            return 0; // Bisa submit sekarang
+        }
 
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
-        require(success, "Transfer failed");
+        uint256 nextSubmissionTime = lastSubmission[_id] + ASSIGNMENT_COOLDOWN;
+
+        if (block.timestamp >= nextSubmissionTime) {
+            return 0; // Bisa submit sekarang
+        }
+
+        return nextSubmissionTime - block.timestamp;
     }
 }
 ```
 
-**Security Tips:**
-- ✅ Follow Checks-Effects-Interactions pattern
-- ✅ Use ReentrancyGuard
-- ✅ Validate all inputs dengan `require()`
-- ✅ Use `call()` instead of `transfer()` atau `send()`
-- ✅ Avoid delegatecall ke untrusted contracts
-- ✅ Test extensively
-- ❌ Never trust external calls
-- ❌ Jangan simpan sensitive data di blockchain
+**Penjelasan:**
+- `block.timestamp` - waktu block saat ini (Unix timestamp dalam detik)
+- `1 days`, `1 hours`, `1 minutes` - time units
+- `constant` - nilai tidak bisa diubah setelah di-set
+- `studentRegisteredTime[_id] = block.timestamp` - catat waktu registrasi
+- `block.timestamp - studentRegisteredTime[_id]` - hitung umur
+- `block.timestamp >= lastSubmission[_id] + ASSIGNMENT_COOLDOWN` - cek cooldown
+- ⚠️ Bisa dimanipulasi miner (±15 detik) - jangan untuk high-security timing!
+
+**Coba:**
+1. Deploy
+2. Ketik 2101001 → `registerStudent`
+3. Ketik 2101001 → `getStudentAge` → Lihat 0 (baru terdaftar)
+4. Tunggu 1 menit → `getStudentAge` → Lihat ~60 detik
+5. Ketik 2101001 → `submitAssignment` → BERHASIL
+6. Langsung coba `submitAssignment` lagi → GAGAL "Harus tunggu 1 hari"
+7. Ketik 2101001 → `timeUntilNextSubmission` → Lihat sisa waktu (dalam detik)
 
 ---
 
 ## Latihan dan Tips
 
-### Latihan 1: Buat Simple Storage
-Buat kontrak untuk menyimpan dan membaca data favorit Anda:
-- Warna favorit
-- Angka favorit
-- Nama favorit
-
-### Latihan 2: Buat User Registry
-Buat kontrak untuk mendaftar pengguna dengan:
+### Latihan 1: Buat Simple Student Registry
+Buat contract untuk registrasi mahasiswa sederhana:
 - Mapping address ke nama
 - Fungsi register
 - Fungsi update nama
 - Fungsi lihat nama berdasarkan address
 
-### Latihan 3: Buat Simple Voting
-Buat kontrak voting sederhana:
-- Mapping address ke pilihan (A atau B)
-- Counter untuk setiap pilihan
-- Fungsi vote
-- Fungsi lihat hasil
+### Latihan 2: Buat Grade System
+Buat contract nilai mahasiswa:
+- Mapping studentId ke nilai
+- Fungsi tambah nilai
+- Fungsi cek kelulusan (nilai >= 60)
+- Event ketika nilai ditambahkan
+
+### Latihan 3: Buat Scholarship System
+Buat contract beasiswa:
+- Payable function untuk donate ke scholarship fund
+- Function untuk give scholarship ke student (hanya admin)
+- Track total scholarship per student
+- Event untuk setiap pemberian beasiswa
 
 ### Tips Belajar Solidity
 
-1. **Mulai dari yang sederhana** - Jangan langsung membuat kontrak kompleks
+1. **Mulai dari yang sederhana** - Jangan langsung membuat contract kompleks
 2. **Test setiap fungsi** - Pastikan setiap fungsi bekerja sebelum lanjut
 3. **Baca error message** - Error message memberikan petunjuk masalah
 4. **Practice, practice, practice** - Semakin banyak latihan, semakin paham
@@ -1527,7 +1109,7 @@ Setelah menguasai basic Solidity, lanjut ke:
 1. **Hardhat Development** - Professional development tools
 2. **Token Standards** - ERC-20, ERC-721, ERC-1155
 3. **DeFi Basics** - Memahami decentralized finance
-4. **Security Best Practices** - Membuat kontrak yang aman
+4. **Security Best Practices** - Membuat contract yang aman
 
 :::tip Terus Berlatih!
 Smart contract development adalah skill yang butuh banyak practice. Mulai dengan project kecil dan tingkatkan kompleksitasnya secara bertahap.

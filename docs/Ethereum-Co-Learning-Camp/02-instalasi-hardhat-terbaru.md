@@ -522,34 +522,36 @@ export default SimpleStorageModule;
 
 **Untuk deploy ke testnet, Anda butuh ETH testnet:**
 
-**Opsi 1: Sepolia Testnet**
+**Cara mendapatkan Sepolia ETH:**
+
+**Opsi 1: Sepolia Faucet (sepoliafaucet.com)**
 1. Kunjungi [https://sepoliafaucet.com](https://sepoliafaucet.com)
 2. Paste address wallet Anda
 3. Klik "Request tokens"
-4. Tunggu 30 detik
+4. Tunggu 30 detik - 1 menit
 
-**Opsi 2: Lisk Sepolia**
-1. Kunjungi [https://sepolia-faucet.lisk.com](https://sepolia-faucet.lisk.com)
-2. Paste address wallet Anda
-3. Klik "Request tokens"
-4. Tunggu 30 detik
+**Opsi 2: Alchemy Sepolia Faucet**
+1. Kunjungi [https://sepoliafaucet.com](https://www.alchemy.com/faucets/ethereum-sepolia)
+2. Login dengan akun Alchemy (gratis)
+3. Paste address wallet Anda
+4. Klik "Send Me ETH"
 
-**Check balance di MetaMask** - pastikan ada ETH testnet.
+**Opsi 3: Infura Sepolia Faucet**
+1. Kunjungi [https://www.infura.io/faucet/sepolia](https://www.infura.io/faucet/sepolia)
+2. Login dengan akun Infura (gratis)
+3. Paste address wallet Anda
+4. Request ETH testnet
+
+**Check balance di MetaMask** - pastikan ada ETH testnet sebelum deploy.
 
 ---
 
-### Step 13: Deploy ke Testnet!
+### Step 13: Deploy ke Sepolia Testnet!
 
-**Deploy ke Sepolia Testnet:**
+**Deploy contract ke Sepolia:**
 
 ```bash
 npx hardhat ignition deploy ignition/modules/SimpleStorage.ts --network sepolia
-```
-
-**Atau deploy ke Lisk Sepolia:**
-
-```bash
-npx hardhat ignition deploy ignition/modules/SimpleStorage.ts --network lisk-sepolia
 ```
 
 **Proses deployment:**
@@ -788,7 +790,7 @@ PRIVATE_KEY=0xabc123...  # ❌ Salah
 **Setup Professional:**
 - ✅ Install Hardhat 3 (versi terbaru 2025)
 - ✅ Buat TypeScript project dengan ESM
-- ✅ Konfigurasi multiple networks (Sepolia, Lisk)
+- ✅ Konfigurasi Sepolia testnet
 - ✅ Secure private keys dengan dotenv
 
 **Development Workflow:**
