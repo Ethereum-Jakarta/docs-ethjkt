@@ -1385,8 +1385,6 @@ forge --version
 5. Flash loan support
 6. Governance token & voting
 
-**Continue learning:** [Part 5: Advanced Topics →](./05-advanced-defi.md)
-
 ---
 
 **Prepared by:** Ethereum Jakarta x Lisk

@@ -92,7 +92,6 @@ Setelah menyelesaikan sesi ini, peserta akan mampu:
 2. [Part 2: Evolusi Decentralized Finance](./02-evolusi-defi.md)
 3. [Part 3: Understanding Automated Market Makers](./03-understanding-amm.md)
 4. [Part 4: Hands-on Lab - Build Simple DEX](./04-build-simple-dex.md)
-5. [Part 5: Advanced Topics & Best Practices](./05-advanced-defi.md)
 
 ---
 
