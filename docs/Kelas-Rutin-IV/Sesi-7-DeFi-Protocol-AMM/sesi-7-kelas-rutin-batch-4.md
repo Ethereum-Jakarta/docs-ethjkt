@@ -76,9 +76,25 @@ Setelah menyelesaikan sesi ini, peserta akan mampu:
   - `getAmountOut()` - Price calculation
 - Testing dengan Foundry
 - Deploy ke Lisk Sepolia
-- Interact dengan DEX via frontend (bonus)
 
-### **Part 5: Wrap-up & Q&A** (30 menit)
+### **Part 5: Frontend Integration - Build DEX UI** (180 menit)
+- Setup React + Vite + TypeScript project
+- Configure Wagmi + RainbowKit untuk Lisk Sepolia
+- Implement custom React hooks:
+  - `useTokenBalance` - Read balances & allowances
+  - `usePoolData` - Fetch pool reserves & prices
+  - `useSwap` - Execute token swaps with approval
+  - `useLiquidity` - Add/remove liquidity
+- Build complete UI components:
+  - `SwapInterface` - Token swap with real-time calculation
+  - `LiquidityInterface` - Add/remove liquidity management
+  - `PoolStats` - TVL, volume, APR analytics
+  - `PriceChart` - Real-time price chart with historical data
+  - `TransactionHistory` - Live transaction tracking
+  - `DEXContainer` - Main app with tab navigation
+- Deploy frontend to production
+
+### **Part 6: Wrap-up & Q&A** (30 menit)
 - Best practices untuk DeFi development
 - Security considerations
 - Resources untuk belajar lebih lanjut
@@ -92,6 +108,8 @@ Setelah menyelesaikan sesi ini, peserta akan mampu:
 2. [Part 2: Evolusi Decentralized Finance](./02-evolusi-defi.md)
 3. [Part 3: Understanding Automated Market Makers](./03-understanding-amm.md)
 4. [Part 4: Hands-on Lab - Build Simple DEX](./04-build-simple-dex.md)
+5. [Part 5: Frontend Integration - Build DEX User Interface](./05-frontend-integration.md)
+   - [Part 5.2: Complete React Components Implementation](./05-part-2-components.md)
 
 ---
 
@@ -107,10 +125,15 @@ Setelah menyelesaikan sesi ini, peserta akan mampu:
 - **Lisk Sepolia Testnet**
 - **Blockscout Explorer**
 
-### Optional: Frontend Integration
-- **Next.js 15**
-- **Thirdweb SDK**
-- **Panna SDK** (gasless swaps!)
+### Frontend Development (Part 5)
+- **React 19.1.0** + **Vite 6.3.5** + **TypeScript 5.8.3**
+- **Wagmi 2.15.6** + **Viem 2.31.3** (Ethereum library)
+- **RainbowKit 2.2.8** (wallet connection UI)
+- **TanStack React Query 5.80.10** (state management)
+- **TailwindCSS 4.1.10** (styling)
+- **Recharts 2.15.3** (price charts)
+- **Lucide React 0.518.0** (icons)
+- **React Hot Toast 2.5.2** (notifications)
 
 ---
 

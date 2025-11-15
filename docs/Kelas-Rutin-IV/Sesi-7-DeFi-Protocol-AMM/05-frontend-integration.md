@@ -33,14 +33,14 @@ Kita akan membangun **SimpleDEX UI** - sebuah aplikasi web modern dengan fitur:
 - ⚡ **Real-time Updates**: Live data menggunakan contract event listeners
 
 ### **Tech Stack**
-- **Framework**: React 18 + Vite + TypeScript
-- **Blockchain**: Wagmi v2 + Viem (Ethereum library)
-- **Wallet**: RainbowKit (wallet connection UI)
-- **State**: TanStack React Query (caching & state)
-- **Styling**: TailwindCSS v4
-- **Charts**: Recharts (data visualization)
-- **Icons**: Lucide React
-- **Notifications**: React Hot Toast
+- **Framework**: React 19.1.0 + Vite 6.3.5 + TypeScript 5.8.3
+- **Blockchain**: Wagmi 2.15.6 + Viem 2.31.3 (Ethereum library)
+- **Wallet**: RainbowKit 2.2.8 (wallet connection UI)
+- **State**: TanStack React Query 5.80.10 (caching & state)
+- **Styling**: TailwindCSS 4.1.10
+- **Charts**: Recharts 2.15.3 (data visualization)
+- **Icons**: Lucide React 0.518.0
+- **Notifications**: React Hot Toast 2.5.2
 
 ---
 
@@ -101,9 +101,9 @@ cd simple-dex-ui
 
 ```bash
 # Install semua dependencies yang diperlukan
-npm install @rainbow-me/rainbowkit wagmi viem@2.x @tanstack/react-query
-npm install react-hot-toast lucide-react recharts
-npm install -D tailwindcss @tailwindcss/vite
+npm install @rainbow-me/rainbowkit@^2.2.8 wagmi@^2.15.6 viem@^2.31.3 @tanstack/react-query@^5.80.10
+npm install react@^19.1.0 react-dom@^19.1.0 react-hot-toast@^2.5.2 lucide-react@^0.518.0 recharts@^2.15.3
+npm install -D tailwindcss@^4.1.10 @tailwindcss/vite@^4.1.10 typescript@~5.8.3 vite@^6.3.5
 ```
 
 **Penjelasan Dependencies:**
@@ -129,71 +129,33 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [react(), tailwindcss()],
 })
 ```
 
-### **Step 4: Configure TailwindCSS**
+### **Step 4: Configure TailwindCSS (Opsional)**
 
-Buat file `tailwind.config.js`:
+> **Note:** Dengan TailwindCSS v4, tidak perlu file `tailwind.config.js`. Semua konfigurasi ada di `index.css` menggunakan CSS variables.
 
-```javascript
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: '#3B82F6',    // Blue
-        secondary: '#8B5CF6',  // Purple
-        accent: '#10B981',     // Green
-      },
-      animation: {
-        'pulse-success': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float': 'float 3s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite',
-      },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        glow: {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.5' },
-        },
-      },
-    },
-  },
-  plugins: [],
-}
-```
+### **Step 5: Setup Environment Variables (Opsional)**
 
-### **Step 5: Setup Environment Variables**
-
-Buat file `.env.local`:
+> **Note:** Dalam implementasi ini, contract addresses sudah hardcoded di `src/constants/index.tsx`. Jika ingin menggunakan environment variables, buat file `.env.local`:
 
 ```bash
-# Contract Addresses (ganti dengan address Anda dari Part 4)
-VITE_SIMPLE_DEX_ADDRESS=0xYourSimpleDEXAddress
-VITE_CAMPUS_COIN_ADDRESS=0xYourCampusCoinAddress
-VITE_MOCK_USDC_ADDRESS=0xYourMockUSDCAddress
-
 # WalletConnect Project ID (dapatkan dari https://cloud.walletconnect.com)
 VITE_WALLETCONNECT_PROJECT_ID=your_walletconnect_project_id
 ```
+
+Contract addresses yang digunakan (Lisk Sepolia Testnet):
+- **SimpleDEX**: `0x70bDD0f7e01DEe803147ead041dE23a531A71CBf`
+- **Campus Coin (CAMP)**: `0xEBAa841c5f97Ff097e61eea151dFA03640A6CC78`
+- **Mock USDC**: `0x786Ca7D3a2E53f0d5F7bB6848E03b60Dae9a3719`
 
 > **💡 Cara Mendapatkan WalletConnect Project ID:**
 > 1. Buka https://cloud.walletconnect.com
 > 2. Sign up / Login
 > 3. Create New Project → masukkan nama project
-> 4. Copy Project ID yang diberikan
+> 4. Copy Project ID dan ganti `YOUR_WALLETCONNECT_PROJECT_ID` di `App.tsx`
 
 ---
 
@@ -206,376 +168,255 @@ Buat file `src/index.css`:
 @import "tailwindcss";
 
 :root {
-  /* Lisk Brand Colors - Adapted from Monad */
-  --lisk-off-white: #fbfaf9;
-  --lisk-primary: #3B82F6;     /* Blue */
-  --lisk-secondary: #8B5CF6;   /* Purple */
-  --lisk-accent: #10B981;      /* Green */
-  --lisk-dark: #0f172a;
-  --lisk-black: #0e100f;
-  --lisk-white: #ffffff;
+  /* Black-White Gradient Colors */
+  --pure-black: #000000;
+  --dark-black: #0a0a0a;
+  --medium-black: #1a1a1a;
+  --light-black: #2a2a2a;
+  --dark-gray: #3a3a3a;
+  --medium-gray: #6a6a6a;
+  --light-gray: #9a9a9a;
+  --off-white: #f5f5f5;
+  --pure-white: #ffffff;
 
-  /* DeFi specific colors */
+  /* DeFi specific colors (subtle grayscale versions) */
   --success-green: #10b981;
-  --success-green-light: rgba(16, 185, 129, 0.2);
+  --success-green-light: rgba(16, 185, 129, 0.15);
   --warning-yellow: #f59e0b;
-  --warning-yellow-light: rgba(245, 158, 11, 0.2);
+  --warning-yellow-light: rgba(245, 158, 11, 0.15);
   --error-red: #ef4444;
-  --error-red-light: rgba(239, 68, 68, 0.2);
+  --error-red-light: rgba(239, 68, 68, 0.15);
 
   /* Derived colors for UI */
-  --lisk-primary-light: rgba(59, 130, 246, 0.8);
-  --lisk-primary-dark: rgba(59, 130, 246, 0.2);
-  --lisk-secondary-light: rgba(139, 92, 246, 0.8);
-  --lisk-secondary-dark: rgba(139, 92, 246, 0.2);
-  --lisk-accent-light: rgba(16, 185, 129, 0.8);
-  --lisk-accent-dark: rgba(16, 185, 129, 0.2);
+  --white-light: rgba(255, 255, 255, 0.9);
+  --white-medium: rgba(255, 255, 255, 0.6);
+  --white-dark: rgba(255, 255, 255, 0.3);
+  --white-very-dark: rgba(255, 255, 255, 0.1);
+  --black-light: rgba(0, 0, 0, 0.3);
+  --black-medium: rgba(0, 0, 0, 0.5);
+  --black-dark: rgba(0, 0, 0, 0.7);
 
   /* UI System Colors */
-  --bg-primary: var(--lisk-dark);
-  --bg-secondary: var(--lisk-black);
-  --bg-tertiary: rgba(15, 23, 42, 0.6);
-  --text-primary: var(--lisk-off-white);
-  --text-secondary: var(--lisk-white);
-  --text-muted: rgba(251, 250, 249, 0.7);
-  --border-primary: rgba(59, 130, 246, 0.3);
-  --border-secondary: rgba(139, 92, 246, 0.2);
-
-  /* Glass Effect */
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  --glass-border: rgba(148, 163, 184, 0.1);
-  --glass-dark-bg: rgba(15, 23, 42, 0.9);
-  --glass-dark-border: rgba(100, 116, 139, 0.2);
+  --bg-primary: var(--pure-black);
+  --bg-secondary: var(--dark-black);
+  --bg-tertiary: rgba(26, 26, 26, 0.8);
+  --text-primary: var(--pure-white);
+  --text-secondary: var(--off-white);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border-primary: rgba(255, 255, 255, 0.2);
+  --border-secondary: rgba(255, 255, 255, 0.1);
 }
 
-/* Base Styles */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  color: var(--text-primary);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, var(--pure-black) 0%, var(--dark-black) 25%, var(--medium-black) 50%, var(--dark-black) 75%, var(--pure-black) 100%);
   min-height: 100vh;
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-weight: 400;
 }
 
-/* Custom Scrollbar */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(30, 41, 59, 0.5);
-  border-radius: 4px;
+  background: var(--pure-black);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--lisk-primary-dark);
-  border-radius: 4px;
-  transition: background 0.2s;
+  background: linear-gradient(180deg, var(--pure-white) 0%, var(--light-gray) 100%);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--lisk-primary-light);
+  background: linear-gradient(180deg, var(--off-white) 0%, var(--medium-gray) 100%);
 }
 
-/* Glass Morphism Effects */
+/* Glass morphism effect */
 .glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  background: rgba(26, 26, 26, 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .glass-dark {
-  background: var(--glass-dark-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-dark-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Gradient Text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--lisk-primary) 0%, var(--lisk-secondary) 100%);
+/* Black-White brand gradients */
+.gradient-monad-primary {
+  background: linear-gradient(135deg, var(--pure-white) 0%, var(--light-gray) 50%, var(--medium-gray) 100%);
+}
+
+.gradient-monad-secondary {
+  background: linear-gradient(135deg, var(--dark-black) 0%, var(--medium-black) 50%, var(--pure-black) 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, var(--success-green) 0%, #059669 100%);
+}
+
+.text-gradient-monad {
+  background: linear-gradient(135deg, var(--pure-white) 0%, var(--off-white) 50%, var(--light-gray) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: transparent;
-}
-
-.text-gradient-accent {
-  background: linear-gradient(135deg, var(--lisk-accent) 0%, var(--lisk-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
 }
 
 /* Animations */
 @keyframes shimmer {
   0% {
-    background-position: -1000px 0;
+    background-position: -200px 0;
   }
   100% {
-    background-position: 1000px 0;
+    background-position: calc(200px + 100%) 0;
   }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.1) 40px, rgba(255, 255, 255, 0.03) 80px);
+  background-size: 400px;
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse-success {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 0 0 var(--success-green-light);
+    transform: scale(1);
   }
   50% {
     opacity: 0.8;
-    box-shadow: 0 0 0 10px transparent;
+    transform: scale(1.02);
   }
+}
+
+.pulse-success {
+  animation: pulse-success 2s ease-in-out infinite;
 }
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0);
+    transform: translateY(0px);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-4px);
   }
 }
 
-@keyframes glow-primary {
-  0%, 100% {
-    box-shadow: 0 0 20px var(--lisk-primary-dark);
-  }
-  50% {
-    box-shadow: 0 0 30px var(--lisk-primary-light);
-  }
-}
-
-@keyframes glow-accent {
-  0%, 100% {
-    box-shadow: 0 0 20px var(--lisk-accent-dark);
-  }
-  50% {
-    box-shadow: 0 0 30px var(--lisk-accent-light);
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Utility Animation Classes */
-.shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(
-    to right,
-    rgba(30, 41, 59, 0.4) 4%,
-    rgba(51, 65, 85, 0.6) 25%,
-    rgba(30, 41, 59, 0.4) 36%
-  );
-  background-size: 1000px 100%;
-}
-
-.pulse-success {
-  animation: pulse-success 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.float {
+.float-animation {
   animation: float 3s ease-in-out infinite;
 }
 
-.glow-primary {
-  animation: glow-primary 2s ease-in-out infinite;
+@keyframes glow-white {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.2);
+  }
 }
 
-.glow-accent {
-  animation: glow-accent 2s ease-in-out infinite;
+@keyframes glow-gray {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.15);
+  }
 }
 
-.spinner {
-  animation: spin 1s linear infinite;
+@keyframes glow-success {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), 0 0 30px rgba(16, 185, 129, 0.4);
+  }
 }
 
-/* Button Styles */
+.glow-purple {
+  animation: glow-white 2s ease-in-out infinite;
+}
+
+.glow-berry {
+  animation: glow-gray 2s ease-in-out infinite;
+}
+
+.glow-success {
+  animation: glow-success 2s ease-in-out infinite;
+}
+
+/* Button hover effects */
 .btn-primary {
-  background: linear-gradient(135deg, var(--lisk-primary) 0%, var(--lisk-secondary) 100%);
-  color: var(--text-secondary);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: none;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 14px 0 var(--lisk-primary-dark);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px 0 var(--lisk-primary-light);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary:active {
   transform: translateY(0);
 }
 
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-secondary {
-  background: var(--glass-bg);
-  color: var(--text-primary);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border-primary);
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.btn-secondary:hover {
-  background: var(--glass-dark-bg);
-  border-color: var(--lisk-primary-light);
-}
-
-/* Input Styles */
+/* Input styles */
 .input-primary {
-  background: var(--glass-dark-bg);
+  background: rgba(14, 16, 15, 0.5);
+  border: 1px solid rgba(251, 250, 249, 0.2);
   color: var(--text-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 0.75rem;
-  padding: 0.875rem 1rem;
-  font-size: 1rem;
-  width: 100%;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 }
 
 .input-primary:focus {
   outline: none;
-  border-color: var(--lisk-primary-light);
-  box-shadow: 0 0 0 3px var(--lisk-primary-dark);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
-.input-primary::placeholder {
-  color: var(--text-muted);
-}
-
-/* Card Styles */
+/* Card hover effects */
 .card-hover {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Loading States */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(30, 41, 59, 0.4) 25%,
-    rgba(51, 65, 85, 0.6) 50%,
-    rgba(30, 41, 59, 0.4) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 0.5rem;
+/* Loading spinner */
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid var(--pure-white);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-/* Progress Bar */
-.progress-bar {
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(100, 116, 139, 0.3);
-  overflow: hidden;
-  position: relative;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.progress-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--lisk-primary) 0%, var(--lisk-accent) 100%);
-  transition: width 0.5s ease;
-  position: relative;
-  overflow: hidden;
+/* Custom number input */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-}
-
-/* Badge Styles */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.badge-success {
-  background: var(--success-green-light);
-  color: var(--success-green);
-  border: 1px solid var(--success-green);
-}
-
-.badge-warning {
-  background: var(--warning-yellow-light);
-  color: var(--warning-yellow);
-  border: 1px solid var(--warning-yellow);
-}
-
-.badge-error {
-  background: var(--error-red-light);
-  color: var(--error-red);
-  border: 1px solid var(--error-red);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .btn-primary,
-  .btn-secondary {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-  }
-
-  .input-primary {
-    font-size: 0.875rem;
-    padding: 0.75rem 0.875rem;
-  }
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
 ```
 
@@ -784,17 +625,21 @@ Buat file `src/constants/SIMPLE_DEX_ABI.json`:
 Buat file `src/constants/index.tsx`:
 
 ```typescript
-import ERC20_ABI from './ERC20_ABI.json'
-import SIMPLE_DEX_ABI from './SIMPLE_DEX_ABI.json'
+/* eslint-disable react-refresh/only-export-components */
+import SIMPLE_DEX_ABI_JSON from "./SIMPLE_DEX_ABI.json"
+import ERC20_ABI_JSON from "./ERC20_ABI.json"
 
-// Contract Addresses (dari environment variables)
+export const SIMPLE_DEX_ABI = SIMPLE_DEX_ABI_JSON;
+export const ERC20_ABI = ERC20_ABI_JSON;
+
+// Contract addresses (update dengan alamat yang sudah deployed)
 export const CONTRACTS = {
-  SIMPLE_DEX: import.meta.env.VITE_SIMPLE_DEX_ADDRESS as `0x${string}`,
-  CAMPUS_COIN: import.meta.env.VITE_CAMPUS_COIN_ADDRESS as `0x${string}`,
-  MOCK_USDC: import.meta.env.VITE_MOCK_USDC_ADDRESS as `0x${string}`,
-}
+  SIMPLE_DEX: "0x70bDD0f7e01DEe803147ead041dE23a531A71CBf",
+  CAMPUS_COIN: "0xEBAa841c5f97Ff097e61eea151dFA03640A6CC78",
+  MOCK_USDC: "0x786Ca7D3a2E53f0d5F7bB6848E03b60Dae9a3719",
+} as const;
 
-// Token Configuration
+// Token configurations
 export const TOKENS = {
   CAMP: {
     address: CONTRACTS.CAMPUS_COIN,
@@ -810,26 +655,14 @@ export const TOKENS = {
     decimals: 6,
     logo: "💵",
   },
-}
+} as const;
 
-// DEX Configuration
+// DEX configuration
 export const DEX_CONFIG = {
-  FEE_PERCENT: 0.3,           // 0.3% trading fee
-  SLIPPAGE_TOLERANCE: 0.5,    // 0.5% default slippage
-  DEADLINE: 20,               // 20 minutes transaction deadline
-}
-
-// Export ABIs
-export { ERC20_ABI, SIMPLE_DEX_ABI }
-
-// Type definitions
-export interface Token {
-  address: `0x${string}`;
-  symbol: string;
-  name: string;
-  decimals: number;
-  logo: string;
-}
+  FEE_PERCENT: 0.3, // 0.3%
+  SLIPPAGE_TOLERANCE: 0.5, // 0.5%
+  DEADLINE: 20, // 20 minutes
+} as const;
 ```
 
 ### **Step 4: TypeScript Types**
@@ -838,7 +671,7 @@ Buat file `src/types/defi.ts`:
 
 ```typescript
 export interface Token {
-  address: `0x${string}`;
+  address: string;
   symbol: string;
   name: string;
   decimals: number;
@@ -876,10 +709,23 @@ export interface TransactionHistory {
   hash: string;
   timestamp: number;
   user: string;
+  tokenA?: {
+    symbol: string;
+    amount: string;
+  };
+  tokenB?: {
+    symbol: string;
+    amount: string;
+  };
+  lpTokens?: string;
   status: 'pending' | 'success' | 'failed';
-  amountA?: string;
-  amountB?: string;
-  liquidity?: string;
+}
+
+export interface PriceData {
+  timestamp: number;
+  price: number;
+  volume24h: number;
+  tvl: number;
 }
 
 export interface UserPosition {
@@ -900,14 +746,16 @@ export interface UserPosition {
 Buat file `src/utils/formatters.ts`:
 
 ```typescript
+import { TOKENS } from '../constants';
+
 /**
- * Validasi apakah string adalah angka valid
+ * Check if amount is valid for transaction
  */
 export const isValidAmount = (amount: string): boolean => {
-  if (!amount || amount === '') return false
-  const num = parseFloat(amount)
-  return !isNaN(num) && num > 0
-}
+  if (!amount || amount === '0' || amount === '.') return false;
+  const num = parseFloat(amount);
+  return !isNaN(num) && num > 0 && isFinite(num);
+};
 
 /**
  * Format angka dengan thousands separator
@@ -916,25 +764,32 @@ export const formatNumber = (
   value: number | string,
   decimals: number = 2
 ): string => {
-  const num = typeof value === 'string' ? parseFloat(value) : value
-  if (isNaN(num)) return '0.00'
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '0';
 
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
+    minimumFractionDigits: 0,
     maximumFractionDigits: decimals,
-  }).format(num)
-}
+  }).format(num);
+};
 
 /**
  * Format token amount dengan symbol
  */
 export const formatTokenAmount = (
-  amount: string | number,
-  tokenSymbol: string,
-  decimals: number = 2
+  amount: bigint | string,
+  tokenSymbol: keyof typeof TOKENS,
+  decimals?: number
 ): string => {
-  return `${formatNumber(amount, decimals)} ${tokenSymbol}`
-}
+  const token = TOKENS[tokenSymbol];
+  const tokenDecimals = decimals || token.decimals;
+
+  const value = typeof amount === 'string'
+    ? parseFloat(amount)
+    : Number(amount) / Math.pow(10, tokenDecimals);
+
+  return `${formatNumber(value, 4)} ${token.symbol}`;
+};
 
 /**
  * Format nilai USD
@@ -1918,90 +1773,69 @@ Remove Liquidity:
 Buat file `src/App.tsx`:
 
 ```typescript
-import '@rainbow-me/rainbowkit/styles.css'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiProvider, http } from 'wagmi'
-import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit'
-import { defineChain } from 'viem'
-import { Toaster } from 'react-hot-toast'
-import DEXContainer from './components/DEXContainer'
-import Header from './components/Header'
+import Header from "./components/Header";
+import '@rainbow-me/rainbowkit/styles.css';
 
-// Define Lisk Sepolia Testnet
-const liskSepolia = defineChain({
+import {
+  getDefaultConfig,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import type {
+  Chain
+} from 'wagmi/chains';
+import {
+  QueryClientProvider,
+  QueryClient,
+} from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
+import DEXContainer from "./components/DEXContainer";
+
+// Konfigurasi Chain Lisk Sepolia Testnet
+const liskSepoliaTestnet: Chain = {
   id: 4202,
   name: 'Lisk Sepolia Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'Sepolia ETH',
+    name: 'ETH',
     symbol: 'ETH',
   },
   rpcUrls: {
     default: {
       http: ['https://rpc.sepolia-api.lisk.com'],
     },
+    public: {
+      http: ['https://rpc.sepolia-api.lisk.com'],
+    },
   },
   blockExplorers: {
     default: {
-      name: 'Lisk Sepolia Explorer',
+      name: 'Lisk Blockscout',
       url: 'https://sepolia-blockscout.lisk.com',
     },
   },
   testnet: true,
-})
+};
 
-// Configure Wagmi
+// eslint-disable-next-line react-refresh/only-export-components
 export const config = getDefaultConfig({
-  appName: 'SimpleDEX',
-  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '',
-  chains: [liskSepolia],
-  ssr: false,
-})
-
-// Create QueryClient
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-})
+  appName: 'Simple DEX',
+  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Dapatkan dari https://cloud.walletconnect.com
+  chains: [liskSepoliaTestnet],
+  ssr: true,
+});
 
 function App() {
+  const queryClient = new QueryClient();
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <div className="min-h-screen">
             <Header />
-            <main className="container mx-auto px-4 py-8">
-              <DEXContainer />
-            </main>
-            <Toaster
-              position="bottom-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#1e293b',
-                  color: '#f8fafc',
-                  border: '1px solid #334155',
-                },
-                success: {
-                  iconTheme: {
-                    primary: '#10b981',
-                    secondary: '#f8fafc',
-                  },
-                },
-                error: {
-                  iconTheme: {
-                    primary: '#ef4444',
-                    secondary: '#f8fafc',
-                  },
-                },
-              }}
-            />
+            <DEXContainer />
           </div>
+          <Toaster position="top-center" />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
@@ -2060,32 +1894,44 @@ Untuk sementara, buat placeholder components agar app bisa running:
 **`src/components/Header.tsx`:**
 
 ```typescript
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 
-export default function Header() {
+const Header = () => {
   return (
-    <header className="glass border-b border-slate-700">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">🔄</div>
-            <div>
-              <h1 className="text-2xl font-bold gradient-text">SimpleDEX</h1>
-              <p className="text-sm text-slate-400">Decentralized Exchange on Lisk</p>
+    <header className="glass-dark sticky top-0 z-50 py-4 border-b border-white/10">
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <div className="flex items-center space-x-1 p-2 rounded-xl bg-gradient-to-r from-white/10 to-white/5 border border-white/10">
+              <img src="/nad-trade-logo.png" alt="Lisk Trade Logo" className="w-8 h-8" />
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500/10 border border-green-500/20">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-green-400">Live</span>
-            </div>
-            <ConnectButton />
+          <div>
+            <h1 className="text-2xl font-bold text-gradient-monad font-inter">LiskTrade</h1>
+            <p className="text-xs font-medium" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+              Decentralized Exchange on Lisk
+            </p>
           </div>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6 text-sm" style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#10B981" }}></div>
+              <span>Live Markets</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span>0.3% Fee</span>
+            </div>
+          </div>
+          <ConnectButton />
         </div>
       </div>
     </header>
   )
 }
+
+export default Header
 ```
 
 **`src/components/DEXContainer.tsx`:**
@@ -2157,40 +2003,42 @@ Buat file `package.json` dengan scripts yang diperlukan:
 
 ```json
 {
-  "name": "simple-dex-ui",
+  "name": "simple-defi-ui",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@rainbow-me/rainbowkit": "^2.1.0",
-    "@tanstack/react-query": "^5.28.0",
-    "lucide-react": "^0.index: 363.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.4.1",
-    "recharts": "^2.12.0",
-    "viem": "^2.9.0",
-    "wagmi": "^2.5.0"
+    "@rainbow-me/rainbowkit": "^2.2.8",
+    "@tanstack/react-query": "^5.80.10",
+    "lucide-react": "^0.518.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.5.2",
+    "recharts": "^2.15.3",
+    "viem": "^2.31.3",
+    "wagmi": "^2.15.6"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0-alpha.25",
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.6",
-    "tailwindcss": "^4.0.0-alpha.25",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "@eslint/js": "^9.25.0",
+    "@tailwindcss/vite": "^4.1.10",
+    "@types/node": "^24.0.3",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "tailwindcss": "^4.1.10",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.5"
   }
 }
 ```
@@ -2459,4 +2307,74 @@ Anda telah berhasil membangun **foundation yang solid** untuk SimpleDEX frontend
 
 **Prepared by:** Ethereum Jakarta x Lisk
 **Part 5 - Frontend Integration**
-**Version:** 1.0
+**Version:** 2.0 (Updated to match actual implementation)
+
+---
+
+## 📝 Documentation Update Summary
+
+Documentation telah diupdate untuk match 1:1 dengan actual code implementation. Berikut adalah perubahan utama:
+
+### **1. Package Versions (Updated to Exact Versions)**
+- React: 18.2.0 → **19.1.0**
+- Wagmi: 2.5.0 → **2.15.6**
+- Viem: 2.9.0 → **2.31.3**
+- RainbowKit: 2.1.0 → **2.2.8**
+- TailwindCSS: 4.0.0-alpha.25 → **4.1.10**
+- Vite: 5.2.0 → **6.3.5**
+- TypeScript: 5.2.2 → **5.8.3**
+- React Query: 5.28.0 → **5.80.10**
+- Recharts: 2.12.0 → **2.15.3**
+
+### **2. Contract Addresses (Hardcoded)**
+Contract addresses sekarang hardcoded di `constants/index.tsx`:
+- **SimpleDEX**: `0x70bDD0f7e01DEe803147ead041dE23a531A71CBf`
+- **Campus Coin**: `0xEBAa841c5f97Ff097e61eea151dFA03640A6CC78`
+- **Mock USDC**: `0x786Ca7D3a2E53f0d5F7bB6848E03b60Dae9a3719`
+
+### **3. Styling Theme (Black-White Gradient)**
+Theme telah diubah dari Lisk brand colors ke **black-white gradient theme**:
+- Background: Pure black → dark black → medium black gradient
+- Glass morphism dengan white/10 borders
+- Text gradient: Pure white → off-white → light gray
+- Animations: glow-white, glow-gray, glow-success
+
+### **4. App Configuration**
+- Wagmi config menggunakan `getDefaultConfig` with `ssr: true`
+- QueryClient dibuat inside App component (bukan global)
+- Toaster position: bottom-right → **top-center**
+- Chain name: "Lisk Sepolia Testnet" dengan public RPC URLs
+
+### **5. Component Implementation**
+- Header: Menggunakan "LiskTrade" branding dengan logo image
+- DEXContainer: "use client" directive untuk tab state management
+- Styling: Inline styles dengan rgba colors (black-white theme)
+
+### **6. Utility Functions**
+- `formatNumber`: minimumFractionDigits set to 0 (bukan decimals)
+- `formatTokenAmount`: Support untuk bigint | string dengan TOKENS keyof
+- `isValidAmount`: Validasi tambahan untuk '0' dan '.'
+- `calculations.ts`: Menggunakan DEX_CONFIG.FEE_PERCENT as default
+
+### **7. Type Definitions**
+- Token address: `0x${string}` → **string**
+- TransactionHistory: Enhanced dengan tokenA/tokenB objects
+- Added PriceData interface untuk analytics
+
+### **8. Hook Implementations**
+- useTokenBalance: Return type includes refetchAllowance
+- usePoolData: Separate getPrice call dengan currentPrice
+- useSwap: Import from '@wagmi/core' untuk waitForTransactionReceipt
+- useLiquidity: Enhanced dengan approveToken helper function
+
+### **9. Build Configuration**
+- Vite config: Simplified plugins array `[react(), tailwindcss()]`
+- No tailwind.config.js needed (TailwindCSS v4 uses CSS variables)
+- TypeScript build: `tsc -b` (incremental build)
+
+### **10. Naming Conventions**
+- Project name: simple-dex-ui → **simple-defi-ui**
+- App name: SimpleDEX → **Simple DEX** / **LiskTrade**
+- Component styling: Lebih banyak inline styles untuk precise control
+
+Semua code examples sekarang match **EXACTLY** dengan actual implementation di `/simple-defi-ui` directory.
