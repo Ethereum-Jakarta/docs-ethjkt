@@ -137,7 +137,6 @@ libs = ["lib"]
 solc = "0.8.30"
 optimizer = true
 optimizer_runs = 200
-via_ir = false
 
 # Remappings untuk imports
 remappings = [
@@ -151,15 +150,6 @@ lisk_sepolia = "https://rpc.sepolia-api.lisk.com"
 
 [etherscan]
 lisk_sepolia = { key = "${BLOCKSCOUT_API_KEY}", url = "https://sepolia-blockscout.lisk.com/api" }
-
-# Testing configuration
-[fuzz]
-runs = 256
-max_test_rejects = 65536
-
-[invariant]
-runs = 256
-depth = 15
 ```
 
 ---
@@ -831,7 +821,6 @@ contract SimpleDEXTest is Test {
         // Alice removes liquidity
         vm.prank(alice);
         (uint256 campOut, uint256 usdcOut) = dex.removeLiquidity(liquidity / 2);
-        console.log("Alice removed liquidity:", campOut / 10**18, "CAMP,", usdcOut / 10**6, "USDC");
 
         assertGt(campOut, 0);
         assertGt(usdcOut, 0);
@@ -1055,11 +1044,11 @@ cast balance YOUR_ADDRESS --rpc-url https://rpc.sepolia-api.lisk.com
 ```bash
 # Method 1: Using deployment script (RECOMMENDED)
 forge script script/DeployDEX.s.sol \
-  --rpc-url https://rpc.sepolia-api.lisk.com \
-  --broadcast \
-  --verify \
-  --verifier blockscout \
-  --verifier-url https://sepolia-blockscout.lisk.com/api
+    --rpc-url https://rpc.sepolia-api.lisk.com \
+    --broadcast \
+    --verify \
+    --verifier blockscout \
+    --verifier-url https://sepolia-blockscout.lisk.com/api
 
 # Method 2: Deploy individually
 forge create src/CampusCoin.sol:CampusCoin \
