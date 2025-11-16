@@ -137,6 +137,8 @@ libs = ["lib"]
 solc = "0.8.30"
 optimizer = true
 optimizer_runs = 200
+gas_limit = "18446744073709551615"
+
 
 # Remappings untuk imports
 remappings = [
