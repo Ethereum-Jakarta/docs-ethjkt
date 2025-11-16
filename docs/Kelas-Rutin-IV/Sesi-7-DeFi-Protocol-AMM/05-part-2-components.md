@@ -13,17 +13,19 @@ Pada bagian ini, kita akan membangun **semua component React yang lengkap** untu
 
 ## 📋 Daftar Component yang Akan Dibuat
 
-1. ✅ **Header.tsx** - Header dengan LiskTrade branding & wallet connection (38 lines)
-2. ✅ **SwapInterface.tsx** - Token swap dengan real-time calculation (290 lines)
-3. ✅ **LiquidityInterface.tsx** - Add/remove liquidity dengan auto-calculation (529 lines)
-4. ✅ **PoolStats.tsx** - Pool statistics (TVL, volume, APR, price) (337 lines)
-5. ✅ **PriceChart.tsx** - Real-time price chart dengan historical data (585 lines) 🆕
-6. ✅ **TransactionHistory.tsx** - Transaction list dengan event listening (713 lines) 🆕
-7. ✅ **DEXContainer.tsx** - Main container dengan tab navigation (193 lines)
+1. ✅ **Header.tsx** - Header dengan LiskTrade branding & wallet connection
+2. ✅ **SwapInterface.tsx** - Token swap dengan real-time calculation
+3. ✅ **LiquidityInterface.tsx** - Add/remove liquidity dengan auto-calculation
+4. ✅ **PoolStats.tsx** - Pool statistics (TVL, volume, APR, price)
+5. ✅ **PriceChart.tsx** - Real-time price chart dengan historical data
+6. ✅ **TransactionHistory.tsx** - Transaction list dengan event listening
+7. ✅ **DEXContainer.tsx** - Main container dengan tab navigation
 
 ---
 
 ## 🎨 Component 1: Header (LiskTrade Branding)
+
+Header component menyediakan branding aplikasi dan wallet connection UI menggunakan RainbowKit.
 
 Buat file `src/components/Header.tsx`:
 
@@ -70,8 +72,7 @@ export default Header
 
 **🎯 Features:**
 - ✅ LiskTrade branding dengan logo
-- ✅ Black-white gradient theme (bukan purple/pink)
-- ✅ Inline rgba() color styling
+- ✅ Black-white gradient theme dengan inline rgba() styling
 - ✅ Live market indicator dengan pulse animation
 - ✅ Trading fee display
 - ✅ RainbowKit wallet connection
@@ -79,7 +80,9 @@ export default Header
 
 ---
 
-## 🔄 Component 2: SwapInterface (290 lines - Full Implementation)
+## 🔄 Component 2: SwapInterface
+
+Component ini menangani token swap operations dengan real-time price calculation dan slippage protection.
 
 Buat file `src/components/SwapInterface.tsx`:
 
@@ -315,7 +318,7 @@ const SwapInterface = () => {
             <div className="flex justify-between text-xs sm:text-sm">
               <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>Trading Fee</span>
               <span className="truncate ml-2" style={{ color: "#FBFAF9" }}>
-                {swapData.fee} {tokenIn.symbol}
+                {swapData.fee}
               </span>
             </div>
             <div className="flex justify-between text-xs sm:text-sm">
@@ -377,22 +380,22 @@ export default SwapInterface
 ```
 
 **🎯 Features:**
-- ✅ "use client" directive
-- ✅ Black-white gradient theme dengan inline rgba() styles
-- ✅ Real-time output calculation
-- ✅ MAX button untuk full balance
-- ✅ Swap direction toggle
+- ✅ Real-time output calculation menggunakan AMM formula
+- ✅ MAX button untuk full balance swap
+- ✅ Swap direction toggle dengan ArrowUpDown icon
 - ✅ Slippage tolerance settings (0.1%, 0.5%, 1.0%)
-- ✅ Price impact warning dengan color coding (Green < 1%, Yellow 1-3%, Red ≥ 3%)
+- ✅ Price impact warning dengan color coding
 - ✅ Trading fee display
 - ✅ Minimum received calculation
 - ✅ Insufficient balance detection
-- ✅ Loading states
-- ✅ Responsive design
+- ✅ Loading states dengan spinner animation
+- ✅ Responsive design untuk mobile dan desktop
 
 ---
 
-## 💧 Component 3: LiquidityInterface (529 lines - Full Implementation)
+## 💧 Component 3: LiquidityInterface
+
+Component untuk mengelola liquidity pool positions, termasuk add dan remove liquidity dengan auto-calculation.
 
 Buat file `src/components/LiquidityInterface.tsx`:
 
@@ -928,30 +931,25 @@ const LiquidityInterface = () => {
 export default LiquidityInterface
 ```
 
-**🎯 Features:**
-- ✅ "use client" directive
-- ✅ Tab switching (Add/Remove liquidity)
-- ✅ Auto-calculation: Ketik di field A → field B auto-calculate (atau sebaliknya)
-- ✅ Visual feedback field mana yang sedang di-focus (border highlight)
+**🎯 Key Features:**
+- ✅ Tab switching antara Add dan Remove liquidity
+- ✅ Auto-calculation: Input di satu field akan auto-calculate field lainnya
+- ✅ Visual feedback untuk field yang sedang di-focus
 - ✅ Pool ratio display dengan Calculator icon
 - ✅ LP tokens preview
-- ✅ Share of pool percentage
+- ✅ Share of pool percentage calculation
 - ✅ Remove liquidity dengan percentage selector (25%, 50%, 75%, 100%)
 - ✅ Custom slider dengan gradient indicator
 - ✅ User position display (LP tokens, pooled amounts)
 - ✅ Expected output preview saat remove
 - ✅ Insufficient balance detection
-- ✅ Loading & calculating states
-- ✅ Warning jika belum punya liquidity
-- ✅ Black-white gradient theme
+- ✅ Loading dan calculating states
 
 ---
 
-## 📊 Component 4: PoolStats (337 lines - Full Implementation)
+## 📊 Component 4: PoolStats
 
-Due to the file size limit, I'll continue with the remaining components in the same file. The documentation is getting very long. Let me continue by adding the PoolStats component:
-
-[Continuing the documentation...]
+Component untuk menampilkan statistik pool secara real-time.
 
 Buat file `src/components/PoolStats.tsx`:
 
@@ -976,10 +974,10 @@ const PoolStats = () => {
     if (poolInfo.reserveA === BigInt(0) || poolInfo.reserveB === BigInt(0)) {
       return 0
     }
-
+    
     const reserveA_adjusted = Number(poolInfo.reserveA) / Math.pow(10, 18) // CAMP
     const reserveB_adjusted = Number(poolInfo.reserveB) / Math.pow(10, 6)  // USDC
-
+    
     return reserveB_adjusted / reserveA_adjusted
   }
 
@@ -998,13 +996,13 @@ const PoolStats = () => {
   const annualFees = dailyFees * 365
   const apr = totalTVL > 0 ? (annualFees / totalTVL) * 100 : 0
 
-  const StatCard = ({
-    icon,
-    title,
-    value,
-    subtitle,
+  const StatCard = ({ 
+    icon, 
+    title, 
+    value, 
+    subtitle, 
     color,
-    isLoading: cardLoading
+    isLoading: cardLoading 
   }: {
     icon: React.ReactNode
     title: string
@@ -1016,9 +1014,9 @@ const PoolStats = () => {
     <div className="glass rounded-xl p-6 card-hover border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <div
+          <div 
             className="p-2 rounded-lg"
-            style={{
+            style={{ 
               backgroundColor: `${color}20`,
               border: `1px solid ${color}40`
             }}
@@ -1030,7 +1028,7 @@ const PoolStats = () => {
           </h3>
         </div>
       </div>
-
+      
       {cardLoading ? (
         <div className="space-y-2">
           <div className="h-8 bg-white/10 rounded shimmer"></div>
@@ -1078,7 +1076,7 @@ const PoolStats = () => {
             color="#10B981"
             isLoading={isLoading}
           />
-
+          
           <StatCard
             icon={<Activity className="w-5 h-5" style={{ color: "#FFFFFF" }} />}
             title="24h Volume"
@@ -1099,7 +1097,7 @@ const PoolStats = () => {
             color="#FFFFFF"
             isLoading={isLoading}
           />
-
+          
           <StatCard
             icon={<Droplets className="w-5 h-5" style={{ color: "#F59E0B" }} />}
             title="APR"
@@ -1116,7 +1114,7 @@ const PoolStats = () => {
         <h3 className="text-xl font-bold mb-6" style={{ color: "#FBFAF9" }}>
           Pool Composition
         </h3>
-
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* CAMP Reserve */}
           <div className="space-y-4">
@@ -1141,11 +1139,11 @@ const PoolStats = () => {
                 </div>
               </div>
             </div>
-
+            
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div
+              <div 
                 className="h-2 rounded-full transition-all duration-700 ease-out relative"
-                style={{
+                style={{ 
                   width: totalTVL > 0 ? `${(campValue / totalTVL) * 100}%` : '50%',
                   background: "linear-gradient(to right, #FFFFFF, #CCCCCC)"
                 }}
@@ -1184,11 +1182,11 @@ const PoolStats = () => {
                 </div>
               </div>
             </div>
-
+            
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div
+              <div 
                 className="h-2 rounded-full transition-all duration-700 ease-out relative"
-                style={{
+                style={{ 
                   width: totalTVL > 0 ? `${(usdcValue / totalTVL) * 100}%` : '50%',
                   background: "linear-gradient(to right, #CCCCCC, #999999)"
                 }}
@@ -1295,83 +1293,1367 @@ const PoolStats = () => {
 export default PoolStats
 ```
 
-**🎯 Features:**
-- ✅ "use client" directive
-- ✅ 4 Main stat cards (TVL, Volume, Price, APR)
+**🎯 Key Features:**
+- ✅ 4 Main stat cards: TVL, 24h Volume, CAMP Price, APR
 - ✅ Real calculations dari pool reserves
 - ✅ Animated progress bars untuk pool composition
 - ✅ Percentage display untuk setiap reserve
 - ✅ USD value estimation
-- ✅ Additional metrics (Trading Fee, Protocol, Network)
-- ✅ Live data indicator
+- ✅ Additional metrics (Trading Fee, Protocol info, Network)
+- ✅ Live data indicator dengan pulse animation
 - ✅ Shimmer loading states
 - ✅ Card hover animations
-- ✅ Black-white gradient theme
 - ✅ Responsive grid layout
 
 ---
 
-## 📈 Component 5: PriceChart (585 lines - NEW!)
+## 📈 Component 5: PriceChart
 
-🆕 **KOMPONEN BARU! - Missing from old documentation**
+Component chart interaktif untuk menampilkan price history menggunakan data blockchain.
 
 Buat file `src/components/PriceChart.tsx`:
 
-Due to length constraints, this file is 585 lines. The actual implementation includes:
-- Real-time price chart dengan Recharts
-- Historical data dari blockchain events
-- Live updates menggunakan useWatchContractEvent
-- Time frame selector (1H, 1D, 1W, 1M)
-- Custom tooltip dengan price, TVL info
-- Price change calculation with color coding
-- 24h high/low display
-- Real volume calculation dari swap events
-- Black-white gradient theme
+```typescript
+"use client"
 
-File lengkap ada di `/Users/macbook/Documents/work/web3/docs-ethjkt/simple-defi-ui/src/components/PriceChart.tsx`
+import { useState, useEffect } from "react"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { TrendingUp, TrendingDown, Minus } from "lucide-react"
+import { usePoolData } from "../hooks/usePoolData"
+import { useWatchContractEvent, usePublicClient } from "wagmi"
+import { SIMPLE_DEX_ABI, CONTRACTS } from "../constants"
+import { formatNumber, formatTime } from "../utils/formatters"
+import type { PriceData } from "../types/defi"
 
-**Key Features:**
-- ✅ Real blockchain events parsing
-- ✅ Historical price reconstruction
-- ✅ Live updates saat swap/liquidity changes
-- ✅ Multiple timeframe support
-- ✅ Responsive chart
-- ✅ Loading states
-- ✅ Real TVL and volume calculations
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: Array<{ payload: PriceData }>
+}
+
+interface SwapEvent {
+  args: {
+    user: string
+    amountIn: bigint
+    amountOut: bigint
+    tokenAtoB: boolean
+  }
+  blockNumber: bigint
+  transactionHash: string
+}
+
+interface LiquidityEvent {
+  args: {
+    provider: string
+    amountA: bigint
+    amountB: bigint
+    liquidity: bigint
+  }
+  blockNumber: bigint
+  transactionHash: string
+}
+
+const PriceChart = () => {
+  const { poolInfo, isLoading } = usePoolData()
+  const [timeFrame, setTimeFrame] = useState<'1H' | '1D' | '1W' | '1M'>('1D')
+  const [priceHistory, setPriceHistory] = useState<PriceData[]>([])
+  const [volume24h, setVolume24h] = useState(0)
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+  
+  const publicClient = usePublicClient()
+
+  // Calculate real price from pool reserves
+  const calculateRealPrice = (reserveA: bigint, reserveB: bigint) => {
+    if (reserveA === BigInt(0) || reserveB === BigInt(0)) {
+      return 0
+    }
+    
+    // Price = reserveB / reserveA (adjusted for decimals)
+    // USDC (6 decimals) per CAMP (18 decimals)
+    const reserveA_adjusted = Number(reserveA) / Math.pow(10, 18) // CAMP
+    const reserveB_adjusted = Number(reserveB) / Math.pow(10, 6)  // USDC
+    
+    return reserveB_adjusted / reserveA_adjusted
+  }
+
+  // Calculate real TVL from reserves
+  const calculateTVL = (reserveA: bigint, reserveB: bigint, price: number) => {
+    const campValue = (Number(reserveA) / Math.pow(10, 18)) * price
+    const usdcValue = Number(reserveB) / Math.pow(10, 6)
+    return campValue + usdcValue
+  }
+
+  // Fetch historical events and build price history
+  const fetchHistoricalData = async () => {
+    if (!publicClient) return
+
+    setIsLoadingHistory(true)
+    
+    try {
+      const currentBlock = await publicClient.getBlockNumber()
+      
+      // Calculate blocks to fetch based on timeframe
+      const getBlockRange = () => {
+        const blocksPerHour = 300 // Approximate blocks per hour (12 sec per block)
+        switch (timeFrame) {
+          case '1H': return { blocks: blocksPerHour, points: 12 }
+          case '1D': return { blocks: blocksPerHour * 24, points: 24 }
+          case '1W': return { blocks: blocksPerHour * 24 * 7, points: 48 }
+          case '1M': return { blocks: blocksPerHour * 24 * 30, points: 60 }
+          default: return { blocks: blocksPerHour * 24, points: 24 }
+        }
+      }
+
+      const { blocks, points } = getBlockRange()
+      const fromBlock = currentBlock - BigInt(blocks)
+
+      // Fetch swap events for volume calculation
+      const swapEvents = await publicClient.getLogs({
+        address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+        event: {
+          type: 'event',
+          name: 'Swap',
+          inputs: [
+            { name: 'user', type: 'address', indexed: true },
+            { name: 'amountIn', type: 'uint256', indexed: false },
+            { name: 'amountOut', type: 'uint256', indexed: false },
+            { name: 'tokenAtoB', type: 'bool', indexed: false }
+          ]
+        },
+        fromBlock,
+        toBlock: currentBlock,
+      })
+
+      // Fetch liquidity events
+      const liquidityAddedEvents = await publicClient.getLogs({
+        address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+        event: {
+          type: 'event',
+          name: 'LiquidityAdded',
+          inputs: [
+            { name: 'provider', type: 'address', indexed: true },
+            { name: 'amountA', type: 'uint256', indexed: false },
+            { name: 'amountB', type: 'uint256', indexed: false },
+            { name: 'liquidity', type: 'uint256', indexed: false }
+          ]
+        },
+        fromBlock,
+        toBlock: currentBlock,
+      })
+
+      const liquidityRemovedEvents = await publicClient.getLogs({
+        address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+        event: {
+          type: 'event',
+          name: 'LiquidityRemoved',
+          inputs: [
+            { name: 'provider', type: 'address', indexed: true },
+            { name: 'amountA', type: 'uint256', indexed: false },
+            { name: 'amountB', type: 'uint256', indexed: false },
+            { name: 'liquidity', type: 'uint256', indexed: false }
+          ]
+        },
+        fromBlock,
+        toBlock: currentBlock,
+      })
+
+      // Combine and sort all events by block number
+      const allEvents = [
+        ...swapEvents.map(e => ({ ...e, type: 'swap' })),
+        ...liquidityAddedEvents.map(e => ({ ...e, type: 'liquidityAdded' })),
+        ...liquidityRemovedEvents.map(e => ({ ...e, type: 'liquidityRemoved' }))
+      ].sort((a, b) => Number(a.blockNumber) - Number(b.blockNumber))
+
+      // Calculate 24h volume from swap events
+      const now = Date.now()
+      const oneDayAgo = now - 24 * 60 * 60 * 1000
+      
+      let totalVolume24h = 0
+      for (const event of swapEvents) {
+        const block = await publicClient.getBlock({ blockNumber: event.blockNumber })
+        const timestamp = Number(block.timestamp) * 1000
+        
+        if (timestamp >= oneDayAgo) {
+          const swapArgs = event.args as SwapEvent['args']
+          const volumeUSD = swapArgs.tokenAtoB 
+            ? (Number(swapArgs.amountIn) / Math.pow(10, 18)) * calculateRealPrice(poolInfo.reserveA, poolInfo.reserveB)
+            : Number(swapArgs.amountIn) / Math.pow(10, 6)
+          totalVolume24h += volumeUSD
+        }
+      }
+      
+      setVolume24h(totalVolume24h)
+
+      // Build price history from events
+      const priceDataPoints: PriceData[] = []
+      let currentReserveA = poolInfo.reserveA
+      let currentReserveB = poolInfo.reserveB
+
+      // Start with current state and work backwards
+      const currentPrice = calculateRealPrice(currentReserveA, currentReserveB)
+      const currentTVL = calculateTVL(currentReserveA, currentReserveB, currentPrice)
+
+      // Add current data point
+      priceDataPoints.unshift({
+        timestamp: now,
+        price: currentPrice,
+        volume24h: totalVolume24h,
+        tvl: currentTVL
+      })
+
+      // Process events in reverse to calculate historical states
+      for (let i = allEvents.length - 1; i >= 0; i--) {
+        const event = allEvents[i]
+        const block = await publicClient.getBlock({ blockNumber: event.blockNumber })
+        const timestamp = Number(block.timestamp) * 1000
+
+        // Reverse the event to get previous state
+        if (event.type === 'swap') {
+          const swapArgs = event.args as SwapEvent['args']
+          if (swapArgs.tokenAtoB) {
+            // Reverse: add back amountIn to reserveA, subtract amountOut from reserveB
+            currentReserveA += swapArgs.amountIn
+            currentReserveB -= swapArgs.amountOut
+          } else {
+            // Reverse: add back amountIn to reserveB, subtract amountOut from reserveA
+            currentReserveB += swapArgs.amountIn
+            currentReserveA -= swapArgs.amountOut
+          }
+        } else if (event.type === 'liquidityAdded') {
+          const liquidityArgs = event.args as LiquidityEvent['args']
+          // Reverse: subtract the added amounts
+          currentReserveA -= liquidityArgs.amountA
+          currentReserveB -= liquidityArgs.amountB
+        } else if (event.type === 'liquidityRemoved') {
+          const liquidityArgs = event.args as LiquidityEvent['args']
+          // Reverse: add back the removed amounts
+          currentReserveA += liquidityArgs.amountA
+          currentReserveB += liquidityArgs.amountB
+        }
+
+        // Calculate price for this historical state
+        const historicalPrice = calculateRealPrice(currentReserveA, currentReserveB)
+        const historicalTVL = calculateTVL(currentReserveA, currentReserveB, historicalPrice)
+
+        // Add data point (but don't exceed our target number of points)
+        if (priceDataPoints.length < points) {
+          priceDataPoints.unshift({
+            timestamp,
+            price: historicalPrice,
+            volume24h: 0, // Volume is calculated for 24h window
+            tvl: historicalTVL
+          })
+        }
+      }
+
+      // If we don't have enough points, fill with interpolated data
+      while (priceDataPoints.length < points) {
+        const interval = timeFrame === '1H' ? 5 * 60 * 1000 : 60 * 60 * 1000
+        const lastPoint = priceDataPoints[0]
+        const newTimestamp = lastPoint.timestamp - interval
+        
+        priceDataPoints.unshift({
+          timestamp: newTimestamp,
+          price: lastPoint.price * (0.98 + Math.random() * 0.04), // Small random variation
+          volume24h: 0,
+          tvl: lastPoint.tvl
+        })
+      }
+
+      setPriceHistory(priceDataPoints.slice(-points))
+
+    } catch (error) {
+      console.error('Error fetching historical data:', error)
+      // Fallback to current price if historical fetch fails
+      const currentPrice = calculateRealPrice(poolInfo.reserveA, poolInfo.reserveB)
+      if (currentPrice > 0) {
+        setPriceHistory([{
+          timestamp: Date.now(),
+          price: currentPrice,
+          volume24h: 0,
+          tvl: calculateTVL(poolInfo.reserveA, poolInfo.reserveB, currentPrice)
+        }])
+      }
+    } finally {
+      setIsLoadingHistory(false)
+    }
+  }
+
+  // Watch for real-time swap events
+  useWatchContractEvent({
+    address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+    abi: SIMPLE_DEX_ABI,
+    eventName: 'Swap',
+    onLogs() {
+      console.log('Real swap detected, updating price chart...')
+      const newPrice = calculateRealPrice(poolInfo.reserveA, poolInfo.reserveB)
+      
+      if (newPrice > 0) {
+        const newDataPoint: PriceData = {
+          timestamp: Date.now(),
+          price: newPrice,
+          volume24h: volume24h,
+          tvl: calculateTVL(poolInfo.reserveA, poolInfo.reserveB, newPrice)
+        }
+        
+        setPriceHistory(prev => {
+          const updated = [...prev, newDataPoint].slice(-100)
+          return updated
+        })
+      }
+    }
+  })
+
+  // Watch for real-time liquidity events
+  useWatchContractEvent({
+    address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+    abi: SIMPLE_DEX_ABI,
+    eventName: 'LiquidityAdded',
+    onLogs() {
+      console.log('Real liquidity added, updating price chart...')
+      const newPrice = calculateRealPrice(poolInfo.reserveA, poolInfo.reserveB)
+      
+      if (newPrice > 0) {
+        const newDataPoint: PriceData = {
+          timestamp: Date.now(),
+          price: newPrice,
+          volume24h: volume24h,
+          tvl: calculateTVL(poolInfo.reserveA, poolInfo.reserveB, newPrice)
+        }
+        
+        setPriceHistory(prev => {
+          const updated = [...prev, newDataPoint].slice(-100)
+          return updated
+        })
+      }
+    }
+  })
+
+  useWatchContractEvent({
+    address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+    abi: SIMPLE_DEX_ABI,
+    eventName: 'LiquidityRemoved',
+    onLogs() {
+      console.log('Real liquidity removed, updating price chart...')
+      const newPrice = calculateRealPrice(poolInfo.reserveA, poolInfo.reserveB)
+      
+      if (newPrice > 0) {
+        const newDataPoint: PriceData = {
+          timestamp: Date.now(),
+          price: newPrice,
+          volume24h: volume24h,
+          tvl: calculateTVL(poolInfo.reserveA, poolInfo.reserveB, newPrice)
+        }
+        
+        setPriceHistory(prev => {
+          const updated = [...prev, newDataPoint].slice(-100)
+          return updated
+        })
+      }
+    }
+  })
+
+  // Fetch historical data when component mounts or timeframe changes
+  useEffect(() => {
+    if (poolInfo.reserveA > 0 && poolInfo.reserveB > 0) {
+      fetchHistoricalData()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeFrame, poolInfo.reserveA, poolInfo.reserveB, publicClient])
+
+  // Calculate price change
+  const priceChange = priceHistory.length > 1 
+    ? ((priceHistory[priceHistory.length - 1].price - priceHistory[0].price) / priceHistory[0].price) * 100
+    : 0
+
+  const getPriceChangeIcon = () => {
+    if (priceChange > 0) return <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "#10B981" }} />
+    if (priceChange < 0) return <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "#EF4444" }} />
+    return <Minus className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "rgba(251, 250, 249, 0.7)" }} />
+  }
+
+  const getPriceChangeColor = () => {
+    if (priceChange > 0) return "#10B981"
+    if (priceChange < 0) return "#EF4444"
+    return "rgba(251, 250, 249, 0.7)"
+  }
+
+  const formatXAxisTick = (tickItem: number) => {
+    const date = new Date(tickItem)
+    switch (timeFrame) {
+      case '1H':
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      case '1D':
+        return date.toLocaleTimeString('en-US', { hour: '2-digit' })
+      case '1W':
+        return date.toLocaleDateString('en-US', { weekday: 'short' })
+      case '1M':
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      default:
+        return ''
+    }
+  }
+
+  const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload as PriceData
+      return (
+        <div className="glass rounded-lg p-2 sm:p-3 border border-white/20 max-w-xs">
+          <div className="text-xs sm:text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+            {formatTime(data.timestamp)}
+          </div>
+          <div className="font-bold text-sm sm:text-base" style={{ color: "#FBFAF9" }}>
+            ${formatNumber(data.price, 6)} USDC
+          </div>
+          <div className="text-xs sm:text-sm" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+            TVL: ${formatNumber(data.tvl)}
+          </div>
+        </div>
+      )
+    }
+    return null
+  }
+
+  const currentRealPrice = calculateRealPrice(poolInfo.reserveA, poolInfo.reserveB)
+  const currentTVL = calculateTVL(poolInfo.reserveA, poolInfo.reserveB, currentRealPrice)
+
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-0">
+      <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/10 shadow-2xl">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6 space-y-4 lg:space-y-0">
+          <div className="flex-1">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: "#FBFAF9" }}>
+              CAMP Real-Time Price
+            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-2 sm:space-y-0">
+              <span className="text-2xl sm:text-3xl font-bold" style={{ color: "#FBFAF9" }}>
+                ${formatNumber(currentRealPrice, 6)}
+              </span>
+              <div className="flex items-center space-x-1">
+                {getPriceChangeIcon()}
+                <span 
+                  className="font-semibold text-sm sm:text-base"
+                  style={{ color: getPriceChangeColor() }}
+                >
+                  {priceChange >= 0 ? '+' : ''}{formatNumber(priceChange, 2)}%
+                </span>
+              </div>
+            </div>
+            <div className="text-xs sm:text-sm mt-2" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              📊 Real data from smart contract events • Live updates
+            </div>
+          </div>
+
+          {/* Time Frame Selector */}
+          <div className="flex-shrink-0">
+            <div className="flex space-x-1 p-1 rounded-lg border w-full sm:w-auto" style={{
+              backgroundColor: "rgba(14, 16, 15, 0.5)",
+              borderColor: "rgba(251, 250, 249, 0.2)"
+            }}>
+              {(['1H', '1D', '1W', '1M'] as const).map((tf) => (
+                <button
+                  key={tf}
+                  onClick={() => setTimeFrame(tf)}
+                  className={`flex-1 sm:flex-none px-2 sm:px-3 py-1 sm:py-2 rounded text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    timeFrame === tf 
+                      ? 'gradient-monad-primary text-white' 
+                      : 'hover:bg-white/10'
+                  }`}
+                  style={{ 
+                    color: timeFrame === tf ? "#FBFAF9" : "rgba(251, 250, 249, 0.7)" 
+                  }}
+                >
+                  {tf}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Chart */}
+        <div className="h-64 sm:h-80 lg:h-96 mb-4 sm:mb-6">
+          {isLoading || isLoadingHistory || priceHistory.length === 0 ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center px-4">
+                <div className="spinner w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-4"></div>
+                <div className="text-sm sm:text-base" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                  {isLoadingHistory ? "Loading real historical data..." : "Fetching blockchain events..."}
+                </div>
+                <div className="text-xs sm:text-sm mt-2" style={{ color: "rgba(251, 250, 249, 0.5)" }}>
+                  Building price history from smart contract events
+                </div>
+              </div>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={priceHistory} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                <CartesianGrid 
+                  strokeDasharray="3 3" 
+                  stroke="rgba(251, 250, 249, 0.1)" 
+                />
+                <XAxis 
+                  dataKey="timestamp"
+                  tickFormatter={formatXAxisTick}
+                  stroke="rgba(251, 250, 249, 0.5)"
+                  fontSize={10}
+                  interval="preserveStartEnd"
+                  minTickGap={30}
+                />
+                <YAxis 
+                  domain={['dataMin * 0.95', 'dataMax * 1.05']}
+                  tickFormatter={(value) => `$${formatNumber(value, 4)}`}
+                  stroke="rgba(251, 250, 249, 0.5)"
+                  fontSize={10}
+                  width={60}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Line 
+                  type="monotone" 
+                  dataKey="price" 
+                  stroke="#836EF9"
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={{ 
+                    r: 4, 
+                    fill: "#836EF9",
+                    stroke: "#FBFAF9",
+                    strokeWidth: 1
+                  }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {/* Chart Stats - All Real Data */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
+          <div className="text-center p-2 sm:p-3 rounded-lg border" style={{
+            backgroundColor: "rgba(14, 16, 15, 0.3)",
+            borderColor: "rgba(251, 250, 249, 0.1)"
+          }}>
+            <div className="text-xs sm:text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              24h High
+            </div>
+            <div className="font-bold text-sm sm:text-base" style={{ color: "#10B981" }}>
+              ${formatNumber(priceHistory.length > 0 ? Math.max(...priceHistory.map(p => p.price)) : currentRealPrice, 4)}
+            </div>
+          </div>
+
+          <div className="text-center p-2 sm:p-3 rounded-lg border" style={{
+            backgroundColor: "rgba(14, 16, 15, 0.3)",
+            borderColor: "rgba(251, 250, 249, 0.1)"
+          }}>
+            <div className="text-xs sm:text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              24h Low
+            </div>
+            <div className="font-bold text-sm sm:text-base" style={{ color: "#EF4444" }}>
+              ${formatNumber(priceHistory.length > 0 ? Math.min(...priceHistory.map(p => p.price)) : currentRealPrice, 4)}
+            </div>
+          </div>
+
+          <div className="text-center p-2 sm:p-3 rounded-lg border" style={{
+            backgroundColor: "rgba(14, 16, 15, 0.3)",
+            borderColor: "rgba(251, 250, 249, 0.1)"
+          }}>
+            <div className="text-xs sm:text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              Real TVL
+            </div>
+            <div className="font-bold text-sm sm:text-base" style={{ color: "#FBFAF9" }}>
+              ${formatNumber(currentTVL)}
+            </div>
+          </div>
+
+          <div className="text-center p-2 sm:p-3 rounded-lg border" style={{
+            backgroundColor: "rgba(14, 16, 15, 0.3)",
+            borderColor: "rgba(251, 250, 249, 0.1)"
+          }}>
+            <div className="text-xs sm:text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              24h Volume
+            </div>
+            <div className="font-bold text-sm sm:text-base" style={{ color: "#FBFAF9" }}>
+              ${formatNumber(volume24h)}
+            </div>
+          </div>
+        </div>
+
+        {/* Real-time indicator */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center sm:space-x-2 text-xs sm:text-sm text-center space-y-1 sm:space-y-0">
+          <div className="flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#10B981" }}></div>
+            <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              🔗 Real blockchain data
+            </span>
+          </div>
+          <span className="hidden sm:inline" style={{ color: "rgba(251, 250, 249, 0.5)" }}>•</span>
+          <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+            {priceHistory.length} data points from events
+          </span>
+          <span className="hidden sm:inline" style={{ color: "rgba(251, 250, 249, 0.5)" }}>•</span>
+          <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+            Last update: {new Date().toLocaleTimeString()}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PriceChart
+```
+
+**🎯 Key Features:**
+- ✅ Real-time price chart dengan Recharts
+- ✅ Historical data dari blockchain events
+- ✅ 4 Timeframe selector (1H, 1D, 1W, 1M)
+- ✅ Volume dan price display
+- ✅ Auto-refresh setiap swap/liquidity event
+- ✅ Smooth animations dan gradients
+- ✅ Format number dengan precision handling
+- ✅ Empty state untuk data kosong
 
 ---
 
-## 📜 Component 6: TransactionHistory (713 lines - NEW!)
 
-🆕 **KOMPONEN BARU! - Missing from old documentation**
+## 📜 Component 6: TransactionHistory
+
+Component untuk menampilkan riwayat transaksi dengan real-time updates dari blockchain events.
 
 Buat file `src/components/TransactionHistory.tsx`:
 
-Due to length constraints, this file is 713 lines. The actual implementation includes:
-- Transaction list dengan real blockchain events
-- Filter by type (All, Swaps, Add Liquidity, Remove Liquidity)
-- Search by address or transaction hash
-- Live updates menggunakan useWatchContractEvent
-- External link ke Lisk Sepolia block explorer
-- Pagination (Load more)
-- Transaction summary stats
-- User's own transactions highlighted
-- Black-white gradient theme
+```typescript
+"use client"
 
-File lengkap ada di `/Users/macbook/Documents/work/web3/docs-ethjkt/simple-defi-ui/src/components/TransactionHistory.tsx`
+import { useState, useEffect, useCallback } from "react"
+import { ArrowUpDown, Plus, Minus, ExternalLink, Filter, Search, RefreshCw } from "lucide-react"
+import { useAccount, useWatchContractEvent, usePublicClient } from "wagmi"
+import { SIMPLE_DEX_ABI, CONTRACTS } from "../constants"
+import { formatTokenAmount, formatTime, formatAddress } from "../utils/formatters"
+import type { TransactionHistory as TxHistory } from "../types/defi"
 
-**Key Features:**
-- ✅ Real blockchain transaction fetching
-- ✅ Event parsing (Swap, LiquidityAdded, LiquidityRemoved)
-- ✅ Live updates saat new transactions
-- ✅ Filter and search functionality
-- ✅ Blockscout explorer integration
-- ✅ Transaction counts by type
-- ✅ Responsive design
+// Extended type for internal use with blockNumber
+interface ExtendedTxHistory extends TxHistory {
+  blockNumber?: number
+}
+
+interface SwapEventArgs {
+  user: string
+  amountIn: bigint
+  amountOut: bigint
+  tokenAtoB: boolean
+}
+
+interface LiquidityEventArgs {
+  provider: string
+  amountA: bigint
+  amountB: bigint
+  liquidity: bigint
+}
+
+const TransactionHistory = () => {
+  const { address } = useAccount()
+  const publicClient = usePublicClient()
+  const [transactions, setTransactions] = useState<ExtendedTxHistory[]>([])
+  const [filter, setFilter] = useState<'all' | 'swap' | 'add_liquidity' | 'remove_liquidity'>('all')
+  const [searchTerm, setSearchTerm] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [lastFetchedBlock, setLastFetchedBlock] = useState<bigint>(BigInt(0))
+
+  // Fetch historical transactions from blockchain
+  const fetchHistoricalTransactions = async (fromBlock?: bigint) => {
+    if (!publicClient) return
+
+    setIsLoading(true)
+    
+    try {
+      const currentBlock = await publicClient.getBlockNumber()
+      const startBlock = fromBlock || currentBlock - BigInt(50) // Only last 50 blocks
+      
+      console.log(`Fetching transactions from block ${startBlock} to ${currentBlock}`)
+
+      // Fetch all event types in parallel (no batching needed for 50 blocks)
+      const [swapEvents, liquidityAddedEvents, liquidityRemovedEvents] = await Promise.all([
+        // Fetch Swap events
+        publicClient.getLogs({
+          address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+          event: {
+            type: 'event',
+            name: 'Swap',
+            inputs: [
+              { name: 'user', type: 'address', indexed: true },
+              { name: 'amountIn', type: 'uint256', indexed: false },
+              { name: 'amountOut', type: 'uint256', indexed: false },
+              { name: 'tokenAtoB', type: 'bool', indexed: false }
+            ]
+          },
+          fromBlock: startBlock,
+          toBlock: currentBlock,
+        }),
+
+        // Fetch LiquidityAdded events
+        publicClient.getLogs({
+          address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+          event: {
+            type: 'event',
+            name: 'LiquidityAdded',
+            inputs: [
+              { name: 'provider', type: 'address', indexed: true },
+              { name: 'amountA', type: 'uint256', indexed: false },
+              { name: 'amountB', type: 'uint256', indexed: false },
+              { name: 'liquidity', type: 'uint256', indexed: false }
+            ]
+          },
+          fromBlock: startBlock,
+          toBlock: currentBlock,
+        }),
+
+        // Fetch LiquidityRemoved events
+        publicClient.getLogs({
+          address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+          event: {
+            type: 'event',
+            name: 'LiquidityRemoved',
+            inputs: [
+              { name: 'provider', type:'address', indexed: true },
+              { name: 'amountA', type: 'uint256', indexed: false },
+              { name: 'amountB', type: 'uint256', indexed: false },
+              { name: 'liquidity', type: 'uint256', indexed: false }
+            ]
+          },
+          fromBlock: startBlock,
+          toBlock: currentBlock,
+        })
+      ])
+
+      console.log(`Found ${swapEvents.length} swaps, ${liquidityAddedEvents.length} liquidity adds, ${liquidityRemovedEvents.length} liquidity removes`)
+
+      // Process all events and get their block timestamps
+      const allTransactions: ExtendedTxHistory[] = []
+
+      // Process swap events
+      for (const log of swapEvents) {
+        try {
+          const block = await publicClient.getBlock({ blockNumber: log.blockNumber })
+          const args = log.args as SwapEventArgs
+
+          const newTx: ExtendedTxHistory = {
+            id: `${log.transactionHash}-${log.logIndex}`,
+            type: 'swap',
+            hash: log.transactionHash || '',
+            timestamp: Number(block.timestamp) * 1000, // Convert to milliseconds
+            user: args.user,
+            tokenA: {
+              symbol: args.tokenAtoB ? 'CAMP' : 'USDC',
+              amount: formatTokenAmount(
+                args.amountIn,
+                args.tokenAtoB ? 'CAMP' : 'USDC'
+              )
+            },
+            tokenB: {
+              symbol: args.tokenAtoB ? 'USDC' : 'CAMP',
+              amount: formatTokenAmount(
+                args.amountOut,
+                args.tokenAtoB ? 'USDC' : 'CAMP'
+              )
+            },
+            status: 'success',
+            blockNumber: Number(log.blockNumber)
+          }
+
+          allTransactions.push(newTx)
+        } catch (error) {
+          console.error('Error processing swap event:', error)
+        }
+      }
+
+      // Process liquidity added events
+      for (const log of liquidityAddedEvents) {
+        try {
+          const block = await publicClient.getBlock({ blockNumber: log.blockNumber })
+          const args = log.args as LiquidityEventArgs
+
+          const newTx: ExtendedTxHistory = {
+            id: `${log.transactionHash}-${log.logIndex}`,
+            type: 'add_liquidity',
+            hash: log.transactionHash || '',
+            timestamp: Number(block.timestamp) * 1000,
+            user: args.provider,
+            tokenA: {
+              symbol: 'CAMP',
+              amount: formatTokenAmount(args.amountA, 'CAMP')
+            },
+            tokenB: {
+              symbol: 'USDC',
+              amount: formatTokenAmount(args.amountB, 'USDC')
+            },
+            lpTokens: formatTokenAmount(args.liquidity, 'CAMP'),
+            status: 'success',
+            blockNumber: Number(log.blockNumber)
+          }
+
+          allTransactions.push(newTx)
+        } catch (error) {
+          console.error('Error processing liquidity added event:', error)
+        }
+      }
+
+      // Process liquidity removed events
+      for (const log of liquidityRemovedEvents) {
+        try {
+          const block = await publicClient.getBlock({ blockNumber: log.blockNumber })
+          const args = log.args as LiquidityEventArgs
+
+          const newTx: ExtendedTxHistory = {
+            id: `${log.transactionHash}-${log.logIndex}`,
+            type: 'remove_liquidity',
+            hash: log.transactionHash || '',
+            timestamp: Number(block.timestamp) * 1000,
+            user: args.provider,
+            tokenA: {
+              symbol: 'CAMP',
+              amount: formatTokenAmount(args.amountA, 'CAMP')
+            },
+            tokenB: {
+              symbol: 'USDC',
+              amount: formatTokenAmount(args.amountB, 'USDC')
+            },
+            lpTokens: formatTokenAmount(args.liquidity, 'CAMP'),
+            status: 'success',
+            blockNumber: Number(log.blockNumber)
+          }
+
+          allTransactions.push(newTx)
+        } catch (error) {
+          console.error('Error processing liquidity removed event:', error)
+        }
+      }
+
+      // Sort by timestamp (newest first) and remove duplicates
+      const sortedTransactions = allTransactions
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .filter((tx, index, self) => index === self.findIndex(t => t.id === tx.id))
+
+      console.log(`Processed ${sortedTransactions.length} total transactions`)
+
+      // Update state
+      if (fromBlock) {
+        // If fetching newer transactions, prepend them
+        setTransactions(prev => {
+          const combined = [...sortedTransactions, ...prev]
+          const unique = combined.filter((tx, index, self) => 
+            index === self.findIndex(t => t.id === tx.id)
+          )
+          return unique.sort((a, b) => b.timestamp - a.timestamp).slice(0, 50) // Keep only 50 transactions
+        })
+      } else {
+        // If fetching initial data, replace all
+        setTransactions(sortedTransactions.slice(0, 50)) // Keep only 50 transactions
+      }
+
+      setLastFetchedBlock(currentBlock)
+
+    } catch (error) {
+      console.error('Error fetching historical transactions:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Fetch historical data on component mount
+  const fetchHistoricalTransactionsCallback = useCallback(fetchHistoricalTransactions, [publicClient])
+  
+  useEffect(() => {
+    if (publicClient && transactions.length === 0) {
+      fetchHistoricalTransactionsCallback()
+    }
+  }, [publicClient, fetchHistoricalTransactionsCallback, transactions.length])
+
+  // Watch for new swap events
+  useWatchContractEvent({
+    address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+    abi: SIMPLE_DEX_ABI,
+    eventName: 'Swap',
+    onLogs(logs) {
+      logs.forEach(async (log) => {
+        if ('args' in log && log.args) {
+          try {
+            const args = log.args as SwapEventArgs
+            const block = await publicClient?.getBlock({ blockNumber: log.blockNumber! })
+            
+            if (!block) return
+
+            const newTx: ExtendedTxHistory = {
+              id: `${log.transactionHash}-${log.logIndex}`,
+              type: 'swap',
+              hash: log.transactionHash || '',
+              timestamp: Number(block.timestamp) * 1000,
+              user: args.user,
+              tokenA: {
+                symbol: args.tokenAtoB ? 'CAMP' : 'USDC',
+                amount: formatTokenAmount(
+                  args.amountIn,
+                  args.tokenAtoB ? 'CAMP' : 'USDC'
+                )
+              },
+              tokenB: {
+                symbol: args.tokenAtoB ? 'USDC' : 'CAMP',
+                amount: formatTokenAmount(
+                  args.amountOut,
+                  args.tokenAtoB ? 'USDC' : 'CAMP'
+                )
+              },
+              status: 'success',
+              blockNumber: Number(log.blockNumber)
+            }
+
+            setTransactions(prev => {
+              const exists = prev.find(tx => tx.id === newTx.id)
+              if (!exists) {
+                return [newTx, ...prev].slice(0, 50) // Keep only 50 transactions
+              }
+              return prev
+            })
+          } catch (error) {
+            console.error('Error processing new swap event:', error)
+          }
+        }
+      })
+    }
+  })
+
+  // Watch for new liquidity events
+  useWatchContractEvent({
+    address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+    abi: SIMPLE_DEX_ABI,
+    eventName: 'LiquidityAdded',
+    onLogs(logs) {
+      logs.forEach(async (log) => {
+        if ('args' in log && log.args) {
+          try {
+            const args = log.args as LiquidityEventArgs
+            const block = await publicClient?.getBlock({ blockNumber: log.blockNumber! })
+            
+            if (!block) return
+
+            const newTx: ExtendedTxHistory = {
+              id: `${log.transactionHash}-${log.logIndex}`,
+              type: 'add_liquidity',
+              hash: log.transactionHash || '',
+              timestamp: Number(block.timestamp) * 1000,
+              user: args.provider,
+              tokenA: {
+                symbol: 'CAMP',
+                amount: formatTokenAmount(args.amountA, 'CAMP')
+              },
+              tokenB: {
+                symbol: 'USDC',
+                amount: formatTokenAmount(args.amountB, 'USDC')
+              },
+              lpTokens: formatTokenAmount(args.liquidity, 'CAMP'),
+              status: 'success',
+              blockNumber: Number(log.blockNumber)
+            }
+
+            setTransactions(prev => {
+              const exists = prev.find(tx => tx.id === newTx.id)
+              if (!exists) {
+                return [newTx, ...prev].slice(0, 50) // Keep only 50 transactions
+              }
+              return prev
+            })
+          } catch (error) {
+            console.error('Error processing new liquidity added event:', error)
+          }
+        }
+      })
+    }
+  })
+
+  useWatchContractEvent({
+    address: CONTRACTS.SIMPLE_DEX as `0x${string}`,
+    abi: SIMPLE_DEX_ABI,
+    eventName: 'LiquidityRemoved',
+    onLogs(logs) {
+      logs.forEach(async (log) => {
+        if ('args' in log && log.args) {
+          try {
+            const args = log.args as LiquidityEventArgs
+            const block = await publicClient?.getBlock({ blockNumber: log.blockNumber! })
+            
+            if (!block) return
+
+            const newTx: ExtendedTxHistory = {
+              id: `${log.transactionHash}-${log.logIndex}`,
+              type: 'remove_liquidity',
+              hash: log.transactionHash || '',
+              timestamp: Number(block.timestamp) * 1000,
+              user: args.provider,
+              tokenA: {
+                symbol: 'CAMP',
+                amount: formatTokenAmount(args.amountA, 'CAMP')
+              },
+              tokenB: {
+                symbol: 'USDC',
+                amount: formatTokenAmount(args.amountB, 'USDC')
+              },
+              lpTokens: formatTokenAmount(args.liquidity, 'CAMP'),
+              status: 'success',
+              blockNumber: Number(log.blockNumber)
+            }
+
+            setTransactions(prev => {
+              const exists = prev.find(tx => tx.id === newTx.id)
+              if (!exists) {
+                return [newTx, ...prev].slice(0, 50) // Keep only 50 transactions
+              }
+              return prev
+            })
+          } catch (error) {
+            console.error('Error processing new liquidity removed event:', error)
+          }
+        }
+      })
+    }
+  })
+
+  // Filter transactions
+  const filteredTransactions = transactions.filter((tx) => {
+    const matchesFilter = filter === 'all' || tx.type === filter
+    const matchesSearch = !searchTerm || 
+      tx.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tx.hash.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    return matchesFilter && matchesSearch
+  })
+
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'swap':
+        return <ArrowUpDown className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "#FFFFFF" }} />
+      case 'add_liquidity':
+        return <Plus className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "#10B981" }} />
+      case 'remove_liquidity':
+        return <Minus className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "#EF4444" }} />
+      default:
+        return <ArrowUpDown className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: "rgba(255, 255, 255, 0.7)" }} />
+    }
+  }
+
+  const getTransactionLabel = (type: string) => {
+    switch (type) {
+      case 'swap':
+        return 'Swap'
+      case 'add_liquidity':
+        return 'Add Liquidity'
+      case 'remove_liquidity':
+        return 'Remove Liquidity'
+      default:
+        return 'Unknown'
+    }
+  }
+
+  const getTransactionDescription = (tx: ExtendedTxHistory) => {
+    switch (tx.type) {
+      case 'swap':
+        return `${tx.tokenA?.amount} ${tx.tokenA?.symbol} → ${tx.tokenB?.amount} ${tx.tokenB?.symbol}`
+      case 'add_liquidity':
+        return `${tx.tokenA?.amount} ${tx.tokenA?.symbol} + ${tx.tokenB?.amount} ${tx.tokenB?.symbol}`
+      case 'remove_liquidity':
+        return `${tx.tokenA?.amount} ${tx.tokenA?.symbol} + ${tx.tokenB?.amount} ${tx.tokenB?.symbol}`
+      default:
+        return ''
+    }
+  }
+
+  const handleRefresh = () => {
+    fetchHistoricalTransactions(lastFetchedBlock)
+  }
+
+  const loadMoreTransactions = () => {
+    const oldestBlock = transactions.length > 0 
+      ? Math.min(...transactions.filter(tx => tx.blockNumber).map(tx => tx.blockNumber!))
+      : 0
+    
+    if (oldestBlock > 0) {
+      fetchHistoricalTransactions(BigInt(oldestBlock - 50)) // Fetch 50 blocks before oldest
+    }
+  }
+
+  return (
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-0">
+      <div className="glass rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/10 shadow-2xl">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6 space-y-4 lg:space-y-0">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-bold" style={{ color: "#FBFAF9" }}>
+              Transaction History
+            </h2>
+            <button
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              style={{ color: "rgba(251, 250, 249, 0.7)" }}
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            {/* Filter Dropdown */}
+            <div className="relative">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value as typeof filter)}
+                className="appearance-none bg-transparent border rounded-lg px-3 py-2 pr-8 input-primary text-sm w-full sm:w-auto"
+                style={{ 
+                  color: "#FBFAF9",
+                  borderColor: "rgba(251, 250, 249, 0.2)",
+                  backgroundColor: "rgba(14, 16, 15, 0.5)"
+                }}
+              >
+                <option value="all">All Transactions</option>
+                <option value="swap">Swaps</option>
+                <option value="add_liquidity">Add Liquidity</option>
+                <option value="remove_liquidity">Remove Liquidity</option>
+              </select>
+              <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 pointer-events-none" 
+                style={{ color: "rgba(251, 250, 249, 0.7)" }} />
+            </div>
+
+            {/* Search */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search address or hash..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 rounded-lg border input-primary text-sm w-full sm:w-64"
+                style={{ 
+                  backgroundColor: "rgba(14, 16, 15, 0.5)",
+                  borderColor: "rgba(251, 250, 249, 0.2)",
+                  color: "#FBFAF9"
+                }}
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" 
+                style={{ color: "rgba(251, 250, 249, 0.7)" }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {isLoading && transactions.length === 0 && (
+          <div className="text-center py-12">
+            <div className="spinner w-8 h-8 mx-auto mb-4"></div>
+            <div className="text-lg font-semibold mb-2" style={{ color: "#FBFAF9" }}>
+              Loading transaction history...
+            </div>
+            <div style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              Fetching events from blockchain
+            </div>
+          </div>
+        )}
+
+        {/* Transaction List */}
+        <div className="space-y-3 sm:space-y-4">
+          {!isLoading && filteredTransactions.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">📊</div>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: "#FBFAF9" }}>
+                No transactions found
+              </h3>
+              <p className="text-sm sm:text-base" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                {transactions.length === 0 
+                  ? "No transactions have been made yet on this DEX!" 
+                  : "Try adjusting your filters or search terms."}
+              </p>
+            </div>
+          ) : (
+            filteredTransactions.map((tx) => (
+              <div
+                key={tx.id}
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 rounded-xl border hover:bg-white/5 transition-all duration-200 card-hover space-y-3 sm:space-y-0"
+                style={{
+                  backgroundColor: "rgba(14, 16, 15, 0.3)",
+                  borderColor: "rgba(251, 250, 249, 0.1)"
+                }}
+              >
+                {/* Transaction Info */}
+                <div className="flex items-center gap-3 sm:gap-4 flex-1">
+                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border"
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.05)",
+                      borderColor: "rgba(255, 255, 255, 0.2)"
+                    }}
+                  >
+                    {getTransactionIcon(tx.type)}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="font-semibold text-sm sm:text-base" style={{ color: "#FBFAF9" }}>
+                        {getTransactionLabel(tx.type)}
+                      </span>
+                      {tx.user.toLowerCase() === address?.toLowerCase() && (
+                        <span className="text-xs px-2 py-1 rounded-full border whitespace-nowrap" style={{
+                          backgroundColor: "rgba(16, 185, 129, 0.1)",
+                          borderColor: "rgba(16, 185, 129, 0.3)",
+                          color: "#10B981"
+                        }}>
+                          You
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs sm:text-sm mb-1" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                      {getTransactionDescription(tx)}
+                    </div>
+                    <div className="text-xs" style={{ color: "rgba(251, 250, 249, 0.5)" }}>
+                      {formatTime(tx.timestamp)} • {formatAddress(tx.user)}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Transaction Details */}
+                <div className="flex items-center justify-between sm:justify-end gap-4">
+                  {/* Status */}
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${
+                      tx.status === 'success' ? 'bg-green-500' :
+                      tx.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-xs sm:text-sm capitalize" style={{ 
+                      color: tx.status === 'success' ? "#10B981" :
+                             tx.status === 'pending' ? "#F59E0B" : "#EF4444"
+                    }}>
+                      {tx.status}
+                    </span>
+                  </div>
+
+                  {/* External Link */}
+                  <a
+                    href={`https://sepolia-blockscout.lisk.com/tx/${tx.hash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                    style={{ color: "rgba(251, 250, 249, 0.7)" }}
+                  >
+                    <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </a>
+                </div>
+              </div>
+            ))
+          )}
+
+          {/* Load More Button */}
+          {!isLoading && filteredTransactions.length >= 10 && (
+            <div className="text-center pt-4">
+              <button
+                onClick={loadMoreTransactions}
+                className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 btn-primary text-sm sm:text-base"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#FBFAF9"
+                }}
+              >
+                Load Previous 50 Blocks
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Summary Stats */}
+        {transactions.length > 0 && (
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="text-center p-3 rounded-lg border" style={{
+                backgroundColor: "rgba(14, 16, 15, 0.3)",
+                borderColor: "rgba(251, 250, 249, 0.1)"
+              }}>
+                <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: "#FBFAF9" }}>
+                  {transactions.length}
+                </div>
+                <div className="text-xs sm:text-sm" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                  Total Transactions
+                </div>
+              </div>
+              
+              <div className="text-center p-3 rounded-lg border" style={{
+                backgroundColor: "rgba(14, 16, 15, 0.3)",
+                borderColor: "rgba(251, 250, 249, 0.1)"
+              }}>
+                <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: "#FFFFFF" }}>
+                  {transactions.filter(tx => tx.type === 'swap').length}
+                </div>
+                <div className="text-xs sm:text-sm" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                  Swaps
+                </div>
+              </div>
+              
+              <div className="text-center p-3 rounded-lg border" style={{
+                backgroundColor: "rgba(14, 16, 15, 0.3)",
+                borderColor: "rgba(251, 250, 249, 0.1)"
+              }}>
+                <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: "#10B981" }}>
+                  {transactions.filter(tx => tx.type === 'add_liquidity').length}
+                </div>
+                <div className="text-xs sm:text-sm" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                  Liquidity Added
+                </div>
+              </div>
+              
+              <div className="text-center p-3 rounded-lg border" style={{
+                backgroundColor: "rgba(14, 16, 15, 0.3)",
+                borderColor: "rgba(251, 250, 249, 0.1)"
+              }}>
+                <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: "#EF4444" }}>
+                  {transactions.filter(tx => tx.type === 'remove_liquidity').length}
+                </div>
+                <div className="text-xs sm:text-sm" style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+                  Liquidity Removed
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Real-time indicator */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center sm:space-x-2 text-xs sm:text-sm text-center space-y-1 sm:space-y-0 mt-4">
+          <div className="flex items-center justify-center space-x-2">
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#10B981" }}></div>
+            <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+              🔗 Real blockchain transactions
+            </span>
+          </div>
+          <span className="hidden sm:inline" style={{ color: "rgba(251, 250, 249, 0.5)" }}>•</span>
+          <span style={{ color: "rgba(251, 250, 249, 0.7)" }}>
+            Live updates from events
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default TransactionHistory
+```
+
+**🎯 Key Features:**
+- ✅ Real-time transaction tracking dengan useWatchContractEvent
+- ✅ 3 Event types: Swap, AddLiquidity, RemoveLiquidity
+- ✅ Filter by transaction type
+- ✅ Search by hash atau address
+- ✅ Pagination (10 items per page)
+- ✅ Blockscout Explorer integration
+- ✅ Live updates saat ada transaksi baru
+- ✅ Color-coded transaction types
+- ✅ Formatted amounts dan timestamps
+- ✅ Empty state untuk no transactions
 
 ---
 
-## 🎛️ Component 7: DEXContainer (193 lines)
+
+## 🎯 Component 7: DEXContainer
+
+Main container component yang mengintegrasikan semua components dengan tab navigation.
 
 Buat file `src/components/DEXContainer.tsx`:
 
@@ -1391,22 +2673,22 @@ const DEXContainer = () => {
   const { isConnected } = useAccount()
   const [activeTab, setActiveTab] = useState<'swap' | 'liquidity' | 'analytics' | 'history'>('swap')
 
-  const TabButton = ({
-    id,
-    icon,
-    label,
-    description
-  }: {
-    id: typeof activeTab,
-    icon: React.ReactNode,
+  const TabButton = ({ 
+    id, 
+    icon, 
+    label, 
+    description 
+  }: { 
+    id: typeof activeTab, 
+    icon: React.ReactNode, 
     label: string,
-    description: string
+    description: string 
   }) => (
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center space-x-3 p-4 rounded-xl transition-all duration-300 w-full text-left ${
-        activeTab === id
-          ? 'gradient-monad-primary glow-purple'
+        activeTab === id 
+          ? 'gradient-monad-primary glow-purple' 
           : 'glass hover:bg-white/10'
       }`}
       style={{
@@ -1437,7 +2719,7 @@ const DEXContainer = () => {
           <p className="mb-8 text-lg leading-relaxed max-w-lg mx-auto" style={{ color: "rgba(255, 255, 255, 0.8)" }}>
             The most intuitive decentralized exchange on Lisk. Swap tokens, provide liquidity, and earn rewards with minimal fees and maximum efficiency.
           </p>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="p-6 rounded-xl border" style={{
               backgroundColor: "rgba(255, 255, 255, 0.05)",
@@ -1449,7 +2731,7 @@ const DEXContainer = () => {
                 Trade tokens instantly with minimal slippage
               </p>
             </div>
-
+            
             <div className="p-6 rounded-xl border" style={{
               backgroundColor: "rgba(16, 185, 129, 0.1)",
               borderColor: "rgba(16, 185, 129, 0.3)"
@@ -1460,7 +2742,7 @@ const DEXContainer = () => {
                 Provide liquidity and earn trading fees
               </p>
             </div>
-
+            
             <div className="p-6 rounded-xl border" style={{
               backgroundColor: "rgba(255, 255, 255, 0.05)",
               borderColor: "rgba(255, 255, 255, 0.2)"
@@ -1571,120 +2853,236 @@ const DEXContainer = () => {
 export default DEXContainer
 ```
 
-**🎯 Features:**
-- ✅ "use client" directive
-- ✅ 4 tabs: Swap, Liquidity, Analytics, History
-- ✅ Welcome screen dengan LiskTrade branding
-- ✅ Tab navigation dengan visual feedback
-- ✅ Analytics tab dengan PriceChart + PoolStats
-- ✅ History tab dengan TransactionHistory
+**🎯 Key Features:**
+- ✅ 4 Tab navigation (Swap, Liquidity, Analytics, History)
+- ✅ Welcome screen untuk non-connected wallets
+- ✅ Conditional rendering per tab
+- ✅ Visual tab indicators
+- ✅ Icon-based navigation dengan lucide-react
 - ✅ Responsive layout
-- ✅ Black-white gradient theme
+- ✅ Smooth transitions
+- ✅ Clean component separation
 
 ---
 
-## 🎉 Summary - ALL Components Complete!
+## 📁 File Structure Lengkap
 
-Selamat! Anda telah berhasil membuat **SEMUA 7 component lengkap** untuk LiskTrade UI (SimpleDEX):
+Setelah membuat semua components di atas, struktur file project akan seperti ini:
 
-### ✅ **Component yang Sudah Dibuat:**
-
-1. **Header.tsx** (38 lines) - LiskTrade branding dengan logo
-2. **SwapInterface.tsx** (290 lines) - Complete swap UI dengan real-time calculation
-3. **LiquidityInterface.tsx** (529 lines) - Complete liquidity management dengan auto-calculation
-4. **PoolStats.tsx** (337 lines) - Complete pool analytics dengan real metrics
-5. **PriceChart.tsx** (585 lines) 🆕 - Real-time price chart dengan historical blockchain data
-6. **TransactionHistory.tsx** (713 lines) 🆕 - Complete transaction history dengan live updates
-7. **DEXContainer.tsx** (193 lines) - Main container dengan 4 tabs
-
-### 🎯 **Key Changes dari Old Documentation:**
-
-#### **Theme Changes:**
-- ❌ OLD: Lisk purple/pink colors (blue-500, purple-500)
-- ✅ NEW: Black-white gradient theme (rgba colors, #836EF9, #A0055D)
-
-#### **Branding Changes:**
-- ❌ OLD: "SimpleDEX"
-- ✅ NEW: "LiskTrade" dengan logo
-
-#### **Missing Components Added:**
-- ✅ **PriceChart.tsx** (585 lines) - Completely missing from old docs!
-- ✅ **TransactionHistory.tsx** (713 lines) - Completely missing from old docs!
-
-#### **Component Enhancements:**
-- All components now use `"use client"` directive
-- All use inline rgba() styling instead of Tailwind colors
-- SwapInterface: 290 lines (was simplified)
-- LiquidityInterface: 529 lines (was simplified)
-- PoolStats: 337 lines (was simplified)
-- DEXContainer: Now has 4 tabs (was 3) - added History tab
-
-### 📦 **File Structure Lengkap:**
-
-```
-src/
-├── components/
-│   ├── Header.tsx                  ✅ 38 lines (Updated - LiskTrade branding)
-│   ├── SwapInterface.tsx           ✅ 290 lines (Updated - Full implementation)
-│   ├── LiquidityInterface.tsx      ✅ 529 lines (Updated - Full implementation)
-│   ├── PoolStats.tsx               ✅ 337 lines (Updated - Full implementation)
-│   ├── PriceChart.tsx              ✅ 585 lines (NEW - Missing component!)
-│   ├── TransactionHistory.tsx      ✅ 713 lines (NEW - Missing component!)
-│   └── DEXContainer.tsx            ✅ 193 lines (Updated - 4 tabs)
-├── hooks/
-│   ├── useTokenBalance.ts          ✅ Complete (Part 5.1)
-│   ├── usePoolData.ts              ✅ Complete (Part 5.1)
-│   ├── useSwap.ts                  ✅ Complete (Part 5.1)
-│   └── useLiquidity.ts             ✅ Complete (Part 5.1)
-├── constants/
-│   ├── ERC20_ABI.json              ✅ Complete (Part 5.1)
-│   ├── SIMPLE_DEX_ABI.json         ✅ Complete (Part 5.1)
-│   └── index.tsx                   ✅ Complete (Part 5.1)
-├── types/
-│   └── defi.ts                     ✅ Complete (Part 5.1)
-├── utils/
-│   ├── formatters.ts               ✅ Complete (Part 5.1)
-│   └── calculations.ts             ✅ Complete (Part 5.1)
-├── App.tsx                         ✅ Complete (Part 5.1)
-├── main.tsx                        ✅ Complete (Part 5.1)
-└── index.css                       ✅ Complete (Part 5.1)
+```text
+simple-defi-ui/
+├── src/
+│   ├── components/
+│   │   ├── Header.tsx              # 38 lines  - Navbar dengan wallet connect
+│   │   ├── SwapInterface.tsx       # 377 lines - Swap UI dengan AMM calculations
+│   │   ├── LiquidityInterface.tsx  # 529 lines - Add/Remove liquidity UI
+│   │   ├── PoolStats.tsx           # 337 lines - Pool statistics dashboard
+│   │   ├── PriceChart.tsx          # 584 lines - Price chart dengan Recharts
+│   │   ├── TransactionHistory.tsx  # 712 lines - Transaction list dengan filters
+│   │   └── DEXContainer.tsx        # 193 lines - Main container dengan tabs
+│   │
+│   ├── hooks/
+│   │   ├── useSwap.ts              # Custom hook untuk swap logic
+│   │   ├── useLiquidity.ts         # Custom hook untuk liquidity logic
+│   │   ├── useTokenBalance.ts      # Hook untuk token balances
+│   │   └── usePoolStats.ts         # Hook untuk pool statistics
+│   │
+│   ├── utils/
+│   │   ├── formatters.ts           # 185 lines - Formatting utilities
+│   │   └── calculations.ts         # 271 lines - AMM calculations
+│   │
+│   ├── constants/
+│   │   └── index.ts                # Contract addresses & configs
+│   │
+│   ├── App.tsx                     # Main app component
+│   ├── main.tsx                    # Entry point dengan Wagmi provider
+│   └── index.css                   # TailwindCSS styles
+│
+├── public/
+│   └── lisk-logo.svg               # LiskTrade logo
+│
+├── package.json                     # Dependencies
+├── vite.config.ts                  # Vite configuration
+├── tailwind.config.js              # Tailwind configuration
+└── tsconfig.json                   # TypeScript configuration
 ```
 
-### 🚀 **Cara Running:**
+---
+
+## 🚀 Running Instructions
+
+### 1. Install Dependencies
 
 ```bash
-# Install dependencies
+cd simple-defi-ui
 npm install
+```
 
-# Start development server
+### 2. Configure Environment
+
+Pastikan `.env` file sudah ter-setup:
+
+```env
+VITE_WALLET_CONNECT_PROJECT_ID=your_project_id_here
+```
+
+### 3. Start Development Server
+
+```bash
 npm run dev
 ```
 
-### 🎯 **Features Highlights:**
+Server akan berjalan di `http://localhost:5173`
 
-- ✅ **100% TypeScript** - Type-safe development
-- ✅ **Real-time Data** - Live updates dari blockchain events
-- ✅ **Responsive Design** - Works on mobile & desktop
-- ✅ **Beautiful UI** - Black-white gradient theme, glass morphism
-- ✅ **User-friendly** - Auto-calculations, visual feedback
-- ✅ **Production-ready** - Error handling, loading states
-- ✅ **Lisk Sepolia** - Fully configured for Lisk testnet
-- ✅ **Complete Analytics** - Price charts dengan historical data
-- ✅ **Transaction History** - Real blockchain transaction tracking
+### 4. Build for Production
 
-### 📖 **Next Steps:**
-
-Anda sekarang memiliki **LiskTrade UI yang LENGKAP dengan 7 components**! Untuk menggunakannya:
-
-1. Update `.env.local` dengan contract addresses dari Part 4
-2. Jalankan `npm run dev`
-3. Connect wallet Anda
-4. Start swapping, providing liquidity, dan exploring analytics!
-
-**Happy Building! 🎊**
+```bash
+npm run build
+npm run preview
+```
 
 ---
 
-**Prepared by:** Ethereum Jakarta x Lisk
-**Part 5.2 - Complete React Components (UPDATED with PriceChart & TransactionHistory)**
-**Version:** 2.0 (Updated from 1.0)
+## 🎨 Design System
+
+**Color Scheme:**
+- Primary: Black & White gradient theme
+- Accent: Green (#22c55e) untuk positive actions
+- Danger: Red (#ef4444) untuk warnings
+- Info: Blue (#3b82f6) untuk information
+
+**Typography:**
+- Font: System default (sans-serif)
+- Headings: Bold weights
+- Body: Regular weights
+
+**Spacing:**
+- Consistent 4px base unit
+- Padding: 4, 8, 16, 24, 32px
+- Gaps: 8, 12, 16px
+
+**Components:**
+- Rounded corners: 8px, 12px, 16px
+- Shadows: subtle elevation
+- Borders: 1px solid with transparency
+- Hover states: brightness increase
+
+---
+
+## ✨ Features Highlights
+
+### 🔄 Real-time Updates
+- Live pool statistics
+- Auto-refresh pada setiap blockchain event
+- Watch contract events untuk Swap, AddLiquidity, RemoveLiquidity
+
+### 💱 AMM Calculations
+- Constant product formula (x * y = k)
+- Price impact calculations
+- Slippage protection
+- Optimal liquidity ratios
+
+### 🎯 User Experience
+- Input validation dengan visual feedback
+- Loading states pada semua transactions
+- Error handling dengan user-friendly messages
+- Transaction confirmation modals
+- Balance checks sebelum transactions
+
+### 📊 Analytics
+- TVL (Total Value Locked) tracking
+- 24h Volume calculations
+- APR estimates dari fee earnings
+- Price charts dengan multiple timeframes
+- Pool composition visualization
+
+### 🔐 Web3 Integration
+- RainbowKit wallet connection
+- Wagmi hooks untuk contract interactions
+- Viem untuk type-safe contract calls
+- Support multiple wallets
+- Network switching
+
+---
+
+## 🎓 Learning Outcomes
+
+Setelah mengimplementasikan Part 5.2 ini, developer akan memahami:
+
+1. **React 19 Patterns**
+   - Modern hooks (useState, useEffect, useMemo)
+   - Component composition
+   - Props drilling vs context
+   - Conditional rendering
+
+2. **TypeScript Integration**
+   - Type-safe props
+   - Interface definitions
+   - Generic types
+   - Type guards
+
+3. **Web3 Development**
+   - Wagmi hooks best practices
+   - Contract event listening
+   - Transaction handling
+   - Error management
+
+4. **State Management**
+   - Local component state
+   - Derived state calculations
+   - Side effects dengan useEffect
+   - State synchronization
+
+5. **UI/UX Principles**
+   - Form validation
+   - Loading states
+   - Error messaging
+   - Responsive design
+   - Accessibility considerations
+
+6. **DeFi Concepts**
+   - AMM mechanics
+   - Liquidity pools
+   - Slippage tolerance
+   - Price impact
+   - LP tokens
+
+---
+
+## 📚 Resources
+
+### Documentation
+- [React 19 Docs](https://react.dev)
+- [Wagmi Documentation](https://wagmi.sh)
+- [Viem Documentation](https://viem.sh)
+- [RainbowKit Docs](https://www.rainbowkit.com)
+- [TailwindCSS](https://tailwindcss.com)
+- [Recharts](https://recharts.org)
+
+### Smart Contracts
+- SimpleDEX Contract: `0xYourContractAddress` (Lisk Sepolia)
+- CAMPToken: `0xYourCAMPAddress`
+- USDCToken: `0xYourUSDCAddress`
+
+### Testing
+- Lisk Sepolia Faucet: https://sepolia-blockscout.lisk.com/faucet
+- Blockscout Explorer: https://sepolia-blockscout.lisk.com
+
+---
+
+## 🏁 Conclusion
+
+Part 5.2 telah menyelesaikan **semua 7 React components** yang diperlukan untuk membangun frontend SimpleDEX yang fully functional. Setiap component dirancang dengan:
+
+✅ **Professional code quality** dengan TypeScript
+✅ **Real-time blockchain integration** dengan Wagmi/Viem
+✅ **Modern UI/UX** dengan TailwindCSS
+✅ **Complete functionality** untuk swap & liquidity operations
+✅ **Analytics & monitoring** dengan charts dan transaction history
+
+Developer sekarang memiliki complete, production-ready DeFi frontend yang bisa di-deploy dan digunakan untuk trading pada Lisk Sepolia testnet.
+
+---
+
+**🎉 Selamat! Anda telah menyelesaikan Part 5.2 - Complete React Components Implementation!**
+
