@@ -60,6 +60,32 @@ CAMP_TOKEN_ADDRESS=0x...   # Address CampusCoin
 USDC_TOKEN_ADDRESS=0x...   # Address MockUSDC
 ```
 
+### Dapatkan Private RPC URL (Recommended)
+
+Agar indexer terhubung lancar dan cepat, kita akan menggunakan **Private RPC URL** dari [Gelato Cloud](https://app.gelato.cloud). Berikut langkah-langkahnya:
+
+1. **Akses website:**  
+   Buka [app.gelato.cloud](https://app.gelato.cloud) di browser Anda.
+
+2. **Registrasi akun & company:**  
+   Daftar menggunakan email, lalu buat *company* asal sesuai instruksi.
+
+3. **Masuk ke menu Private RPC:**  
+   Setelah login, pada sidebar pilih **Private RPC**.
+
+4. **Buat Key baru:**  
+   Klik tombol **Create Key** / **Add Key** dan beri nama sesuai kebutuhan (misal: `simple-dex-indexer`).
+
+5. **Pergi ke menu Networks (dalam Private RPC):**  
+   Setelah key berhasil dibuat, klik pada key tersebut untuk membuka detail. Kemudian navigasi ke tab/menu **Networks**.
+
+6. **Cari Lisk Sepolia Testnet dan copy RPC URL:**  
+   Temukan **Lisk Sepolia Testnet** di daftar network. Klik untuk reveal **RPC URL**.  
+   **Copy URL** ini dan simpan, misal ke file `.env` sebagai `PONDER_RPC_URL_1`.
+
+Sekarang, Anda sudah punya endpoint Private RPC-nya!  
+Gunakan URL ini di konfigurasi Ponder agar akses blockchain cepat dan andal.
+
 ---
 
 ## 📄 Langkah 2: Dapatkan ABI Contracts
