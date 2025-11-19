@@ -1539,8 +1539,8 @@ bun run dev
 
 Open http://localhost:5173 in your browser!
 
-<img width="1906" height="945" alt="Screenshot 2025-11-19 171532" src="https://github.com/user-attachments/assets/cee83a06-70af-4862-bd2f-6420b221dc18" />
-<img width="1918" height="939" alt="Screenshot 2025-11-19 171515" src="https://github.com/user-attachments/assets/4b5524bb-0e45-4a2a-96ee-9dcf3aa2ef05" />
+<img width="1200" height="500" alt="Screenshot 2025-11-19 171532" src="https://github.com/user-attachments/assets/cee83a06-70af-4862-bd2f-6420b221dc18" />
+<img width="1200" height="500" alt="Screenshot 2025-11-19 171515" src="https://github.com/user-attachments/assets/4b5524bb-0e45-4a2a-96ee-9dcf3aa2ef05" />
 
 
 ### Using the DEX
