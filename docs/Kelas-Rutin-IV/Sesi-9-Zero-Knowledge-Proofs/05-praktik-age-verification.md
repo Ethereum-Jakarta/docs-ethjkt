@@ -3164,7 +3164,9 @@ export default App
 
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* Monad Brand Colors */
@@ -3883,6 +3885,24 @@ export default defineConfig({
 }
 ```
 
+### Postcss Config
+
+**`postcss.config.js`:**
+
+```typescript
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
+
+export default {
+  plugins: [
+    tailwindcss,
+    autoprefixer,
+  ],
+}
+
+
+```
+
 ### Package Configuration
 
 **`package.json`:**
@@ -3893,7 +3913,7 @@ export default defineConfig({
   "private": true,
   "version": "0.0.0",
   "type": "module",
-   "scripts": {
+  "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -3904,33 +3924,37 @@ export default defineConfig({
   },
   "dependencies": {
     "@noir-lang/backend_barretenberg": "^0.36.0",
-    "@noir-lang/noir_wasm": "^1.0.0-beta.7",
-    "@rainbow-me/rainbowkit": "^2.2.8",
-    "@tailwindcss/vite": "^4.1.11",
-    "@tanstack/react-query": "^5.81.2",
+    "@noir-lang/noir_wasm": "^1.0.0-beta.15",
+    "@rainbow-me/rainbowkit": "^2.2.9",
+    "@tanstack/react-query": "^5.90.10",
     "circomlib": "^2.0.5",
-    "lucide-react": "^0.523.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-hot-toast": "^2.5.2",
+    "lucide-react": "^0.554.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-hot-toast": "^2.6.0",
     "snarkjs": "^0.7.5",
-    "viem": "^2.31.4",
-    "wagmi": "^2.15.6"
+    "viem": "^2.39.3",
+    "wagmi": "^2.19.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.5.2",
-    "eslint": "^9.29.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.2.0",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.34.1",
-    "vite": "^6.3.5"
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.22",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4"
   }
 }
+
 ```
 
 ### Setup Scripts
@@ -4002,82 +4026,19 @@ echo "🚀 Circuit files ready for frontend!"
 echo "You can now test the ZK proof generation."
 ```
 
----
 
-## 🧪 Step 7: Testing
-
-### Test Case 1: Adult (Age >= 18)
+Jalankan Script:
 
 ```bash
-# Create input file
-cat > input_adult.json <<'EOF'
-{
-  "birthDay": "25",
-  "birthMonth": "1",
-  "birthYear": "1995",
-  "currentYear": "2025",
-  "currentMonth": "6",
-  "currentDay": "28",
-  "salt": "123456789012345678901234567890"
-}
-EOF
+# Make executable
+chmod +x scripts/copy-circuit-files.sh
 
-# Generate witness
-snarkjs wtns calculate \
-  circuits/build/ageVerification_js/ageVerification.wasm \
-  input_adult.json \
-  witness_adult.wtns
-
-# Generate proof
-snarkjs groth16 prove \
-  circuits/build/ageVerification_0001.zkey \
-  witness_adult.wtns \
-  proof_adult.json \
-  public_adult.json
-
-# Verify proof
-snarkjs groth16 verify \
-  circuits/build/verification_key.json \
-  public_adult.json \
-  proof_adult.json
-
-# Check result
-cat public_adult.json
-# Should show: ["1", "..."] (1 = adult)
+# Compile circuit
+./scripts/copy-circuit-files.sh
 ```
 
-### Test Case 2: Minor (Age < 18)
 
-```bash
-# Create input file
-cat > input_minor.json <<'EOF'
-{
-  "birthDay": "15",
-  "birthMonth": "6",
-  "birthYear": "2010",
-  "currentYear": "2025",
-  "currentMonth": "6",
-  "currentDay": "28",
-  "salt": "987654321098765432109876543210"
-}
-EOF
 
-# Generate witness and proof
-snarkjs wtns calculate \
-  circuits/build/ageVerification_js/ageVerification.wasm \
-  input_minor.json \
-  witness_minor.wtns
-
-snarkjs groth16 prove \
-  circuits/build/ageVerification_0001.zkey \
-  witness_minor.wtns \
-  proof_minor.json \
-  public_minor.json
-
-# Check result
-cat public_minor.json
-# Should show: ["0", "..."] (0 = minor)
-```
 
 ---
 
