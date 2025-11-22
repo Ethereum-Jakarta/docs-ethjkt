@@ -897,6 +897,24 @@ contract AgeVerifierTest is Test {
 }
 ```
 
+### Foundry Config
+
+```toml
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+metadata = true
+metadata_hash = "none"  # disable ipfs
+use_literal_content = true # use source code
+
+# Lisk Sepolia Configuration
+eth-rpc-url="https://rpc.sepolia-api.lisk.com"
+chain_id = 4202
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+```
+
 ### Menjalankan Tests
 
 ```bash
