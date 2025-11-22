@@ -141,36 +141,12 @@ Dokumentasi ini dibagi menjadi 4 bagian yang fokus pada **pemahaman mendalam Zer
 
 ## 🎯 Apa Itu Zero-Knowledge Proof?
 
-### Definisi
+### Ringkasan Singkat
 
-**Zero-Knowledge Proof (ZKP)** adalah metode kriptografi yang memungkinkan satu pihak (prover) membuktikan kepada pihak lain (verifier) bahwa mereka mengetahui suatu informasi tertentu, **tanpa mengungkapkan informasi itu sendiri**.
-
-### Analogi Sederhana: "Cave Example"
-
-Bayangkan ada sebuah gua dengan satu pintu masuk dan dua jalur (Path A dan Path B) yang bertemu di pintu terkunci dengan passphrase. Alice ingin membuktikan kepada Bob bahwa dia tahu passcode pintu tersebut, **tanpa memberitahu passcode-nya**.
-
-**Proses:**
-1. Bob berdiri di luar gua
-2. Alice masuk ke gua melalui salah satu jalur (tanpa Bob tahu jalur mana)
-3. Bob meminta Alice keluar melalui jalur yang dipilih secara acak
-4. Jika Alice benar-benar tahu passcode, dia bisa membuka pintu dan keluar melalui jalur yang diminta
-5. Proses ini diulang beberapa kali untuk meningkatkan tingkat kepercayaan
-
-**Hasil:** Bob yakin Alice tahu passcode **tanpa** mengetahui passcode itu sendiri!
-
-### Mengapa ZKP Penting untuk Blockchain?
-
-**Masalah dengan Blockchain Transparan:**
-- ❌ Semua transaksi terlihat publik
-- ❌ Tidak cocok untuk data sensitif (medical records, financial data)
-- ❌ Perusahaan tidak bisa menggunakan proprietary data
-- ❌ Tidak compliant dengan regulasi privacy (GDPR, HIPAA)
-
-**Solusi dengan ZKP:**
-- ✅ Verifikasi tanpa mengungkapkan data
-- ✅ Privacy-preserving smart contracts
-- ✅ Compliance dengan regulasi
-- ✅ Scalability melalui zk-Rollups
+- **Apa:** ZKP = bukti kriptografi untuk membuktikan suatu klaim tanpa membuka data rahasia.
+- **Kenapa penting:** Memberi privacy + verifiability sekaligus; ideal untuk data sensitif, kepatuhan regulasi, dan skalabilitas (zk-rollups).
+- **Analogi:** Lihat cerita “Cave Example” lengkap di [Bagian 1](./01-pengenalan-zkp.md) beserta penjelasan completeness, soundness, dan zero-knowledge.
+- **Dampak praktis:** Memungkinkan transaksi privat (contoh: Zcash), login/age verification tanpa membocorkan identitas, dan verifiable compute untuk oracles.
 
 ---
 
@@ -242,25 +218,11 @@ Bayangkan ada sebuah gua dengan satu pintu masuk dan dua jalur (Path A dan Path 
 
 ## 🎮 Proyek Yang Akan Dibahas
 
-**Use Cases ZKP di Industri:**
-
-1. **Private Transactions**
-   - Zcash: Shielded transactions
-   - Tornado Cash: Privacy mixer
-
-2. **Layer 2 Scaling**
-   - zkSync: zk-Rollup untuk Ethereum
-   - StarkNet: STARK-based L2
-   - Polygon zkEVM: EVM-compatible zk-Rollup
-
-3. **Verifiable Computations**
-   - Chainlink DECO: Privacy-preserving oracles
-   - Verifiable random functions (VRF)
-
-4. **Identity & Authentication**
-   - Decentralized identity (DID)
-   - Proof of citizenship tanpa reveal passport
-   - Age verification tanpa reveal DOB
+**Ringkasan use case (detail di [Bagian 3](./03-use-cases-zkp.md)):**
+- Private transactions: Zcash, Tornado Cash.
+- Layer 2 scaling: zkSync, StarkNet, Polygon zkEVM.
+- Verifiable computation & oracles: Chainlink DECO, VRF.
+- Identity & authentication: DID, proof of citizenship, age verification.
 
 ---
 
@@ -334,7 +296,7 @@ Setelah selesai workshop ini, Anda akan:
 
 ## 🚀 Ready to Start?
 
-Mari kita mulai perjalanan memahami teknologi kriptografi yang mengubah cara kita berpikir tentang privacy dan verifikasi di blockchain!
+Mari mulai perjalanan memahami teknologi kriptografi yang mengubah cara Anda berpikir tentang privacy dan verifikasi di blockchain!
 
 **Struktur workshop:**
 1. 🔍 **Pahami ZKP** - Konsep fundamental & sejarah
@@ -369,4 +331,3 @@ Mari kita mulai perjalanan memahami teknologi kriptografi yang mengubah cara kit
 **Let's dive into the world of Zero-Knowledge Proofs! 🔐**
 
 **#BuildOnLisk** | **#EthereumJakarta** | **#Web3Indonesia** | **#ZeroKnowledge**
-

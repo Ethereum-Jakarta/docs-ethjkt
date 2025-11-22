@@ -263,65 +263,7 @@ Jika secrets TIDAK dihancurkan:
 | **Tools & Libraries** | Banyak ✅ | Sedang berkembang ⚠️ |
 | **Use Case** | On-chain verify | Off-chain compute |
 
-### Proof Size Comparison
-
-```
-┌─────────────────────────────────────────┐
-│  PROOF SIZE COMPARISON                  │
-│  ─────────────────────────────────────  │
-│                                          │
-│  zk-SNARK:  ~200 bytes                   │
-│  └─ Seperti 1 paragraf teks             │
-│                                          │
-│  zk-STARK:  ~100 KB                     │
-│  └─ Seperti 50 halaman dokumen         │
-│                                          │
-│  Perbedaan: 500x lebih besar!           │
-└─────────────────────────────────────────┘
-```
-
-**Dampak:**
-- SNARK: Hemat gas, cocok untuk on-chain
-- STARK: Lebih mahal, cocok untuk off-chain compute
-
-### Verification Time Comparison
-
-```
-┌─────────────────────────────────────────┐
-│  VERIFICATION TIME                      │
-│  ─────────────────────────────────────  │
-│                                          │
-│  zk-SNARK:  ~5-10 ms                    │
-│  └─ Sangat cepat                        │
-│                                          │
-│  zk-STARK:  ~50-100 ms                  │
-│  └─ Masih cepat, tapi lebih lambat      │
-│                                          │
-│  Perbedaan: 10x lebih lambat            │
-└─────────────────────────────────────────┘
-```
-
-**Dampak:**
-- SNARK: User experience lebih baik
-- STARK: Masih acceptable untuk kebanyakan use cases
-
-### Trusted Setup: Trade-off Penting
-
-**zk-SNARK:**
-```
-✅ Proof kecil & cepat
-⚠️  Perlu trusted setup
-⚠️  Jika compromised → security hilang
-⚠️  Kritik dari ahli kriptografi
-```
-
-**zk-STARK:**
-```
-⚠️  Proof besar & lebih lambat
-✅ Tidak perlu trusted setup
-✅ Transparent & auditable
-✅ Tidak ada "security weak link"
-```
+> Ringkasannya: SNARK unggul di ukuran proof & biaya verifikasi, tetapi butuh trusted setup dan belum tahan kuantum. STARK transparan dan tahan kuantum, tetapi proof lebih besar dan verifikasi lebih mahal.
 
 ---
 
@@ -366,6 +308,7 @@ Jika secrets TIDAK dihancurkan:
    ✅ Proof kecil → hemat gas
    ✅ Verification cepat → UX baik
    ✅ Cocok untuk smart contracts
+   (contoh: Zcash, Tornado Cash)
    ```
 
 2. **High-Frequency Transactions**
@@ -373,6 +316,7 @@ Jika secrets TIDAK dihancurkan:
    ✅ Gas cost rendah
    ✅ Bisa verify banyak proofs
    ✅ Scalable untuk volume tinggi
+   (contoh: zkSync era, Polygon zkEVM)
    ```
 
 3. **Mature Ecosystem**
@@ -394,6 +338,7 @@ Jika secrets TIDAK dihancurkan:
    ✅ Proof size tidak masalah
    ✅ Focus pada computation besar
    ✅ Batch processing
+   (contoh: StarkEx, dYdX v3)
    ```
 
 2. **Transparency Critical**
@@ -401,6 +346,7 @@ Jika secrets TIDAK dihancurkan:
    ✅ Tidak mau trusted setup
    ✅ Perlu auditable
    ✅ Regulatory compliance
+   (contoh: StarkNet)
    ```
 
 3. **Future-Proofing**
@@ -408,6 +354,7 @@ Jika secrets TIDAK dihancurkan:
    ✅ Quantum resistance penting
    ✅ Long-term security
    ✅ Enterprise adoption
+   (contoh: Immutable X)
    ```
 
 **Contoh Proyek:**
@@ -526,4 +473,3 @@ Jika secrets TIDAK dihancurkan:
 ---
 
 **Selanjutnya:** [Bagian 3: Use Cases & Implementasi ZKP →](./03-use-cases-zkp.md)
-

@@ -29,7 +29,7 @@ Setelah menyelesaikan bagian ini, Anda akan mampu:
 │  ZERO-KNOWLEDGE PROOF SYSTEM            │
 │  ─────────────────────────────────────  │
 │                                          │
-│  👤 Prover (Pembuktian)                 │
+│  👤 Prover (Pembukti)                   │
 │     - Memiliki informasi rahasia        │
 │     - Membuat proof                      │
 │     - Membuktikan pengetahuan            │
@@ -196,49 +196,17 @@ Verifier's view = Simulated view (tanpa data rahasia)
 ## 🔄 Interactive vs Non-Interactive Proofs
 
 ### Interactive Proofs (1985)
-
-**Karakteristik:**
-- Prover dan Verifier **berinteraksi** beberapa round
-- Verifier mengajukan pertanyaan
-- Prover menjawab pertanyaan
-- Diulang sampai tingkat kepercayaan tinggi
-
-**Contoh:**
-```
-Round 1: Verifier → "Jalur mana?" → Prover → "Path A"
-Round 2: Verifier → "Jalur mana?" → Prover → "Path B"
-Round 3: Verifier → "Jalur mana?" → Prover → "Path A"
-...
-```
-
-**Kekurangan:**
-- ❌ Perlu interaksi langsung
-- ❌ Harus diulang untuk setiap verifier
-- ❌ Tidak efisien untuk blockchain
+- Pola tanya-jawab berkali-kali: verifier melempar pertanyaan acak, prover menjawab.
+- Semakin banyak round, semakin kecil peluang prover berbohong.
+- Cocok untuk pembuktian tatap muka, **kurang cocok** untuk blockchain karena butuh interaksi terus-menerus.
+- **Contoh:** Cave example di atas adalah interactive proof; verifier (Bob) berulang kali meminta jalur acak, prover (Alice) harus selalu keluar di jalur yang diminta.
 
 ### Non-Interactive Proofs (NIZK)
-
-**Karakteristik:**
-- Prover membuat **satu proof**
-- Proof bisa diverifikasi **oleh siapa saja**
-- Tidak perlu interaksi langsung
-- Cocok untuk blockchain!
-
-**Contoh:**
-```
-Prover membuat proof → Upload ke blockchain
-→ Siapa saja bisa verify proof
-→ Tidak perlu interaksi langsung
-```
-
-**Keuntungan:**
-- ✅ Satu proof untuk semua verifier
-- ✅ Bisa dipublikasikan (blockchain)
-- ✅ Efisien untuk aplikasi terdesentralisasi
-
-**Teknologi:**
-- zk-SNARKs (Non-Interactive)
-- zk-STARKs (Non-Interactive)
+- Prover membuat **satu** proof yang bisa diverifikasi siapa saja, kapan saja.
+- Proof dipublikasikan (mis. on-chain); tidak perlu dialog lagi.
+- Ideal untuk blockchain dan aplikasi terdesentralisasi.
+- Contoh teknologi: **zk-SNARK** dan **zk-STARK** (keduanya non-interactive).
+- **Contoh:** Prover menghasilkan satu proof, unggah ke blockchain; siapa pun dapat memverifikasi tanpa sesi tanya-jawab baru.
 
 ---
 
@@ -433,4 +401,3 @@ Blockchain + ZKP = Privacy + Verifikasi
 ---
 
 **Selanjutnya:** [Bagian 2: Perbandingan zk-SNARK vs zk-STARK →](./02-perbandingan-snark-stark.md)
-

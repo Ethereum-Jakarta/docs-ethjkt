@@ -64,7 +64,7 @@ Setelah menyelesaikan bagian ini, Anda akan mampu:
 
 **Cara Kerja:**
 ```
-1. User membuat shielded transaction
+1. Pengguna membuat shielded transaction
 2. zk-SNARK proof dibuat:
    - Buktikan: "Saya punya cukup balance"
    - Buktikan: "Transaction valid"
@@ -89,9 +89,9 @@ Setelah menyelesaikan bagian ini, Anda akan mampu:
 
 **Cara Kerja:**
 ```
-1. User deposit 1 ETH ke Tornado Cash
-2. User dapat "note" (secret)
-3. User withdraw 1 ETH ke address baru
+1. Pengguna deposit 1 ETH ke Tornado Cash
+2. Pengguna mendapat "note" (secret)
+3. Pengguna withdraw 1 ETH ke address baru
 4. zk-SNARK proof:
    - Buktikan: "Saya punya valid note"
    - TIDAK reveal: "Note mana yang saya punya"
@@ -148,7 +148,7 @@ Setelah menyelesaikan bagian ini, Anda akan mampu:
 
 **Cara Kerja:**
 ```
-1. User punya data di web server (bank, medical, dll)
+1. Pengguna punya data di web server (bank, medical, dll)
 2. DECO oracle request data via HTTPS/TLS
 3. Oracle buat ZKP proof:
    - Buktikan: "Data dari server valid"
@@ -230,7 +230,7 @@ Setelah menyelesaikan bagian ini, Anda akan mampu:
 
 **Cara Kerja:**
 ```
-1. User submit transactions ke zkSync
+1. Pengguna submit transactions ke zkSync
 2. zkSync batch transactions
 3. zkSync generate zk-SNARK proof
 4. Proof di-submit ke Ethereum L1
@@ -242,7 +242,7 @@ Setelah menyelesaikan bagian ini, Anda akan mampu:
 - ✅ Throughput tinggi
 - ✅ Gas fees rendah
 - ✅ Security tetap (L1 verify)
-- ✅ User experience lebih baik
+- ✅ Pengalaman pengguna lebih baik
 
 ### Case Study: StarkNet
 
@@ -285,7 +285,7 @@ StarkNet (STARK):
 
 **3. Volition:**
 ```
-✅ User pilih: on-chain atau off-chain
+- ✅ Pengguna pilih: on-chain atau off-chain
 ✅ Flexibility
 ✅ Balance cost vs security
 ```
@@ -308,7 +308,7 @@ StarkNet (STARK):
 
 **ZKP memungkinkan:**
 ```
-✅ User control identity sendiri
+- ✅ Pengguna mengendalikan identitas sendiri
 ✅ Verify attributes tanpa reveal data
 ✅ Privacy-preserving
 ✅ Self-sovereign identity
@@ -349,7 +349,7 @@ StarkNet (STARK):
 **CanDID - Decentralized Identity dengan DECO**
 
 **Fitur:**
-- User manage credentials sendiri
+- Pengguna mengelola credential sendiri
 - Issuers sign credentials
 - Privacy-preserving verification
 - Sybil resistance
@@ -357,8 +357,8 @@ StarkNet (STARK):
 **Cara Kerja:**
 ```
 1. Issuer (university, government) sign credential
-2. User store credential di wallet
-3. User buat ZKP proof:
+2. Pengguna menyimpan credential di wallet
+3. Pengguna membuat ZKP proof:
    - Buktikan: "Saya punya valid credential"
    - Buktikan: "Credential dari issuer X"
    - TIDAK reveal: "Credential details"
@@ -530,4 +530,3 @@ StarkNet (STARK):
 ---
 
 **Selanjutnya:** [Bagian 4: Setup Circom & Persiapan Praktik →](./04-circom-setup.md)
-
