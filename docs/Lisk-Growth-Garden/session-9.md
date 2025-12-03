@@ -1,9 +1,9 @@
-# 🌱 Lisk Growth Garden Session 9
-## Harvesting the Future: From Hack to Startup
+# Session 9 – Harvesting the Future: From Hack to Startup
 
-**Building Winning Hackathon Projects**
+**By:** ETH JKT
+**Date:** December 3, 2025
 
-*ETH JKT | December 3, 2025*
+Wrap up by learning how to take your DApp idea from a hackathon project to a venture-ready product. Explore pitching, and what it means to build in Ethereum's infinite garden.
 
 ---
 
