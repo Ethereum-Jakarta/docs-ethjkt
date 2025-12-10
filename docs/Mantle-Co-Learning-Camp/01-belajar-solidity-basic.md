@@ -31,21 +31,65 @@ Dalam tutorial ini, kita akan belajar Solidity step-by-step dari yang paling das
 **Langkah-langkah:**
 1. Download MetaMask dari [metamask.io](https://metamask.io)
 2. Buat wallet baru (simpan seed phrase dengan aman!)
-3. Tambahkan Sepolia Testnet:
-   - Klik Networks → Add Network
-   - Pilih Sepolia dari daftar
 
-### 3. Dapatkan Test Token
+### 3. Setup Mantle Sepolia Testnet (WAJIB!)
 
-1. Kunjungi [https://sepoliafaucet.com](https://sepoliafaucet.com)
-2. Masukkan address wallet Anda
-3. Tunggu token ETH masuk (untuk bayar gas fee)
+<div style={{background:'#E8F5E9',borderRadius:'8px',padding:'16px',margin:'0 0 18px'}}>
+  <p style={{fontSize:'15px',fontWeight:'600',margin:'0 0 12px'}}>🔧 Setup Mantle Sepolia Testnet (WAJIB!):</p>
+  <p style={{fontSize:'14px',margin:'0 0 12px',color:'#666'}}>Ikuti langkah-langkah berikut untuk setup testnet:</p>
+
+  <div style={{background:'#fff',borderRadius:'6px',padding:'12px',margin:'0 0 10px'}}>
+    <p style={{fontSize:'14px',fontWeight:'600',margin:'0 0 6px'}}>Step 1: Tambah Mantle Sepolia ke MetaMask</p>
+    <p style={{fontSize:'13px',margin:'0 0 8px',color:'#666'}}>Buka Chainlist dan connect wallet untuk auto-add network:</p>
+    <a href="https://chainlist.org/?chain=11155111&search=mantle+sepolia&testnets=true" target="_blank"
+       style={{display:'inline-block',padding:'8px 16px',fontSize:'13px',fontWeight:'600',color:'#333',background:'linear-gradient(135deg, #F2A9DD 0%, #C8B2F5 50%, #F7FAE4 100%)',
+              textDecoration:'none',borderRadius:'6px'}}>
+      🔗 Chainlist - Add Mantle Sepolia
+    </a>
+  </div>
+
+  <div style={{background:'#fff',borderRadius:'6px',padding:'12px',margin:'0 0 10px'}}>
+    <p style={{fontSize:'14px',fontWeight:'600',margin:'0 0 6px'}}>Step 2: Claim MNT di Sepolia Ethereum</p>
+    <p style={{fontSize:'13px',margin:'0 0 8px',color:'#666'}}>Claim token MNT gratis di chain Sepolia Ethereum dari Mantle Faucet:</p>
+    <a href="https://faucet.sepolia.mantle.xyz/" target="_blank"
+       style={{display:'inline-block',padding:'8px 16px',fontSize:'13px',fontWeight:'600',color:'#333',background:'linear-gradient(135deg, #F2A9DD 0%, #C8B2F5 50%, #F7FAE4 100%)',
+              textDecoration:'none',borderRadius:'6px'}}>
+      🚰 Mantle Sepolia Faucet
+    </a>
+  </div>
+
+  <div style={{background:'#fff',borderRadius:'6px',padding:'12px',margin:'0 0 10px'}}>
+    <p style={{fontSize:'14px',fontWeight:'600',margin:'0 0 6px'}}>Step 3: Ambil Sepolia ETH (untuk gas bridge)</p>
+    <p style={{fontSize:'13px',margin:'0 0 8px',color:'#666'}}>Claim Sepolia ETH gratis dari Google Cloud Faucet untuk biaya gas bridge:</p>
+    <a href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank"
+       style={{display:'inline-block',padding:'8px 16px',fontSize:'13px',fontWeight:'600',color:'#333',background:'linear-gradient(135deg, #F2A9DD 0%, #C8B2F5 50%, #F7FAE4 100%)',
+              textDecoration:'none',borderRadius:'6px'}}>
+      🚰 Google Sepolia Faucet
+    </a>
+  </div>
+
+  <div style={{background:'#fff',borderRadius:'6px',padding:'12px',margin:'0'}}>
+    <p style={{fontSize:'14px',fontWeight:'600',margin:'0 0 6px'}}>Step 4: Bridge MNT ke Mantle Sepolia</p>
+    <p style={{fontSize:'13px',margin:'0 0 8px',color:'#666'}}>Bridge token MNT dari Sepolia Ethereum ke Mantle Sepolia:</p>
+    <a href="https://app.mantle.xyz/bridge?network=sepolia" target="_blank"
+       style={{display:'inline-block',padding:'8px 16px',fontSize:'13px',fontWeight:'600',color:'#333',background:'linear-gradient(135deg, #F2A9DD 0%, #C8B2F5 50%, #F7FAE4 100%)',
+              textDecoration:'none',borderRadius:'6px'}}>
+      🌉 Mantle Bridge (Sepolia)
+    </a>
+  </div>
+</div>
+
+:::info Catatan Penting
+- Pastikan Anda memiliki Sepolia ETH untuk membayar gas fee saat bridge
+- Proses bridge membutuhkan waktu beberapa menit
+- Setelah bridge selesai, MNT akan muncul di wallet Anda pada network Mantle Sepolia
+:::
 
 ### 4. Hubungkan Remix dengan MetaMask
 
 1. Di Remix, klik tab **"Deploy & Run Transactions"**
 2. Di bagian Environment, pilih **"Injected Provider - MetaMask"**
-3. Pastikan MetaMask terhubung ke Sepolia Network
+3. Pastikan MetaMask terhubung ke **Mantle Sepolia Network**
 
 :::success Siap!
 Sekarang Anda sudah siap untuk belajar Solidity!
@@ -380,6 +424,253 @@ Selamat! Anda sudah menguasai:
 - ✅ Global variables (msg.sender, block.timestamp)
 
 **Selanjutnya:** Pelajari Struct & Enum untuk data yang lebih kompleks!
+
+---
+
+### 6. Global Variables (Variabel Bawaan Solidity)
+
+**Apa itu:** Variabel khusus yang sudah disediakan oleh Solidity dan dapat diakses dari mana saja dalam smart contract tanpa perlu mendeklarasikannya.
+
+**Mengapa penting:** Memberikan informasi penting tentang transaksi, block, dan konteks eksekusi yang diperlukan untuk logic smart contract.
+
+#### Kategori Global Variables
+
+##### 1. Block Properties
+
+| Variable | Tipe | Deskripsi |
+|----------|------|-----------|
+| `block.timestamp` | `uint256` | Waktu block saat ini (Unix timestamp dalam detik) |
+| `block.number` | `uint256` | Nomor block saat ini |
+| `block.chainid` | `uint256` | Chain ID dari blockchain (Mantle Sepolia = 5003) |
+| `block.coinbase` | `address payable` | Alamat miner/validator yang membuat block |
+| `block.difficulty` | `uint256` | Difficulty block saat ini |
+| `block.gaslimit` | `uint256` | Gas limit block saat ini |
+| `block.basefee` | `uint256` | Base fee block saat ini (EIP-1559) |
+| `blockhash(uint256)` | `bytes32` | Hash dari block tertentu (hanya 256 block terakhir) |
+
+##### 2. Transaction Properties (msg)
+
+| Variable | Tipe | Deskripsi |
+|----------|------|-----------|
+| `msg.sender` | `address` | Alamat yang memanggil fungsi saat ini |
+| `msg.value` | `uint256` | Jumlah wei (ETH) yang dikirim bersama transaksi |
+| `msg.data` | `bytes` | Data lengkap dari calldata |
+| `msg.sig` | `bytes4` | 4 byte pertama dari calldata (function selector) |
+
+##### 3. Transaction Properties (tx)
+
+| Variable | Tipe | Deskripsi |
+|----------|------|-----------|
+| `tx.origin` | `address` | Alamat yang memulai transaksi (EOA asli) |
+| `tx.gasprice` | `uint256` | Harga gas dari transaksi |
+
+##### 4. Contract Properties
+
+| Variable | Tipe | Deskripsi |
+|----------|------|-----------|
+| `this` | `address` | Alamat contract saat ini |
+| `address(this).balance` | `uint256` | Saldo ETH/MNT contract saat ini |
+
+#### Contoh Penggunaan Global Variables
+
+Buat `LearnGlobalVariables.sol`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract LearnGlobalVariables {
+    // ============================================
+    // BLOCK PROPERTIES
+    // ============================================
+
+    // Mendapatkan waktu block saat ini
+    function getCurrentTimestamp() public view returns (uint256) {
+        return block.timestamp;
+    }
+
+    // Mendapatkan nomor block saat ini
+    function getCurrentBlockNumber() public view returns (uint256) {
+        return block.number;
+    }
+
+    // Mendapatkan chain ID (Mantle Sepolia = 5003)
+    function getChainId() public view returns (uint256) {
+        return block.chainid;
+    }
+
+    // Mendapatkan alamat validator/miner
+    function getBlockCoinbase() public view returns (address) {
+        return block.coinbase;
+    }
+
+    // Mendapatkan gas limit block
+    function getBlockGasLimit() public view returns (uint256) {
+        return block.gaslimit;
+    }
+
+    // Mendapatkan hash dari block sebelumnya
+    function getPreviousBlockHash() public view returns (bytes32) {
+        return blockhash(block.number - 1);
+    }
+
+    // ============================================
+    // MESSAGE (MSG) PROPERTIES
+    // ============================================
+
+    // Mendapatkan alamat pemanggil fungsi
+    function getMsgSender() public view returns (address) {
+        return msg.sender;
+    }
+
+    // Mendapatkan jumlah MNT/ETH yang dikirim (dalam wei)
+    function getMsgValue() public payable returns (uint256) {
+        return msg.value;
+    }
+
+    // Mendapatkan calldata lengkap
+    function getMsgData() public pure returns (bytes calldata) {
+        return msg.data;
+    }
+
+    // Mendapatkan function selector (4 bytes pertama)
+    function getMsgSig() public pure returns (bytes4) {
+        return msg.sig;
+    }
+
+    // ============================================
+    // TRANSACTION (TX) PROPERTIES
+    // ============================================
+
+    // Mendapatkan alamat EOA yang memulai transaksi
+    function getTxOrigin() public view returns (address) {
+        return tx.origin;
+    }
+
+    // Mendapatkan harga gas transaksi
+    function getTxGasPrice() public view returns (uint256) {
+        return tx.gasprice;
+    }
+
+    // ============================================
+    // CONTRACT PROPERTIES
+    // ============================================
+
+    // Mendapatkan alamat contract ini
+    function getContractAddress() public view returns (address) {
+        return address(this);
+    }
+
+    // Mendapatkan saldo contract (dalam wei)
+    function getContractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    // ============================================
+    // PRACTICAL EXAMPLES
+    // ============================================
+
+    address public owner;
+    uint256 public deployTime;
+    uint256 public deployBlock;
+
+    constructor() {
+        owner = msg.sender;           // Simpan alamat deployer
+        deployTime = block.timestamp; // Simpan waktu deploy
+        deployBlock = block.number;   // Simpan block deploy
+    }
+
+    // Contoh: Hanya owner yang bisa memanggil
+    function onlyOwnerCanCall() public view returns (string memory) {
+        require(msg.sender == owner, "Bukan owner!");
+        return "Anda adalah owner!";
+    }
+
+    // Contoh: Hitung berapa lama contract sudah di-deploy
+    function getContractAge() public view returns (uint256) {
+        return block.timestamp - deployTime;
+    }
+
+    // Contoh: Hitung berapa block sejak deploy
+    function getBlocksSinceDeploy() public view returns (uint256) {
+        return block.number - deployBlock;
+    }
+
+    // Contoh: Terima MNT/ETH dan catat pengirim
+    event Received(address indexed sender, uint256 amount, uint256 timestamp);
+
+    function deposit() public payable {
+        emit Received(msg.sender, msg.value, block.timestamp);
+    }
+
+    // Contoh: Validasi chain ID (pastikan di Mantle Sepolia)
+    function validateChain() public view returns (bool) {
+        return block.chainid == 5003; // Mantle Sepolia Chain ID
+    }
+}
+```
+
+#### Coba di Remix:
+
+1. **Deploy** contract di Mantle Sepolia
+2. **Test Block Properties:**
+   - Klik `getCurrentTimestamp` → Lihat Unix timestamp
+   - Klik `getCurrentBlockNumber` → Lihat nomor block
+   - Klik `getChainId` → Harus 5003 (Mantle Sepolia)
+3. **Test Msg Properties:**
+   - Klik `getMsgSender` → Lihat alamat wallet Anda
+   - Masukkan VALUE 0.001 MNT → Klik `getMsgValue` → Lihat jumlah wei
+4. **Test Tx Properties:**
+   - Klik `getTxOrigin` → Sama dengan msg.sender (jika langsung dari wallet)
+5. **Test Contract Properties:**
+   - Klik `getContractAddress` → Alamat contract
+   - Klik `getContractBalance` → Saldo contract (0 jika belum ada deposit)
+6. **Test Practical Examples:**
+   - Klik `onlyOwnerCanCall` → "Anda adalah owner!"
+   - Klik `getContractAge` → Detik sejak deploy
+   - Masukkan VALUE → Klik `deposit` → Lihat event di logs
+
+#### ⚠️ Perbedaan Penting: `msg.sender` vs `tx.origin`
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+contract ContractA {
+    function callContractB(address _contractB) public view returns (address, address) {
+        return ContractB(_contractB).whoCalledMe();
+    }
+}
+
+contract ContractB {
+    function whoCalledMe() public view returns (address sender, address origin) {
+        sender = msg.sender;  // Alamat yang LANGSUNG memanggil (bisa contract)
+        origin = tx.origin;   // Alamat EOA yang MEMULAI transaksi
+    }
+}
+```
+
+**Skenario:**
+- User (EOA: 0xUser) → ContractA → ContractB
+- Di ContractB:
+  - `msg.sender` = alamat ContractA
+  - `tx.origin` = alamat User (0xUser)
+
+:::warning Peringatan Keamanan
+**JANGAN** gunakan `tx.origin` untuk autentikasi! Rentan terhadap phishing attack. Selalu gunakan `msg.sender` untuk cek kepemilikan.
+:::
+
+#### 📊 Ringkasan Global Variables
+
+| Variable | Kegunaan Utama |
+|----------|----------------|
+| `msg.sender` | Cek siapa yang memanggil, access control |
+| `msg.value` | Cek jumlah ETH/MNT yang dikirim |
+| `block.timestamp` | Logic berbasis waktu, deadline |
+| `block.number` | Tracking block, randomness (tidak aman) |
+| `block.chainid` | Validasi network yang benar |
+| `address(this)` | Referensi ke contract sendiri |
+| `address(this).balance` | Cek saldo contract |
 
 ---
 
@@ -1070,28 +1361,398 @@ contract LearnTime {
 
 ---
 
-## Latihan dan Tips
+## 🏆 Final Challenge: EduLoan - Student Loan DApp
 
-### Latihan 1: Buat Simple Student Registry
-Buat contract untuk registrasi mahasiswa sederhana:
-- Mapping address ke nama
-- Fungsi register
-- Fungsi update nama
-- Fungsi lihat nama berdasarkan address
+### Tentang Challenge Ini
 
-### Latihan 2: Buat Grade System
-Buat contract nilai mahasiswa:
-- Mapping studentId ke nilai
-- Fungsi tambah nilai
-- Fungsi cek kelulusan (nilai >= 60)
-- Event ketika nilai ditambahkan
+<div style={{background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',borderRadius:'12px',padding:'24px',margin:'0 0 24px',color:'#fff'}}>
+  <h3 style={{margin:'0 0 12px',fontSize:'20px',fontWeight:'700'}}>EduLoan: Decentralized Student Loan System</h3>
+  <p style={{margin:'0 0 16px',fontSize:'14px',opacity:'0.95'}}>
+    Bangun sistem pinjaman pendidikan terdesentralisasi di Mantle Network! Challenge ini menggabungkan semua konsep yang telah dipelajari untuk menciptakan solusi Real World Asset (RWA) yang nyata.
+  </p>
+  <div style={{display:'flex',gap:'12px',flexWrap:'wrap'}}>
+    <span style={{background:'rgba(255,255,255,0.2)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>💰 DeFi</span>
+    <span style={{background:'rgba(255,255,255,0.2)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>🏛️ RWA</span>
+    <span style={{background:'rgba(255,255,255,0.2)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>📚 Education</span>
+    <span style={{background:'rgba(255,255,255,0.2)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>⛓️ Mantle Network</span>
+  </div>
+</div>
 
-### Latihan 3: Buat Scholarship System
-Buat contract beasiswa:
-- Payable function untuk donate ke scholarship fund
-- Function untuk give scholarship ke student (hanya admin)
-- Track total scholarship per student
-- Event untuk setiap pemberian beasiswa
+### 📋 Deskripsi Challenge
+
+**Latar Belakang:**
+Banyak mahasiswa membutuhkan pinjaman untuk biaya pendidikan. Sistem pinjaman tradisional seringkali tidak transparan dan memiliki proses yang rumit. Dengan blockchain, kita bisa membuat sistem pinjaman yang:
+- **Transparan** - Semua transaksi tercatat on-chain
+- **Trustless** - Tidak perlu perantara
+- **Efisien** - Proses otomatis via smart contract
+- **Trackable** - Riwayat pembayaran jelas
+
+**Misi Anda:**
+Buat smart contract `EduLoan.sol` yang memungkinkan:
+1. Mahasiswa mengajukan pinjaman pendidikan
+2. Admin (kampus/lembaga) menyetujui/menolak pengajuan
+3. Sistem tracking cicilan dan pembayaran
+4. Penghitungan bunga sederhana
+5. Deadline pembayaran dengan penalti
+
+---
+
+### 🔧 Spesifikasi Teknis
+
+#### Data Structures
+
+```solidity
+// Status pinjaman
+enum LoanStatus {
+    Pending,    // 0: Menunggu approval
+    Approved,   // 1: Disetujui, menunggu pencairan
+    Active,     // 2: Sudah dicairkan, dalam masa cicilan
+    Repaid,     // 3: Sudah lunas
+    Defaulted   // 4: Gagal bayar (melewati deadline)
+}
+
+// Data pinjaman
+struct Loan {
+    uint256 loanId;
+    address borrower;
+    uint256 principalAmount;    // Jumlah pinjaman pokok
+    uint256 interestRate;       // Bunga dalam basis points (100 = 1%)
+    uint256 totalAmount;        // Total yang harus dibayar (pokok + bunga)
+    uint256 amountRepaid;       // Jumlah yang sudah dibayar
+    uint256 applicationTime;    // Waktu pengajuan
+    uint256 approvalTime;       // Waktu disetujui
+    uint256 deadline;           // Batas waktu pelunasan
+    LoanStatus status;
+    string purpose;             // Tujuan pinjaman (SPP, buku, dll)
+}
+```
+
+#### State Variables yang Dibutuhkan
+
+```solidity
+address public admin;
+uint256 public loanCounter;
+uint256 public constant INTEREST_RATE = 500; // 5% dalam basis points
+uint256 public constant LOAN_DURATION = 365 days;
+uint256 public constant MIN_LOAN = 0.01 ether;
+uint256 public constant MAX_LOAN = 10 ether;
+
+mapping(uint256 => Loan) public loans;
+mapping(address => uint256[]) public borrowerLoans;
+```
+
+#### Events yang Dibutuhkan
+
+```solidity
+event LoanApplied(uint256 indexed loanId, address indexed borrower, uint256 amount, string purpose);
+event LoanApproved(uint256 indexed loanId, address indexed borrower, uint256 totalAmount);
+event LoanRejected(uint256 indexed loanId, address indexed borrower, string reason);
+event LoanDisbursed(uint256 indexed loanId, address indexed borrower, uint256 amount);
+event PaymentMade(uint256 indexed loanId, address indexed borrower, uint256 amount, uint256 remaining);
+event LoanRepaid(uint256 indexed loanId, address indexed borrower);
+event LoanDefaulted(uint256 indexed loanId, address indexed borrower);
+```
+
+#### Functions yang Harus Dibuat
+
+| Function | Akses | Deskripsi |
+|----------|-------|-----------|
+| `applyLoan(uint256 _amount, string memory _purpose)` | Public | Mahasiswa mengajukan pinjaman |
+| `approveLoan(uint256 _loanId)` | Admin Only | Menyetujui pengajuan pinjaman |
+| `rejectLoan(uint256 _loanId, string memory _reason)` | Admin Only | Menolak pengajuan pinjaman |
+| `disburseLoan(uint256 _loanId)` | Admin Only, Payable | Mencairkan dana pinjaman |
+| `makePayment(uint256 _loanId)` | Borrower Only, Payable | Membayar cicilan |
+| `checkDefault(uint256 _loanId)` | Public | Cek dan update status default |
+| `getLoanDetails(uint256 _loanId)` | View | Lihat detail pinjaman |
+| `getMyLoans()` | View | Lihat semua pinjaman milik caller |
+| `calculateInterest(uint256 _principal)` | Pure | Hitung bunga |
+| `getRemainingAmount(uint256 _loanId)` | View | Lihat sisa yang harus dibayar |
+| `depositFunds()` | Admin Only, Payable | Admin deposit dana ke contract |
+| `getContractBalance()` | View | Lihat saldo contract |
+
+#### Modifiers yang Dibutuhkan
+
+```solidity
+modifier onlyAdmin()
+modifier onlyBorrower(uint256 _loanId)
+modifier loanExists(uint256 _loanId)
+modifier inStatus(uint256 _loanId, LoanStatus _status)
+```
+
+---
+
+### 📝 Template Starter Code
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.30;
+
+/// @title EduLoan - Decentralized Student Loan System
+/// @author [Nama Anda]
+/// @notice Sistem pinjaman pendidikan terdesentralisasi di Mantle Network
+/// @dev Challenge Final Mantle Co-Learning Camp
+
+contract EduLoan {
+    // ============================================
+    // ENUMS & STRUCTS
+    // ============================================
+
+    enum LoanStatus {
+        Pending,
+        Approved,
+        Active,
+        Repaid,
+        Defaulted
+    }
+
+    struct Loan {
+        uint256 loanId;
+        address borrower;
+        uint256 principalAmount;
+        uint256 interestRate;
+        uint256 totalAmount;
+        uint256 amountRepaid;
+        uint256 applicationTime;
+        uint256 approvalTime;
+        uint256 deadline;
+        LoanStatus status;
+        string purpose;
+    }
+
+    // ============================================
+    // STATE VARIABLES
+    // ============================================
+
+    // TODO: Deklarasikan state variables
+    // Hint: admin, loanCounter, constants, mappings
+
+
+    // ============================================
+    // EVENTS
+    // ============================================
+
+    // TODO: Deklarasikan semua events
+
+
+    // ============================================
+    // MODIFIERS
+    // ============================================
+
+    // TODO: Buat modifiers (onlyAdmin, onlyBorrower, dll)
+
+
+    // ============================================
+    // CONSTRUCTOR
+    // ============================================
+
+    constructor() {
+        // TODO: Set admin = msg.sender
+    }
+
+    // ============================================
+    // MAIN FUNCTIONS
+    // ============================================
+
+    /// @notice Mahasiswa mengajukan pinjaman
+    /// @param _amount Jumlah pinjaman yang diajukan
+    /// @param _purpose Tujuan pinjaman
+    function applyLoan(uint256 _amount, string memory _purpose) public {
+        // TODO: Implementasi
+        // 1. Validasi amount (MIN_LOAN <= amount <= MAX_LOAN)
+        // 2. Increment loanCounter
+        // 3. Hitung total dengan bunga
+        // 4. Buat Loan struct baru
+        // 5. Simpan di mapping
+        // 6. Tambahkan loanId ke borrowerLoans
+        // 7. Emit event
+    }
+
+    /// @notice Admin menyetujui pinjaman
+    /// @param _loanId ID pinjaman yang disetujui
+    function approveLoan(uint256 _loanId) public {
+        // TODO: Implementasi
+    }
+
+    /// @notice Admin menolak pinjaman
+    /// @param _loanId ID pinjaman yang ditolak
+    /// @param _reason Alasan penolakan
+    function rejectLoan(uint256 _loanId, string memory _reason) public {
+        // TODO: Implementasi
+    }
+
+    /// @notice Admin mencairkan dana pinjaman
+    /// @param _loanId ID pinjaman yang dicairkan
+    function disburseLoan(uint256 _loanId) public {
+        // TODO: Implementasi
+        // 1. Validasi status = Approved
+        // 2. Validasi contract balance cukup
+        // 3. Transfer dana ke borrower
+        // 4. Set deadline
+        // 5. Update status ke Active
+        // 6. Emit event
+    }
+
+    /// @notice Borrower membayar cicilan
+    /// @param _loanId ID pinjaman
+    function makePayment(uint256 _loanId) public payable {
+        // TODO: Implementasi
+        // 1. Validasi status = Active
+        // 2. Validasi msg.value > 0
+        // 3. Update amountRepaid
+        // 4. Jika lunas, update status ke Repaid
+        // 5. Emit event
+    }
+
+    /// @notice Cek apakah pinjaman sudah default
+    /// @param _loanId ID pinjaman
+    function checkDefault(uint256 _loanId) public {
+        // TODO: Implementasi
+        // Jika melewati deadline dan belum lunas, set status Defaulted
+    }
+
+    // ============================================
+    // VIEW FUNCTIONS
+    // ============================================
+
+    /// @notice Lihat detail pinjaman
+    function getLoanDetails(uint256 _loanId) public view returns (Loan memory) {
+        // TODO: Implementasi
+    }
+
+    /// @notice Lihat semua pinjaman milik caller
+    function getMyLoans() public view returns (uint256[] memory) {
+        // TODO: Implementasi
+    }
+
+    /// @notice Hitung bunga dari principal
+    function calculateInterest(uint256 _principal) public pure returns (uint256) {
+        // TODO: Implementasi
+        // Formula: (_principal * INTEREST_RATE) / 10000
+    }
+
+    /// @notice Lihat sisa yang harus dibayar
+    function getRemainingAmount(uint256 _loanId) public view returns (uint256) {
+        // TODO: Implementasi
+    }
+
+    /// @notice Lihat saldo contract
+    function getContractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    // ============================================
+    // ADMIN FUNCTIONS
+    // ============================================
+
+    /// @notice Admin deposit dana ke contract
+    function depositFunds() public payable {
+        // TODO: Implementasi (onlyAdmin)
+    }
+
+    /// @notice Admin withdraw dana dari contract
+    function withdrawFunds(uint256 _amount) public {
+        // TODO: Implementasi (onlyAdmin)
+    }
+}
+```
+
+---
+
+### 📤 Cara Submit Challenge
+
+#### Step 1: Buat Repository GitHub
+
+1. Buat repository baru di GitHub dengan nama: `mantle-eduloan-[nama-anda]`
+2. Struktur folder:
+```
+mantle-eduloan-[nama-anda]/
+├── contracts/
+│   └── EduLoan.sol
+├── README.md
+└── screenshots/
+    ├── deploy.png
+    ├── apply-loan.png
+    ├── approve-loan.png
+    └── payment.png
+```
+
+#### Step 2: Isi README.md
+
+```markdown
+# EduLoan - Mantle Co-Learning Camp Challenge
+
+## Author
+- Nama: [Nama Lengkap]
+- GitHub: [username]
+- Wallet: [address yang digunakan untuk deploy]
+
+## Contract Address (Mantle Sepolia)
+`0x...`
+
+## Features Implemented
+- [x] Apply Loan
+- [x] Approve/Reject Loan
+- [x] Disburse Loan
+- [x] Make Payment
+- [x] Check Default
+- [ ] Bonus: [sebutkan jika ada]
+
+## Screenshots
+[Sertakan screenshots dari Remix]
+
+## How to Test
+1. Deploy contract di Mantle Sepolia
+2. Admin deposit funds
+3. User apply loan
+4. Admin approve loan
+5. Admin disburse loan
+6. User make payment
+
+## Lessons Learned
+[Tulis apa yang Anda pelajari dari challenge ini]
+```
+
+#### Step 3: Submit di HackQuest
+
+<div style={{background:'#E3F2FD',borderRadius:'8px',padding:'16px',margin:'16px 0'}}>
+  <p style={{fontSize:'14px',fontWeight:'600',margin:'0 0 8px'}}>📝 Detail Submission HackQuest:</p>
+  <ul style={{margin:'0',paddingLeft:'20px',fontSize:'13px'}}>
+    <li><strong>Task Type:</strong> Link</li>
+    <li><strong>Link:</strong> URL GitHub Repository Anda</li>
+    <li><strong>Section:</strong> Belajar dengan HackQuest</li>
+  </ul>
+</div>
+
+---
+
+### 💡 Tips Mengerjakan Challenge
+
+1. **Mulai dari yang simple** - Implementasi applyLoan dan getLoanDetails dulu
+2. **Test setiap fungsi** - Jangan lanjut sebelum fungsi sebelumnya bekerja
+3. **Gunakan Remix** - Deploy di Remix VM dulu sebelum ke Mantle Sepolia
+4. **Baca error message** - Error Solidity biasanya informatif
+5. **Cek gas** - Pastikan ada cukup MNT untuk deploy dan testing
+
+### 🎓 Konsep yang Diuji
+
+Challenge ini menguji pemahaman Anda tentang:
+- ✅ Tipe data dasar (string, uint256, bool, address)
+- ✅ Struct & Enum
+- ✅ Mapping & Array
+- ✅ Modifier & Access Control
+- ✅ Events
+- ✅ Payable Functions
+- ✅ Time-based Logic
+- ✅ Global Variables (msg.sender, msg.value, block.timestamp)
+
+---
+
+### 🏅 Rewards
+
+Peserta yang berhasil menyelesaikan challenge akan mendapatkan:
+- **Points** di HackQuest Community
+- **Certificate of Completion** dari Mantle Co-Learning Camp
+- **Networking** dengan komunitas Web3 Indonesia
 
 ### Tips Belajar Solidity
 
