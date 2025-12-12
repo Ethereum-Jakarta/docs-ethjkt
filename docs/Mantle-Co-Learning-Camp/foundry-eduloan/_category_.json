@@ -1,0 +1,8 @@
+{
+  "label": "Foundry EduLoan Workshop",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Workshop lengkap menggunakan Foundry untuk testing, gas optimization, dan deployment EduLoan smart contract ke Mantle Sepolia."
+  }
+}
