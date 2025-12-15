@@ -1799,19 +1799,43 @@ Berikut adalah contoh-contoh proyek RWA yang memenangkan atau berpartisipasi di 
 
 ---
 
-## 11. Hands-on: IndonesiaPropertyToken
+## 🏆 Final Challenge: IndonesiaPropertyToken - RWA Real Estate DApp
 
-:::tip Bisa Langsung Dicoba di Remix!
-Semua smart contract di bawah ini dapat langsung di-copy dan di-deploy di [Remix IDE](https://remix.ethereum.org). Pilih compiler version `0.8.20` dan environment `Remix VM`.
-:::
+### Tentang Challenge Ini
 
-### 11.1 Project Overview
+<div style={{background:'linear-gradient(135deg, #F2A9DD 0%, #C8B2F5 50%, #F7FAE4 100%)',borderRadius:'12px',padding:'24px',margin:'0 0 24px',color:'#333'}}>
+  <h3 style={{margin:'0 0 12px',fontSize:'20px',fontWeight:'700'}}>IndonesiaPropertyToken: Tokenisasi Real Estate dengan Compliance</h3>
+  <p style={{margin:'0 0 16px',fontSize:'14px',opacity:'0.95'}}>
+    Bangun platform tokenisasi properti real estate Indonesia di Mantle Network! Challenge ini mengimplementasikan konsep RWA (Real World Assets) dengan KYC/AML compliance, fractional ownership, dan transfer restrictions.
+  </p>
+  <div style={{display:'flex',gap:'12px',flexWrap:'wrap'}}>
+    <span style={{background:'rgba(0,0,0,0.1)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>🏠 Real Estate</span>
+    <span style={{background:'rgba(0,0,0,0.1)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>🏛️ RWA</span>
+    <span style={{background:'rgba(0,0,0,0.1)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>✅ Compliance</span>
+    <span style={{background:'rgba(0,0,0,0.1)',padding:'6px 12px',borderRadius:'20px',fontSize:'12px'}}>⛓️ Mantle Network</span>
+  </div>
+</div>
 
-**IndonesiaPropertyToken** adalah platform tokenisasi properti real estate di Indonesia dengan fitur:
-- KYC/Whitelist verification
-- Fractional ownership
-- Compliant transfers
-- Admin controls
+### 📋 Deskripsi Challenge
+
+**Latar Belakang:**
+Investasi properti di Indonesia selalu membutuhkan modal besar (minimal ratusan juta rupiah). Dengan tokenisasi RWA, kita bisa membuat investasi properti yang:
+- **Fractional** - Beli sebagian kecil properti (mulai Rp 100.000)
+- **Compliant** - KYC/AML sesuai regulasi OJK
+- **Transparent** - Semua ownership tercatat on-chain
+- **Liquid** - Bisa diperdagangkan 24/7
+- **Secure** - Admin controls untuk legal compliance
+
+**Misi Anda:**
+Buat 2 smart contracts yang saling terintegrasi:
+1. **KYCRegistry.sol** - Mengelola whitelist investor yang sudah KYC
+2. **IndonesiaPropertyToken.sol** - Token ERC-20 dengan compliance checks
+
+---
+
+### 🔧 Spesifikasi Teknis
+
+#### Architecture
 
 ```
 ARCHITECTURE: IndonesiaPropertyToken
@@ -1829,28 +1853,133 @@ ARCHITECTURE: IndonesiaPropertyToken
 +-------------------+     +-------------------+
 ```
 
-### 11.2 Step 1: KYC Registry Contract
+#### Data Structures - KYCRegistry
 
-Contract pertama untuk mengelola whitelist investor yang sudah KYC.
+```solidity
+// KYC Levels untuk investor
+enum KYCLevel {
+    NONE,           // 0 - Belum KYC (blocked)
+    BASIC,          // 1 - KYC dasar (KTP only)
+    VERIFIED,       // 2 - KYC lengkap (KTP + NPWP)
+    ACCREDITED      // 3 - Investor terakreditasi
+}
+
+// Data investor
+struct Investor {
+    KYCLevel level;
+    uint256 expiryDate;     // Kapan KYC expired
+    uint16 countryCode;     // 360 = Indonesia
+    bool isActive;          // Active atau revoked
+}
+```
+
+#### Data Structures - PropertyToken
+
+```solidity
+// Informasi properti
+struct PropertyInfo {
+    string propertyName;        // "Apartemen Sudirman Tower"
+    string location;            // "Jakarta Selatan"
+    uint256 totalValue;         // Total value in IDR
+    uint256 totalTokens;        // Total tokens = 100% ownership
+    string legalDocument;       // IPFS hash of legal docs
+    bool isActive;
+}
+```
+
+#### State Variables yang Dibutuhkan
+
+**KYCRegistry:**
+```solidity
+address public admin;
+mapping(address => Investor) public investors;
+uint256 public totalInvestors;
+```
+
+**PropertyToken:**
+```solidity
+address public admin;
+address public kycRegistry;                              // Reference ke KYCRegistry
+mapping(address => bool) public frozen;                  // Frozen accounts
+mapping(address => uint256) public balances;             // Token balances
+mapping(address => mapping(address => uint256)) public allowances;
+uint256 public minInvestment = 1 ether;                  // Min investment
+uint256 public maxInvestment = 1000 ether;               // Max investment
+```
+
+#### Events yang Dibutuhkan
+
+**KYCRegistry:**
+```solidity
+event InvestorRegistered(address indexed investor, KYCLevel level);
+event InvestorUpdated(address indexed investor, KYCLevel newLevel);
+event InvestorRevoked(address indexed investor);
+```
+
+**PropertyToken:**
+```solidity
+event Transfer(address indexed from, address indexed to, uint256 value);
+event Approval(address indexed owner, address indexed spender, uint256 value);
+event AccountFrozen(address indexed account, string reason);
+event AccountUnfrozen(address indexed account);
+```
+
+#### Functions yang Harus Dibuat
+
+**KYCRegistry Functions:**
+
+| Function | Akses | Deskripsi |
+|----------|-------|-----------|
+| `registerInvestor(address, KYCLevel, uint16, uint256)` | Admin Only | Register investor baru dengan KYC |
+| `updateInvestor(address, KYCLevel)` | Admin Only | Update KYC level investor |
+| `revokeInvestor(address)` | Admin Only | Revoke/blacklist investor |
+| `isVerified(address)` | View | Check apakah investor verified & active |
+| `meetsLevel(address, KYCLevel)` | View | Check apakah meets minimum level |
+| `getInvestor(address)` | View | Get full investor data |
+
+**PropertyToken Functions:**
+
+| Function | Akses | Deskripsi |
+|----------|-------|-----------|
+| `balanceOf(address)` | View | Get token balance |
+| `transfer(address, uint256)` | Public + Compliance | Transfer dengan KYC check |
+| `approve(address, uint256)` | Public | Approve spender |
+| `transferFrom(address, address, uint256)` | Public + Compliance | Transfer from allowance |
+| `freezeAccount(address, string)` | Admin Only | Freeze account (AML) |
+| `unfreezeAccount(address)` | Admin Only | Unfreeze account |
+| `forceTransfer(address, address, uint256)` | Admin Only | Force transfer (legal) |
+| `getOwnershipPercent(address)` | View | Get ownership % |
+| `canTransfer(address, address, uint256)` | View | Pre-check transfer validity |
+
+#### Modifiers yang Dibutuhkan
+
+```solidity
+modifier onlyAdmin()
+modifier notFrozen(address _account)
+modifier onlyVerified(address _account)
+```
+
+---
+
+### 📝 Template Starter Code
+
+#### Contract 1: KYCRegistry.sol
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/**
- * @title KYCRegistry
- * @notice Manages KYC verification for IndonesiaPropertyToken
- * @dev Deploy this contract first, then use its address in PropertyToken
- *
- * Tutorial: https://docs.openzeppelin.com/contracts
- */
+/// @title KYCRegistry
+/// @author [Nama Anda]
+/// @notice Manages KYC verification for IndonesiaPropertyToken
+/// @dev Deploy this contract first, then use its address in PropertyToken
+
 contract KYCRegistry {
 
-    // ============ STATE VARIABLES ============
+    // ============================================
+    // ENUMS & STRUCTS
+    // ============================================
 
-    address public admin;
-
-    // KYC Levels
     enum KYCLevel {
         NONE,           // 0 - Belum KYC
         BASIC,          // 1 - KYC dasar (KTP)
@@ -1861,228 +1990,187 @@ contract KYCRegistry {
     struct Investor {
         KYCLevel level;
         uint256 expiryDate;
-        uint16 countryCode;     // 360 = Indonesia
+        uint16 countryCode;
         bool isActive;
     }
 
-    // Mapping: wallet address => investor data
-    mapping(address => Investor) public investors;
+    // ============================================
+    // STATE VARIABLES
+    // ============================================
 
-    // Total registered investors
-    uint256 public totalInvestors;
+    // TODO: Deklarasikan state variables
+    // Hint: admin, investors mapping, totalInvestors
 
-    // ============ EVENTS ============
 
-    event InvestorRegistered(address indexed investor, KYCLevel level);
-    event InvestorUpdated(address indexed investor, KYCLevel newLevel);
-    event InvestorRevoked(address indexed investor);
+    // ============================================
+    // EVENTS
+    // ============================================
 
-    // ============ MODIFIERS ============
+    // TODO: Deklarasikan events
+    // Hint: InvestorRegistered, InvestorUpdated, InvestorRevoked
 
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "Only admin");
-        _;
-    }
 
-    // ============ CONSTRUCTOR ============
+    // ============================================
+    // MODIFIERS
+    // ============================================
+
+    // TODO: Buat modifier onlyAdmin
+
+
+    // ============================================
+    // CONSTRUCTOR
+    // ============================================
 
     constructor() {
-        admin = msg.sender;
+        // TODO: Set admin = msg.sender
     }
 
-    // ============ ADMIN FUNCTIONS ============
+    // ============================================
+    // ADMIN FUNCTIONS
+    // ============================================
 
-    /**
-     * @notice Register new investor after KYC verification
-     * @param _investor Wallet address of investor
-     * @param _level KYC level (1-3)
-     * @param _countryCode Country code (360 for Indonesia)
-     * @param _validDays How many days KYC is valid
-     */
+    /// @notice Register new investor after KYC verification
+    /// @param _investor Wallet address of investor
+    /// @param _level KYC level (1-3)
+    /// @param _countryCode Country code (360 for Indonesia)
+    /// @param _validDays How many days KYC is valid
     function registerInvestor(
         address _investor,
         KYCLevel _level,
         uint16 _countryCode,
         uint256 _validDays
-    ) external onlyAdmin {
-        require(_investor != address(0), "Invalid address");
-        require(_level != KYCLevel.NONE, "Invalid KYC level");
-        require(!investors[_investor].isActive, "Already registered");
-
-        investors[_investor] = Investor({
-            level: _level,
-            expiryDate: block.timestamp + (_validDays * 1 days),
-            countryCode: _countryCode,
-            isActive: true
-        });
-
-        totalInvestors++;
-        emit InvestorRegistered(_investor, _level);
+    ) external {
+        // TODO: Implementasi
+        // 1. Tambahkan modifier onlyAdmin
+        // 2. Validasi address tidak zero
+        // 3. Validasi level bukan NONE
+        // 4. Validasi belum registered
+        // 5. Buat Investor struct dengan expiryDate = block.timestamp + (_validDays * 1 days)
+        // 6. Simpan di mapping
+        // 7. Increment totalInvestors
+        // 8. Emit event
     }
 
-    /**
-     * @notice Update investor KYC level
-     */
+    /// @notice Update investor KYC level
     function updateInvestor(
         address _investor,
         KYCLevel _newLevel
-    ) external onlyAdmin {
-        require(investors[_investor].isActive, "Not registered");
-        investors[_investor].level = _newLevel;
-        emit InvestorUpdated(_investor, _newLevel);
+    ) external {
+        // TODO: Implementasi (onlyAdmin)
     }
 
-    /**
-     * @notice Revoke investor KYC (blacklist)
-     */
-    function revokeInvestor(address _investor) external onlyAdmin {
-        require(investors[_investor].isActive, "Not registered");
-        investors[_investor].isActive = false;
-        totalInvestors--;
-        emit InvestorRevoked(_investor);
+    /// @notice Revoke investor KYC (blacklist)
+    function revokeInvestor(address _investor) external {
+        // TODO: Implementasi (onlyAdmin)
+        // Set isActive = false, decrement totalInvestors
     }
 
-    // ============ VIEW FUNCTIONS ============
+    // ============================================
+    // VIEW FUNCTIONS
+    // ============================================
 
-    /**
-     * @notice Check if investor is verified and active
-     */
+    /// @notice Check if investor is verified and active
     function isVerified(address _investor) public view returns (bool) {
-        Investor memory inv = investors[_investor];
-
-        if (!inv.isActive) return false;
-        if (inv.level == KYCLevel.NONE) return false;
-        if (block.timestamp > inv.expiryDate) return false;
-
-        return true;
+        // TODO: Implementasi
+        // Return false jika: !isActive, level == NONE, atau expired
+        // Return true jika semua check passed
     }
 
-    /**
-     * @notice Check if investor meets minimum KYC level
-     */
+    /// @notice Check if investor meets minimum KYC level
     function meetsLevel(
         address _investor,
         KYCLevel _requiredLevel
     ) public view returns (bool) {
-        if (!isVerified(_investor)) return false;
-        return uint8(investors[_investor].level) >= uint8(_requiredLevel);
+        // TODO: Implementasi
+        // Hint: uint8(investors[_investor].level) >= uint8(_requiredLevel)
     }
 
-    /**
-     * @notice Get investor details
-     */
+    /// @notice Get investor details
     function getInvestor(address _investor) external view returns (
         KYCLevel level,
         uint256 expiryDate,
         uint16 countryCode,
         bool isActive
     ) {
-        Investor memory inv = investors[_investor];
-        return (inv.level, inv.expiryDate, inv.countryCode, inv.isActive);
+        // TODO: Implementasi
     }
 }
 ```
 
-**Cara Test di Remix:**
-
-1. Deploy `KYCRegistry`
-2. Copy address contract
-3. Call `registerInvestor` dengan parameter:
-   - `_investor`: address wallet (bisa pakai address kedua dari Remix)
-   - `_level`: 1 (BASIC), 2 (VERIFIED), atau 3 (ACCREDITED)
-   - `_countryCode`: 360 (Indonesia)
-   - `_validDays`: 365
-4. Call `isVerified` untuk cek status
-
 ---
 
-### 11.3 Step 2: Property Token Contract
-
-Contract utama untuk token properti dengan compliance built-in.
+#### Contract 2: IndonesiaPropertyToken.sol
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/**
- * @title IndonesiaPropertyToken
- * @notice ERC-20 token representing fractional ownership of Indonesian real estate
- * @dev Implements compliance checks via KYCRegistry
- *
- * Reference: https://www.erc3643.org/
- */
+/// @title IndonesiaPropertyToken
+/// @author [Nama Anda]
+/// @notice ERC-20 token representing fractional ownership of Indonesian real estate
+/// @dev Implements compliance checks via KYCRegistry
+
 contract IndonesiaPropertyToken {
 
-    // ============ TOKEN METADATA ============
+    // ============================================
+    // STRUCTS
+    // ============================================
 
+    struct PropertyInfo {
+        string propertyName;
+        string location;
+        uint256 totalValue;
+        uint256 totalTokens;
+        string legalDocument;
+        bool isActive;
+    }
+
+    // ============================================
+    // STATE VARIABLES
+    // ============================================
+
+    // Token metadata
     string public name;
     string public symbol;
     uint8 public constant decimals = 18;
     uint256 public totalSupply;
 
-    // ============ PROPERTY INFO ============
-
-    struct PropertyInfo {
-        string propertyName;        // "Apartemen Sudirman Tower"
-        string location;            // "Jakarta Selatan"
-        uint256 totalValue;         // Total property value in IDR
-        uint256 totalTokens;        // Total tokens representing 100%
-        string legalDocument;       // IPFS hash of legal docs
-        bool isActive;
-    }
-
+    // Property info
     PropertyInfo public property;
 
-    // ============ COMPLIANCE ============
+    // TODO: Deklarasikan state variables lainnya
+    // Hint: admin, kycRegistry, frozen mapping, balances mapping, allowances mapping
+    // Hint: minInvestment, maxInvestment
 
-    address public admin;
-    address public kycRegistry;     // KYCRegistry contract address
 
-    mapping(address => bool) public frozen;     // Frozen accounts
-    mapping(address => uint256) public balances;
-    mapping(address => mapping(address => uint256)) public allowances;
+    // ============================================
+    // EVENTS
+    // ============================================
 
-    // Investment limits
-    uint256 public minInvestment = 1 ether;         // Min 1 token
-    uint256 public maxInvestment = 1000 ether;      // Max 1000 tokens
+    // TODO: Deklarasikan events
+    // Hint: Transfer, Approval, AccountFrozen, AccountUnfrozen
 
-    // ============ EVENTS ============
 
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-    event AccountFrozen(address indexed account, string reason);
-    event AccountUnfrozen(address indexed account);
-    event PropertyUpdated(string propertyName, uint256 totalValue);
+    // ============================================
+    // MODIFIERS
+    // ============================================
 
-    // ============ MODIFIERS ============
+    // TODO: Buat modifiers
+    // Hint: onlyAdmin, notFrozen(address), onlyVerified(address)
 
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "Only admin");
-        _;
-    }
 
-    modifier notFrozen(address _account) {
-        require(!frozen[_account], "Account is frozen");
-        _;
-    }
+    // ============================================
+    // CONSTRUCTOR
+    // ============================================
 
-    modifier onlyVerified(address _account) {
-        require(_isVerified(_account), "Not KYC verified");
-        _;
-    }
-
-    // ============ CONSTRUCTOR ============
-
-    /**
-     * @notice Deploy property token
-     * @param _name Token name (e.g., "Sudirman Tower Token")
-     * @param _symbol Token symbol (e.g., "SDMN")
-     * @param _kycRegistry Address of deployed KYCRegistry
-     * @param _propertyName Name of the property
-     * @param _location Property location
-     * @param _totalValue Total property value in IDR
-     * @param _totalTokens Total tokens to mint (representing 100%)
-     */
+    /// @notice Deploy property token
+    /// @param _name Token name (e.g., "Sudirman Tower Token")
+    /// @param _symbol Token symbol (e.g., "SDMN")
+    /// @param _kycRegistry Address of deployed KYCRegistry
+    /// @param _propertyName Name of the property
+    /// @param _location Property location
+    /// @param _totalValue Total property value in IDR
+    /// @param _totalTokens Total tokens to mint (representing 100%)
     constructor(
         string memory _name,
         string memory _symbol,
@@ -2092,228 +2180,139 @@ contract IndonesiaPropertyToken {
         uint256 _totalValue,
         uint256 _totalTokens
     ) {
-        require(_kycRegistry != address(0), "Invalid KYC registry");
-
-        name = _name;
-        symbol = _symbol;
-        admin = msg.sender;
-        kycRegistry = _kycRegistry;
-
-        property = PropertyInfo({
-            propertyName: _propertyName,
-            location: _location,
-            totalValue: _totalValue,
-            totalTokens: _totalTokens,
-            legalDocument: "",
-            isActive: true
-        });
-
-        // Mint all tokens to admin initially
-        totalSupply = _totalTokens;
-        balances[msg.sender] = _totalTokens;
-        emit Transfer(address(0), msg.sender, _totalTokens);
+        // TODO: Implementasi
+        // 1. Validasi _kycRegistry tidak zero
+        // 2. Set name, symbol, admin, kycRegistry
+        // 3. Buat PropertyInfo struct
+        // 4. Mint semua tokens ke admin (totalSupply = _totalTokens)
+        // 5. Emit Transfer event dari address(0)
     }
 
-    // ============ ERC-20 FUNCTIONS ============
+    // ============================================
+    // ERC-20 FUNCTIONS
+    // ============================================
 
     function balanceOf(address _owner) public view returns (uint256) {
-        return balances[_owner];
+        // TODO: Return balance
     }
 
-    /**
-     * @notice Transfer tokens with compliance checks
-     * @dev Both sender and receiver must be KYC verified and not frozen
-     */
+    /// @notice Transfer tokens with compliance checks
+    /// @dev Both sender and receiver must be KYC verified and not frozen
     function transfer(
         address _to,
         uint256 _value
-    )
-        public
-        notFrozen(msg.sender)
-        notFrozen(_to)
-        onlyVerified(msg.sender)
-        onlyVerified(_to)
-        returns (bool)
-    {
-        require(_to != address(0), "Invalid recipient");
-        require(balances[msg.sender] >= _value, "Insufficient balance");
-
-        // Check investment limits for receiver
-        uint256 newBalance = balances[_to] + _value;
-        require(newBalance <= maxInvestment, "Exceeds max investment");
-
-        balances[msg.sender] -= _value;
-        balances[_to] += _value;
-
-        emit Transfer(msg.sender, _to, _value);
-        return true;
+    ) public returns (bool) {
+        // TODO: Implementasi
+        // 1. Tambahkan modifiers: notFrozen(msg.sender), notFrozen(_to), onlyVerified(msg.sender), onlyVerified(_to)
+        // 2. Validasi _to tidak zero
+        // 3. Validasi balance cukup
+        // 4. Validasi tidak exceed maxInvestment
+        // 5. Update balances
+        // 6. Emit Transfer event
     }
 
     function approve(address _spender, uint256 _value) public returns (bool) {
-        allowances[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender, _value);
-        return true;
+        // TODO: Implementasi
     }
 
     function allowance(address _owner, address _spender) public view returns (uint256) {
-        return allowances[_owner][_spender];
+        // TODO: Implementasi
     }
 
     function transferFrom(
         address _from,
         address _to,
         uint256 _value
-    )
-        public
-        notFrozen(_from)
-        notFrozen(_to)
-        onlyVerified(_from)
-        onlyVerified(_to)
-        returns (bool)
-    {
-        require(_to != address(0), "Invalid recipient");
-        require(balances[_from] >= _value, "Insufficient balance");
-        require(allowances[_from][msg.sender] >= _value, "Insufficient allowance");
-
-        uint256 newBalance = balances[_to] + _value;
-        require(newBalance <= maxInvestment, "Exceeds max investment");
-
-        balances[_from] -= _value;
-        balances[_to] += _value;
-        allowances[_from][msg.sender] -= _value;
-
-        emit Transfer(_from, _to, _value);
-        return true;
+    ) public returns (bool) {
+        // TODO: Implementasi (similar to transfer but check allowance)
     }
 
-    // ============ ADMIN FUNCTIONS ============
+    // ============================================
+    // ADMIN FUNCTIONS
+    // ============================================
 
-    /**
-     * @notice Freeze account (for AML/compliance)
-     */
+    /// @notice Freeze account (for AML/compliance)
     function freezeAccount(
         address _account,
         string calldata _reason
-    ) external onlyAdmin {
-        frozen[_account] = true;
-        emit AccountFrozen(_account, _reason);
+    ) external {
+        // TODO: Implementasi (onlyAdmin)
     }
 
-    /**
-     * @notice Unfreeze account
-     */
-    function unfreezeAccount(address _account) external onlyAdmin {
-        frozen[_account] = false;
-        emit AccountUnfrozen(_account);
+    /// @notice Unfreeze account
+    function unfreezeAccount(address _account) external {
+        // TODO: Implementasi (onlyAdmin)
     }
 
-    /**
-     * @notice Force transfer (for legal compliance, recovery)
-     */
+    /// @notice Force transfer (for legal compliance, recovery)
     function forceTransfer(
         address _from,
         address _to,
         uint256 _value
-    ) external onlyAdmin {
-        require(balances[_from] >= _value, "Insufficient balance");
-
-        balances[_from] -= _value;
-        balances[_to] += _value;
-
-        emit Transfer(_from, _to, _value);
+    ) external {
+        // TODO: Implementasi (onlyAdmin)
+        // Transfer tanpa compliance check (untuk court order, estate, dll)
     }
 
-    /**
-     * @notice Update property legal documents
-     */
-    function setLegalDocument(string calldata _ipfsHash) external onlyAdmin {
-        property.legalDocument = _ipfsHash;
+    /// @notice Update property legal documents
+    function setLegalDocument(string calldata _ipfsHash) external {
+        // TODO: Implementasi (onlyAdmin)
     }
 
-    /**
-     * @notice Update investment limits
-     */
+    /// @notice Update investment limits
     function setInvestmentLimits(
         uint256 _min,
         uint256 _max
-    ) external onlyAdmin {
-        require(_min < _max, "Invalid limits");
-        minInvestment = _min;
-        maxInvestment = _max;
+    ) external {
+        // TODO: Implementasi (onlyAdmin)
     }
 
-    // ============ VIEW FUNCTIONS ============
+    // ============================================
+    // VIEW FUNCTIONS
+    // ============================================
 
-    /**
-     * @notice Get ownership percentage
-     */
+    /// @notice Get ownership percentage (in basis points, 10000 = 100%)
     function getOwnershipPercent(address _owner) public view returns (uint256) {
-        if (totalSupply == 0) return 0;
-        return (balances[_owner] * 10000) / totalSupply; // Returns basis points (100% = 10000)
+        // TODO: Implementasi
+        // Formula: (balances[_owner] * 10000) / totalSupply
     }
 
-    /**
-     * @notice Get token value in IDR
-     */
+    /// @notice Get token value in IDR
     function getTokenValueIDR() public view returns (uint256) {
-        if (property.totalTokens == 0) return 0;
-        return property.totalValue / property.totalTokens;
+        // TODO: Implementasi
+        // Formula: property.totalValue / property.totalTokens
     }
 
-    /**
-     * @notice Check if transfer would be allowed
-     */
+    /// @notice Check if transfer would be allowed
     function canTransfer(
         address _from,
         address _to,
         uint256 _value
     ) public view returns (bool, string memory) {
-        if (frozen[_from]) return (false, "Sender is frozen");
-        if (frozen[_to]) return (false, "Receiver is frozen");
-        if (!_isVerified(_from)) return (false, "Sender not KYC verified");
-        if (!_isVerified(_to)) return (false, "Receiver not KYC verified");
-        if (balances[_from] < _value) return (false, "Insufficient balance");
-        if (balances[_to] + _value > maxInvestment) return (false, "Exceeds max investment");
-
-        return (true, "Transfer allowed");
+        // TODO: Implementasi
+        // Check: frozen, KYC verified, balance, max investment
+        // Return (false, "reason") atau (true, "Transfer allowed")
     }
 
-    // ============ INTERNAL FUNCTIONS ============
+    // ============================================
+    // INTERNAL FUNCTIONS
+    // ============================================
 
+    /// @notice Check if account is KYC verified
     function _isVerified(address _account) internal view returns (bool) {
-        // Admin is always verified
-        if (_account == admin) return true;
-
-        // Check KYC registry
-        (bool success, bytes memory data) = kycRegistry.staticcall(
-            abi.encodeWithSignature("isVerified(address)", _account)
-        );
-
-        if (!success) return false;
-        return abi.decode(data, (bool));
+        // TODO: Implementasi
+        // 1. Admin selalu verified
+        // 2. Call kycRegistry.isVerified(_account) menggunakan staticcall
+        // Hint: (bool success, bytes memory data) = kycRegistry.staticcall(
+        //           abi.encodeWithSignature("isVerified(address)", _account)
+        //       );
     }
 }
 ```
 
-**Cara Test di Remix:**
-
-1. Deploy `KYCRegistry` terlebih dahulu
-2. Copy address `KYCRegistry`
-3. Deploy `IndonesiaPropertyToken` dengan parameter:
-   - `_name`: "Sudirman Tower Token"
-   - `_symbol`: "SDMN"
-   - `_kycRegistry`: (paste address KYCRegistry)
-   - `_propertyName`: "Apartemen Sudirman Tower"
-   - `_location`: "Jakarta Selatan"
-   - `_totalValue`: 10000000000000 (10 Miliar IDR)
-   - `_totalTokens`: 10000000000000000000000 (10,000 tokens dengan 18 decimals)
-
-4. Register investor di `KYCRegistry`
-5. Transfer token ke investor yang sudah KYC
-
 ---
 
-### 11.4 Testing Flow
+### 🧪 Testing Flow
 
 ```
 COMPLETE TESTING FLOW
@@ -2359,6 +2358,154 @@ COMPLETE TESTING FLOW
    - getOwnershipPercent(investor1)
    - getTokenValueIDR()
 ```
+
+#### ✅ Checklist Verifikasi
+
+Setelah selesai, cek apakah contracts Anda memenuhi ini:
+
+**KYCRegistry:**
+- [ ] Ada 3 state variables (admin, investors mapping, totalInvestors)
+- [ ] Ada 3 events
+- [ ] Modifier onlyAdmin bekerja
+- [ ] registerInvestor validasi address, level, dan existing
+- [ ] isVerified check isActive, level, dan expiry
+- [ ] revokeInvestor set isActive = false
+
+**PropertyToken:**
+- [ ] Constructor mint semua tokens ke admin
+- [ ] transfer() check frozen dan KYC untuk sender DAN receiver
+- [ ] transfer() check maxInvestment limit
+- [ ] freezeAccount() dan unfreezeAccount() bekerja
+- [ ] forceTransfer() bypass semua check (admin only)
+- [ ] canTransfer() return reason yang benar
+- [ ] _isVerified() call KYCRegistry menggunakan staticcall
+
+---
+
+### 📤 Cara Submit Challenge
+
+#### Step 1: Buat Repository GitHub
+
+1. Buat repository baru di GitHub dengan nama: `mantle-rwa-propertytoken-[nama-anda]`
+2. Struktur folder:
+```
+mantle-rwa-propertytoken-[nama-anda]/
+├── contracts/
+│   ├── KYCRegistry.sol
+│   └── IndonesiaPropertyToken.sol
+├── README.md
+└── screenshots/
+    ├── deploy-kyc.png
+    ├── deploy-token.png
+    ├── register-investor.png
+    ├── transfer-success.png
+    ├── transfer-blocked.png
+    └── freeze-account.png
+```
+
+#### Step 2: Isi README.md
+
+```markdown
+# IndonesiaPropertyToken - Mantle Co-Learning Camp RWA Challenge
+
+## Author
+- Nama: [Nama Lengkap]
+- GitHub: [username]
+- Wallet: [address yang digunakan untuk deploy]
+
+## Contract Addresses (Mantle Sepolia)
+- KYCRegistry: `0x...`
+- IndonesiaPropertyToken: `0x...`
+
+## Property Details
+- Property Name: [nama properti]
+- Location: [lokasi]
+- Total Value: [nilai dalam IDR]
+- Total Tokens: [jumlah tokens]
+
+## Features Implemented
+- [x] KYC Registry dengan 4 levels
+- [x] ERC-20 token dengan compliance
+- [x] Transfer restrictions (KYC + frozen)
+- [x] Admin controls (freeze, unfreeze, forceTransfer)
+- [x] Ownership percentage calculation
+- [ ] Bonus: [sebutkan jika ada]
+
+## Screenshots
+[Sertakan screenshots dari Remix]
+
+## How to Test
+1. Deploy KYCRegistry
+2. Deploy IndonesiaPropertyToken dengan KYCRegistry address
+3. Register 2 investors di KYCRegistry
+4. Transfer tokens dari admin ke investor
+5. Test transfer antar investor
+6. Test freeze account
+7. Test revoke investor
+
+## Lessons Learned
+[Tulis apa yang Anda pelajari dari challenge ini tentang RWA dan compliance]
+```
+
+#### Step 3: Submit di HackQuest
+
+<div style={{background:'#E3F2FD',borderRadius:'8px',padding:'16px',margin:'16px 0'}}>
+  <p style={{fontSize:'14px',fontWeight:'600',margin:'0 0 8px'}}>📝 Detail Submission HackQuest:</p>
+  <ul style={{margin:'0',paddingLeft:'20px',fontSize:'13px'}}>
+    <li><strong>Task Type:</strong> Link</li>
+    <li><strong>Link:</strong> URL GitHub Repository Anda</li>
+    <li><strong>Section:</strong> Belajar dengan HackQuest</li>
+  </ul>
+</div>
+
+---
+
+### 💡 Tips Mengerjakan Challenge
+
+1. **Deploy KYCRegistry dulu** - PropertyToken butuh address KYCRegistry
+2. **Test setiap fungsi** - Jangan lanjut sebelum fungsi sebelumnya bekerja
+3. **Gunakan Remix VM dulu** - Sebelum deploy ke Mantle Sepolia
+4. **Copy address dengan benar** - Salah address = contract tidak terhubung
+5. **Switch account di Remix** - Untuk test transfer antar investor
+6. **Baca error message** - Solidity error biasanya informatif
+
+### 🎓 Konsep yang Diuji
+
+Challenge ini menguji pemahaman Anda tentang:
+- ✅ Struct & Enum untuk data structures
+- ✅ Mapping untuk investor registry dan balances
+- ✅ Modifier untuk access control dan compliance
+- ✅ Events untuk transparency
+- ✅ Cross-contract calls (staticcall)
+- ✅ Time-based logic (KYC expiry)
+- ✅ ERC-20 token standard
+- ✅ RWA compliance patterns (KYC, AML, freeze)
+
+---
+
+### 🏅 Rewards
+
+Peserta yang berhasil menyelesaikan challenge akan mendapatkan:
+- **Points** di HackQuest Community
+- **Certificate of Completion** dari Mantle Co-Learning Camp
+- **Networking** dengan komunitas Web3 Indonesia
+- **Foundation** untuk Mantle Global Hackathon ($150K prize pool!)
+
+---
+
+### 🎁 Bonus Challenge (Optional)
+
+Untuk yang ingin tantangan lebih, tambahkan fitur:
+
+1. **Dividend Distribution** - Distribusi rental income ke token holders
+2. **Voting Mechanism** - Token holders vote untuk keputusan properti
+3. **Multi-Property Support** - Satu contract untuk multiple properties
+4. **Transfer History** - Track semua transfer on-chain
+5. **KYC Renewal** - Extend KYC expiry dengan fungsi baru
+
+:::tip Selamat Mengerjakan!
+Challenge ini adalah fondasi untuk membangun RWA protocol yang sesungguhnya. Skill yang Anda pelajari di sini bisa digunakan untuk Mantle Hackathon! 🚀
+:::
 
 ---
 
@@ -2436,15 +2583,12 @@ Real World Assets (RWA) merepresentasikan konvergensi antara keuangan tradisiona
 
 ### Next Steps
 
-1. **Practice**: Deploy IndonesiaPropertyToken di Remix
-2. **Explore**: Baca dokumentasi ERC-3643 dan T-REX
-3. **Build**: Kembangkan project untuk Mantle Hackathon
-4. **Connect**: Join Mantle Discord untuk komunitas
+1. **Complete Challenge**: Selesaikan Final Challenge IndonesiaPropertyToken di atas
+2. **Submit**: Upload ke GitHub dan submit di HackQuest
+3. **Explore**: Baca dokumentasi ERC-3643 dan T-REX untuk production
+4. **Build**: Kembangkan project untuk Mantle Global Hackathon ($150K prize!)
+5. **Connect**: Join [Discord ETHJKT](https://discord.gg/p5b6RFEnnk) untuk komunitas
 
-:::success Challenge
-Modifikasi `IndonesiaPropertyToken` untuk menambahkan fitur:
-- Dividend distribution
-- Voting mechanism
-- Secondary market listing
-- Multi-property support
+:::tip Ready for Hackathon?
+Skill yang Anda pelajari dari challenge ini adalah fondasi untuk membangun RWA protocol. Mantle Global Hackathon 2025 memiliki prize pool $150K - gunakan pengetahuan RWA ini untuk berkompetisi! 🚀
 :::
