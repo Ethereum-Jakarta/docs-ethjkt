@@ -83,7 +83,7 @@ git clone https://github.com/0gfoundation/0g-agent-nft.git
 cd 0g-agent-nft
 
 # Install dependencies
-pnpm install
+npm install
 ```
 
 #### Step 2: Setup Environment
@@ -109,17 +109,17 @@ ZG_INDEXER_URL=https://indexer-storage-testnet-turbo.0g.ai
 #### Step 3: Compile Contracts
 
 ```bash
-pnpm compile
+npm run compile
 ```
 
 #### Step 4: Deploy ke 0G Testnet
 
 ```bash
 # Deploy Verifier dulu
-pnpm hardhat deploy --tags verifier --network 0g-testnet
+npx hardhat deploy --tags verifier --network 0g-testnet
 
 # Deploy AgentNFT
-pnpm hardhat deploy --tags agentNFT --network 0g-testnet
+npx hardhat deploy --tags agentNFT --network 0g-testnet
 ```
 
 Simpan address contract yang muncul di output!
@@ -184,7 +184,7 @@ main().catch(console.error);
 ```
 
 ```bash
-pnpm hardhat run scripts/homework-mint.ts --network 0g-testnet
+npx hardhat run scripts/homework-mint.ts --network 0g-testnet
 ```
 
 ### Submission Task 2
@@ -281,14 +281,16 @@ Sebelum submit, pastikan:
 - Pastikan sudah claim dari [faucet](https://faucet.0g.ai)
 - Cek balance di explorer
 
-### "pnpm not found"
+### "npm not found"
+Pastikan Node.js sudah terinstall dengan benar:
 ```bash
-npm install -g pnpm
+node -v
+npm -v
 ```
 
 ### "Compilation failed"
 - Pastikan Node.js v18+
-- Coba `pnpm install` ulang
+- Coba `npm install` ulang
 
 ### Deploy gagal
 - Check private key di `.env`

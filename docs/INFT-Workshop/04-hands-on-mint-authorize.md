@@ -27,15 +27,9 @@ Sebelum mulai, pastikan:
 git clone https://github.com/0gfoundation/0g-agent-nft.git
 cd 0g-agent-nft
 
-# Install dependencies (gunakan pnpm)
-pnpm install
+# Install dependencies
+npm install
 ```
-
-:::tip Tidak punya pnpm?
-```bash
-npm install -g pnpm
-```
-:::
 
 ### Step 1.2: Setup Environment
 
@@ -66,7 +60,7 @@ ZG_INDEXER_URL=https://indexer-storage-testnet-turbo.0g.ai
 ### Step 1.3: Compile Contracts
 
 ```bash
-pnpm compile
+npm run compile
 ```
 
 Output yang diharapkan:
@@ -81,7 +75,7 @@ Compiled X Solidity files successfully
 AgentNFT membutuhkan Verifier contract untuk validasi proof:
 
 ```bash
-pnpm hardhat deploy --tags verifier --network 0g-testnet
+npx hardhat deploy --tags verifier --network 0g-testnet
 ```
 
 Simpan address Verifier yang muncul di output.
@@ -89,7 +83,7 @@ Simpan address Verifier yang muncul di output.
 ### Step 2.2: Deploy AgentNFT
 
 ```bash
-pnpm hardhat deploy --tags agentNFT --network 0g-testnet
+npx hardhat deploy --tags agentNFT --network 0g-testnet
 ```
 
 Output:
@@ -194,7 +188,7 @@ main().catch((error) => {
 ### Step 3.2: Run Mint Script
 
 ```bash
-pnpm hardhat run scripts/workshop-mint.ts --network 0g-testnet
+npx hardhat run scripts/workshop-mint.ts --network 0g-testnet
 ```
 
 Output:
@@ -280,7 +274,7 @@ main().catch(console.error);
 Ganti `USER_TO_AUTHORIZE` dengan address yang ingin di-authorize, lalu:
 
 ```bash
-pnpm hardhat run scripts/workshop-authorize.ts --network 0g-testnet
+npx hardhat run scripts/workshop-authorize.ts --network 0g-testnet
 ```
 
 ## Part 5: Batch Authorize

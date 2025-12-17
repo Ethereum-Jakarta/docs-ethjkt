@@ -71,7 +71,7 @@ cd 0g-agent-nft
 ```bash
 git clone https://github.com/0gfoundation/0g-agent-nft.git
 cd 0g-agent-nft
-pnpm install
+npm install
 ```
 
 ### Step 2: Environment Setup
@@ -97,7 +97,7 @@ ZG_INDEXER_URL=https://indexer-storage-testnet-turbo.0g.ai
 ### Step 3: Compile
 
 ```bash
-pnpm compile
+npm run compile
 ```
 
 ## AgentNFT Contract Overview
@@ -170,13 +170,13 @@ struct IntelligentData {
 ### Deploy Verifier
 
 ```bash
-pnpm hardhat deploy --tags verifier --network 0g-testnet
+npx hardhat deploy --tags verifier --network 0g-testnet
 ```
 
 ### Deploy AgentNFT
 
 ```bash
-pnpm hardhat deploy --tags agentNFT --network 0g-testnet
+npx hardhat deploy --tags agentNFT --network 0g-testnet
 ```
 
 ### Atau Deploy Manual
@@ -501,7 +501,7 @@ describe("AgentNFT", function () {
 
 Run tests:
 ```bash
-pnpm test
+npm test
 ```
 
 ---
