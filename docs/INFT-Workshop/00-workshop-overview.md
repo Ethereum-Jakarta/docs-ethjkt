@@ -22,6 +22,7 @@ Workshop kolaborasi **Ethereum Jakarta x 0G Labs x HackQuest** untuk membangun I
 
 ### Technical Requirements
 - **Node.js** v18+ terinstall
+- **Yarn 4** (via corepack)
 - **MetaMask** atau wallet EVM lainnya
 - **Git** untuk clone repositories
 - Code editor (VS Code recommended)
@@ -39,10 +40,10 @@ Workshop kolaborasi **Ethereum Jakarta x 0G Labs x HackQuest** untuk membangun I
 
 # Verify installation
 node --version  # Should be v18+
-npm --version
 
-# Install Hardhat globally (optional)
-npm install -g hardhat
+# Enable Yarn 4 via corepack
+corepack enable
+yarn --version  # Should be 4.x
 ```
 
 ### Wallet Setup
@@ -50,7 +51,7 @@ npm install -g hardhat
 2. Tambahkan 0G Galileo Testnet:
    - **Network Name:** 0G Galileo Testnet
    - **RPC URL:** https://evmrpc-testnet.0g.ai
-   - **Chain ID:** 16601
+   - **Chain ID:** 16602
    - **Symbol:** OG
    - **Explorer:** https://chainscan-galileo.0g.ai
 
@@ -89,11 +90,13 @@ npm install -g hardhat
 ## Tech Stack
 
 ```
-Frontend:        React/Next.js + ethers.js/wagmi
+Frontend:        React + Vite + wagmi + RainbowKit
 Smart Contract:  Solidity 0.8.20 + OpenZeppelin
-Development:     Hardhat / Foundry
-Network:         0G Galileo Testnet (Chain ID: 16601)
+Development:     Hardhat + Ignition
+Backend:         Hono + TypeScript
+Network:         0G Galileo Testnet (Chain ID: 16602)
 AI Inference:    0G Compute Network
+Package Manager: Yarn 4 (via corepack)
 ```
 
 ## Workshop Checkpoints
@@ -137,8 +140,9 @@ Gunakan checklist ini untuk track progress kamu:
 - [Integration Guide](https://docs.0g.ai/build-with-0g/compute-network/agentic-ai-solution/agent-nft/integration-guide)
 
 ### GitHub Repositories
-- [0G Agent NFT](https://github.com/0gfoundation/0g-agent-nft/tree/eip-7857-draft)
-- [ETHJKT Examples](https://github.com/ethereumjakarta)
+- [ETHJKT INFT Monorepo](https://github.com/Ethereum-Jakarta/og-inft-monorepo) - Workshop repository
+- [0G Agent NFT (Official)](https://github.com/0gfoundation/0g-agent-nft/tree/eip-7857-draft)
+- [ETHJKT](https://github.com/ethereumjakarta)
 
 ### Community
 - [Discord ETHJKT](https://discord.gg/p5b6RFEnnk)
