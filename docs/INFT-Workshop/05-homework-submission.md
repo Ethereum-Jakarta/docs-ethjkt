@@ -20,7 +20,7 @@ Ada **3 tasks** yang harus diselesaikan:
 |------|-----------|------------|
 | **Task 1** | Mint INFT di 0G Test Network | [Typeform 1](https://xsxo494365r.typeform.com/to/VccFRojV) |
 | **Task 2** | Deploy AgentNFT + Mint INFT sendiri | [Typeform 2](https://xsxo494365r.typeform.com/to/U7FoSXUa) |
-| **Task 3** | Integrate 0G Storage (Bonus) | [Typeform 2](https://xsxo494365r.typeform.com/to/U7FoSXUa) |
+| **Task 3** | Integrate 0G Storage (Bonus) |  |
 
 ---
 

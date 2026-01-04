@@ -51,7 +51,7 @@ OG_COMPUTE_URL=https://api.0g.ai/v1
 OG_COMPUTE_API_KEY=your_api_key
 ```
 
-### Step 1.2: Get 0G Compute API Key
+### Step 1.2: Get 0G Compute API Key (opsional jika kalian punya 3 0G)
 
 Jalankan dari **root monorepo**:
 
@@ -91,25 +91,23 @@ curl http://localhost:3001/health
 ```bash
 cd packages/frontend
 
-# Create .env file
-cat > .env << EOF
+# Copy example env
+cp .env.example .env
+```
+
+Edit `.env` dengan deployed proxy addresses:
+
+```env
 VITE_EXECUTOR_URL=http://localhost:3001
-EOF
+
+# Contract Addresses (0G Galileo Testnet)
+VITE_AGENT_NFT_ADDRESS=0x...      # Your AgentNFT proxy
+VITE_AGENT_MARKET_ADDRESS=0x...   # Your AgentMarket proxy (if any)
+VITE_VERIFIER_ADDRESS=0x...       # Your Verifier proxy
+VITE_TEE_VERIFIER_ADDRESS=0x...   # Your TEEVerifier proxy
 ```
 
-### Step 2.2: Update Contract Addresses
-
-Edit `src/config/contracts.ts` dengan deployed proxy addresses:
-
-```typescript
-export const CONTRACTS = {
-  AgentNFT: "0x..." as Address,      // Your AgentNFT proxy
-  Verifier: "0x..." as Address,      // Your Verifier proxy
-  TEEVerifier: "0x..." as Address,   // Your TEEVerifier proxy
-};
-```
-
-### Step 2.3: Start Frontend
+### Step 2.2: Start Frontend
 
 ```bash
 yarn dev
