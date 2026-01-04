@@ -14,16 +14,62 @@ Pastikan submit sebelum deadline yang diumumkan di channel Discord/Telegram untu
 
 ## Overview Homework
 
-Ada **2 tasks** yang harus diselesaikan:
+Ada **3 tasks** yang harus diselesaikan:
 
 | Task | Deskripsi | Submission |
 |------|-----------|------------|
-| **Task 1** | Deploy AgentNFT + Mint INFT | [Typeform](https://xsxo494365r.typeform.com/to/U7FoSXUa) |
-| **Task 2** | Integrate 0G Storage (Bonus) | [Typeform](https://xsxo494365r.typeform.com/to/U7FoSXUa) |
+| **Task 1** | Mint INFT di 0G Test Network | [Typeform 1](https://xsxo494365r.typeform.com/to/VccFRojV) |
+| **Task 2** | Deploy AgentNFT + Mint INFT sendiri | [Typeform 2](https://xsxo494365r.typeform.com/to/U7FoSXUa) |
+| **Task 3** | Integrate 0G Storage (Bonus) | [Typeform 2](https://xsxo494365r.typeform.com/to/U7FoSXUa) |
 
 ---
 
-## Task 1: Deploy AgentNFT + Mint INFT
+## Task 1: Mint INFT on 0G Test Network
+
+### Objektif
+Mint INFT menggunakan contract yang sudah di-deploy oleh tim workshop.
+
+### Langkah-langkah
+
+#### Step 1: Setup Wallet
+```
+Network Name: 0G Galileo Testnet
+RPC URL: https://evmrpc-testnet.0g.ai
+Chain ID: 16602
+Symbol: OG
+Explorer: https://chainscan-galileo.0g.ai
+```
+
+#### Step 2: Dapatkan Test Token
+Kunjungi faucet untuk mendapatkan OG test token:
+- [0G Faucet](https://faucet.0g.ai)
+
+#### Step 3: Mint INFT
+1. Buka contract yang diberikan di workshop
+2. Connect wallet kamu
+3. Panggil fungsi `mint()` dengan parameter:
+   - `iDatas`: Array of IntelligentData
+   - `to`: Wallet address kamu
+
+4. Approve transaction dan tunggu konfirmasi
+
+#### Step 4: Verifikasi
+1. Cek transaction di [0G Explorer](https://chainscan-galileo.0g.ai)
+2. Copy transaction hash untuk submission
+
+### Submission Task 1
+
+**Submit di:** [https://xsxo494365r.typeform.com/to/VccFRojV](https://xsxo494365r.typeform.com/to/VccFRojV)
+
+Yang perlu disiapkan:
+- [ ] Wallet address kamu
+- [ ] Transaction hash mint
+- [ ] Token ID yang didapat
+- [ ] Screenshot hasil mint
+
+---
+
+## Task 2: Deploy AgentNFT + Mint INFT
 
 ### Objektif
 Deploy contract AgentNFT menggunakan monorepo dan mint INFT di atasnya.
@@ -105,7 +151,7 @@ yarn dev
 3. Go to Mint page
 4. Configure agent dan mint!
 
-### Submission Task 1
+### Submission Task 2
 
 **Submit di:** [https://xsxo494365r.typeform.com/to/U7FoSXUa](https://xsxo494365r.typeform.com/to/U7FoSXUa)
 
@@ -119,7 +165,7 @@ Yang perlu disiapkan:
 
 ---
 
-## Task 2: 0G Storage Integration (Bonus)
+## Task 3: 0G Storage Integration (Bonus)
 
 :::tip Bonus Task
 Task ini **opsional** tapi sangat direkomendasikan untuk pemahaman yang lebih dalam tentang 0G ecosystem!
@@ -188,9 +234,9 @@ Modify executor to:
 - [0G Storage SDK](https://www.npmjs.com/package/@0glabs/0g-storage-sdk)
 - [Example Implementation](https://github.com/0glabs/0g-storage-sdk/tree/main/examples)
 
-### Submission Task 2
+### Submission Task 3
 
-Submit bersama Task 1 di [Typeform](https://xsxo494365r.typeform.com/to/U7FoSXUa)
+Submit bersama Task 2 di [Typeform](https://xsxo494365r.typeform.com/to/U7FoSXUa)
 
 Yang perlu disiapkan:
 - [ ] Link ke fork/branch dengan 0G Storage implementation
@@ -253,6 +299,11 @@ Sebelum submit, pastikan:
 ### Task 1
 - [ ] Wallet connected ke 0G Testnet
 - [ ] Test OG token dari faucet
+- [ ] Mint berhasil via workshop contract
+- [ ] Transaction hash tersimpan
+- [ ] Screenshot siap
+
+### Task 2
 - [ ] Clone monorepo og-inft-monorepo
 - [ ] Setup parameters.json
 - [ ] Compile tanpa error
@@ -263,7 +314,7 @@ Sebelum submit, pastikan:
 - [ ] Mint INFT via frontend berhasil
 - [ ] Semua transaction hash tersimpan
 
-### Task 2 (Bonus)
+### Task 3 (Bonus)
 - [ ] 0G Storage SDK installed
 - [ ] Upload config to storage works
 - [ ] Download config from storage works
