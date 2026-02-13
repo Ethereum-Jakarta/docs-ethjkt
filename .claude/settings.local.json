@@ -5,7 +5,9 @@
       "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/lib/**)",
       "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/hooks/**)",
       "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/types/**)",
-      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/**)"
+      "Read(//mnt/c/Users/revop/OneDrive/Documents/project/web3/lisk-garden-dapp/**)",
+      "WebFetch(domain:theojustin.gitbook.io)",
+      "WebFetch(domain:docs.learnbittensor.org)"
     ],
     "deny": [],
     "ask": []
