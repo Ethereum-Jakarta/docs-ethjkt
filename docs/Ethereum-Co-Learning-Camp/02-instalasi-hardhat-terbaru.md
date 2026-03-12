@@ -106,36 +106,42 @@ added 1 package, and audited 2 packages in 5s
 
 **1. Jalankan Hardhat initialization wizard:**
 ```bash
-npx hardhat init
+npx hardhat --init
 ```
 
 **Penjelasan:**
 - `npx` = menjalankan package yang sudah diinstall
-- `hardhat init` = memulai wizard setup Hardhat 3
+- `hardhat --init` = memulai wizard setup Hardhat 3
+
+:::warning Perhatikan Flag `--init`
+Gunakan `--init` (dengan dua dash), **BUKAN** `init`. Jika Anda menjalankan `npx hardhat init` akan muncul error `HHE3: No Hardhat config file found`.
+:::
 
 **2. Hardhat 3 Wizard akan muncul:**
 
 ```
- _   _               _   _           _     _____
-| | | |             | | | |         | |   |____ |
-| |_| | __ _ _ __ __| |_| |__   __ _| |_      / /
-|  _  |/ _` | '__/ _` | '_ \ / _` | __|     \ \
-| | | | (_| | | | (_| | | | | (_| | |_  .___/ /
-\_| |_/\__,_|_|  \__,_|_| |_|\__,_|\__| \____/
+ █████  █████                         ███  ███                  ███      ██████
+░░███  ░░███                         ░███ ░███                 ░███     ███░░███
+ ░███   ░███   ██████  ████████   ███████ ░███████    ██████  ███████  ░░░  ░███
+ ░██████████  ░░░░░███░░███░░███ ███░░███ ░███░░███  ░░░░░███░░░███░      ████░
+ ░███░░░░███   ███████ ░███ ░░░ ░███ ░███ ░███ ░███   ███████  ░███      ░░░░███
+ ░███   ░███  ███░░███ ░███     ░███ ░███ ░███ ░███  ███░░███  ░███ ███ ███ ░███
+ █████  █████░░███████ █████    ░░███████ ████ █████░░███████  ░░█████ ░░██████
+░░░░░  ░░░░░  ░░░░░░░ ░░░░░      ░░░░░░░ ░░░░ ░░░░░  ░░░░░░░    ░░░░░   ░░░░░░
 
-👷 Welcome to Hardhat v3.0.0 👷‍
+👷 Welcome to Hardhat v3.1.12 👷
 
-? Which version of Hardhat would you like to use? › hardhat-3
-? Where would you like to initialize the project? › .
-? What type of project would you like to initialize? › node-test-runner-viem
-  Hardhat only supports ESM projects. Would you like to turn your project into ESM? (Y/n) › true
+✔ Which version of Hardhat would you like to use? · hardhat-3
+✔ Where would you like to initialize the project? · .
+✔ What type of project would you like to initialize? · node-test-runner-viem
+✔ Hardhat only supports ESM projects. Would you like to change "./package.json" to turn your project into ESM? (Y/n) · true
 ```
 
 **3. Pilih opsi berikut:**
 
 | Pertanyaan | Pilihan | Penjelasan |
 |-----------|---------|------------|
-| Hardhat version? | `hardhat-3` | Versi terbaru (2025) |
+| Hardhat version? | `hardhat-3` | Versi terbaru |
 | Initialize path? | `.` (Enter) | Gunakan folder saat ini |
 | Project type? | `node-test-runner-viem` | Modern stack dengan Viem |
 | Turn into ESM? | `Y` (Yes) | ECMAScript Modules (modern JS) |
@@ -151,19 +157,20 @@ npx hardhat init
 ```
 ✨ Template files copied ✨
 
-Installing dependencies...
-added 110 packages, and audited 170 packages in 37s
+npm install --save-dev "@nomicfoundation/hardhat-toolbox-viem@^5.0.3" ...
+
+added 111 packages, and audited 198 packages in 53s
 ✨ Dependencies installed ✨
 ```
 
 **Proses ini:**
-- Menginstall ~110 packages
+- Menginstall ~111 packages
 - Memakan waktu 1-2 menit
 - Ini normal, jangan khawatir!
 
 **5. Selesai! Anda akan melihat:**
 ```
-Give Hardhat a star on GitHub if you're enjoying it! 🌟✨
+Give Hardhat a star on Github if you're enjoying it! ⭐️✨
 https://github.com/NomicFoundation/hardhat
 ```
 
@@ -267,7 +274,15 @@ Buka file `.env` dan tambahkan:
 
 ```env
 PRIVATE_KEY=your_private_key_here_without_0x
+ETHERSCAN_API_KEY=your_etherscan_api_key_here
 ```
+
+**Cara mendapatkan Etherscan API Key (untuk verify contract - GRATIS):**
+1. Buka [https://etherscan.io](https://etherscan.io) dan buat akun (gratis)
+2. Login → Klik username → "API Keys"
+3. Klik "Add" → Beri nama (contoh: "hardhat")
+4. Copy API Key Token
+5. Paste ke file .env
 
 **Cara mendapatkan private key dari MetaMask:**
 1. Buka MetaMask extension
@@ -325,7 +340,7 @@ const config: HardhatUserConfig = {
     // Sepolia Testnet
     sepolia: {
       type: "http",
-      url: "https://rpc.sepolia.org",
+      url: "https://ethereum-sepolia-rpc.publicnode.com",
       accounts: process.env.PRIVATE_KEY ? [`0x${process.env.PRIVATE_KEY}`] : [],
       chainId: 11155111,
     },
@@ -349,7 +364,7 @@ const config: HardhatUserConfig = {
   // Verification settings
   verify: {
     etherscan: {
-      enabled: true,
+      apiKey: process.env.ETHERSCAN_API_KEY || "",
     },
   },
 
@@ -379,78 +394,267 @@ export default config;
 | `networks.sepolia` | Konfigurasi Sepolia testnet |
 | `chainId: 11155111` | Chain ID untuk Sepolia testnet |
 | `chainDescriptors` | Informasi block explorer untuk Etherscan |
+| `verify.etherscan.apiKey` | API key untuk verify contract di Etherscan |
 
 ---
 
-## Buat dan Deploy Smart Contract Pertama
+## Deploy CrowdFund Challenge dengan Hardhat
 
-### Step 9: Buat Smart Contract Sederhana
+Sekarang kita akan deploy **CrowdFund** contract dari Final Challenge Sesi 1 menggunakan Hardhat 3. Ini adalah cara professional untuk deploy smart contract yang sudah Anda buat di Remix!
 
-**1. Buat file `contracts/SimpleStorage.sol`:**
+### Step 9: Buat Smart Contract CrowdFund
+
+**1. Buat file `contracts/CrowdFund.sol`:**
 
 ```bash
 # Di Windows:
-type nul > contracts/SimpleStorage.sol
+type nul > contracts/CrowdFund.sol
 
 # Di Mac/Linux:
-touch contracts/SimpleStorage.sol
+touch contracts/CrowdFund.sol
 ```
 
-**2. Isi dengan kode smart contract:**
+**2. Isi dengan kode smart contract CrowdFund:**
 
-Buka `contracts/SimpleStorage.sol` di VS Code dan tulis:
+Buka `contracts/CrowdFund.sol` di VS Code dan tulis implementasi lengkap dari challenge Sesi 1:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-/**
- * @title SimpleStorage
- * @dev Kontrak sederhana untuk menyimpan dan membaca data
- */
-contract SimpleStorage {
-    // State variable untuk menyimpan angka
-    uint256 public favoriteNumber;
+/// @title CrowdFund - Decentralized Crowdfunding Platform
+/// @notice Platform crowdfunding terdesentralisasi di Ethereum
+/// @dev Challenge Final Ethereum Co-Learning Camp
 
-    // Event yang di-emit ketika angka berubah
-    event NumberChanged(uint256 oldNumber, uint256 newNumber);
+contract CrowdFund {
+    // ============================================
+    // ENUMS & STRUCTS
+    // ============================================
 
-    // Struct untuk menyimpan data orang
-    struct Person {
-        string name;
-        uint256 favoriteNumber;
+    enum CampaignStatus {
+        Active,     // 0: Sedang berjalan, menerima kontribusi
+        Successful, // 1: Target tercapai, dana bisa di-claim
+        Failed,     // 2: Deadline lewat, target tidak tercapai
+        Claimed     // 3: Dana sudah di-claim oleh creator
     }
 
-    // Array untuk menyimpan banyak orang
-    Person[] public people;
-
-    // Mapping dari nama ke favorite number
-    mapping(string => uint256) public nameToFavoriteNumber;
-
-    // Fungsi untuk set favorite number
-    function store(uint256 _favoriteNumber) public {
-        uint256 oldNumber = favoriteNumber;
-        favoriteNumber = _favoriteNumber;
-        emit NumberChanged(oldNumber, _favoriteNumber);
+    struct Campaign {
+        uint256 campaignId;
+        address creator;
+        string title;
+        string description;
+        uint256 goalAmount;
+        uint256 currentAmount;
+        uint256 deadline;
+        uint256 createdAt;
+        CampaignStatus status;
+        uint256 contributorCount;
     }
 
-    // Fungsi untuk retrieve favorite number
-    function retrieve() public view returns (uint256) {
-        return favoriteNumber;
+    // ============================================
+    // STATE VARIABLES
+    // ============================================
+
+    uint256 public campaignCounter;
+    uint256 public constant MIN_GOAL = 0.01 ether;
+    uint256 public constant MAX_DURATION = 90 days;
+    uint256 public constant MIN_DURATION = 1 days;
+    uint256 public constant MIN_CONTRIBUTION = 0.001 ether;
+
+    mapping(uint256 => Campaign) public campaigns;
+    mapping(uint256 => mapping(address => uint256)) public contributions;
+    mapping(uint256 => mapping(address => bool)) public hasContributed;
+    mapping(address => uint256[]) public creatorCampaigns;
+
+    // ============================================
+    // EVENTS
+    // ============================================
+
+    event CampaignCreated(uint256 indexed campaignId, address indexed creator, string title, uint256 goalAmount, uint256 deadline);
+    event ContributionMade(uint256 indexed campaignId, address indexed contributor, uint256 amount, uint256 totalRaised);
+    event CampaignSuccessful(uint256 indexed campaignId, uint256 totalRaised);
+    event FundsClaimed(uint256 indexed campaignId, address indexed creator, uint256 amount);
+    event RefundIssued(uint256 indexed campaignId, address indexed contributor, uint256 amount);
+    event CampaignFailed(uint256 indexed campaignId, uint256 totalRaised, uint256 goalAmount);
+
+    // ============================================
+    // MODIFIERS
+    // ============================================
+
+    modifier campaignExists(uint256 _campaignId) {
+        require(_campaignId > 0 && _campaignId <= campaignCounter, "Campaign does not exist");
+        _;
     }
 
-    // Fungsi untuk tambah person
-    function addPerson(string memory _name, uint256 _favoriteNumber) public {
-        people.push(Person(_name, _favoriteNumber));
-        nameToFavoriteNumber[_name] = _favoriteNumber;
+    modifier onlyCreator(uint256 _campaignId) {
+        require(campaigns[_campaignId].creator == msg.sender, "Only creator can call this");
+        _;
     }
 
-    // Fungsi untuk get total people
-    function getTotalPeople() public view returns (uint256) {
-        return people.length;
+    modifier onlyContributor(uint256 _campaignId) {
+        require(contributions[_campaignId][msg.sender] > 0, "Only contributors can call this");
+        _;
+    }
+
+    modifier isActive(uint256 _campaignId) {
+        require(campaigns[_campaignId].status == CampaignStatus.Active, "Campaign is not active");
+        _;
+    }
+
+    // ============================================
+    // MAIN FUNCTIONS
+    // ============================================
+
+    /// @notice Buat campaign crowdfunding baru
+    function createCampaign(
+        string memory _title,
+        string memory _description,
+        uint256 _goalAmount,
+        uint256 _durationDays
+    ) public {
+        require(_goalAmount >= MIN_GOAL, "Goal must be >= MIN_GOAL");
+        require(_durationDays * 1 days >= MIN_DURATION, "Duration too short");
+        require(_durationDays * 1 days <= MAX_DURATION, "Duration too long");
+
+        campaignCounter++;
+        uint256 deadline = block.timestamp + (_durationDays * 1 days);
+
+        campaigns[campaignCounter] = Campaign({
+            campaignId: campaignCounter,
+            creator: msg.sender,
+            title: _title,
+            description: _description,
+            goalAmount: _goalAmount,
+            currentAmount: 0,
+            deadline: deadline,
+            createdAt: block.timestamp,
+            status: CampaignStatus.Active,
+            contributorCount: 0
+        });
+
+        creatorCampaigns[msg.sender].push(campaignCounter);
+        emit CampaignCreated(campaignCounter, msg.sender, _title, _goalAmount, deadline);
+    }
+
+    /// @notice Kontribusi ETH ke campaign
+    function contribute(uint256 _campaignId)
+        public
+        payable
+        campaignExists(_campaignId)
+        isActive(_campaignId)
+    {
+        Campaign storage campaign = campaigns[_campaignId];
+        require(block.timestamp < campaign.deadline, "Campaign deadline passed");
+        require(msg.value >= MIN_CONTRIBUTION, "Contribution too small");
+        require(campaign.creator != msg.sender, "Creator cannot contribute");
+
+        contributions[_campaignId][msg.sender] += msg.value;
+        campaign.currentAmount += msg.value;
+
+        if (!hasContributed[_campaignId][msg.sender]) {
+            hasContributed[_campaignId][msg.sender] = true;
+            campaign.contributorCount++;
+        }
+
+        if (campaign.currentAmount >= campaign.goalAmount) {
+            campaign.status = CampaignStatus.Successful;
+            emit CampaignSuccessful(_campaignId, campaign.currentAmount);
+        }
+
+        emit ContributionMade(_campaignId, msg.sender, msg.value, campaign.currentAmount);
+    }
+
+    /// @notice Creator claim dana setelah campaign sukses
+    function claimFunds(uint256 _campaignId)
+        public
+        campaignExists(_campaignId)
+        onlyCreator(_campaignId)
+    {
+        Campaign storage campaign = campaigns[_campaignId];
+        require(campaign.status == CampaignStatus.Successful, "Campaign not successful");
+
+        campaign.status = CampaignStatus.Claimed;
+        uint256 amount = campaign.currentAmount;
+
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        require(success, "Transfer failed");
+
+        emit FundsClaimed(_campaignId, msg.sender, amount);
+    }
+
+    /// @notice Kontributor refund jika campaign gagal
+    function refund(uint256 _campaignId)
+        public
+        campaignExists(_campaignId)
+        onlyContributor(_campaignId)
+    {
+        Campaign storage campaign = campaigns[_campaignId];
+        require(campaign.status == CampaignStatus.Failed, "Campaign not failed");
+
+        uint256 amount = contributions[_campaignId][msg.sender];
+        contributions[_campaignId][msg.sender] = 0;
+
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        require(success, "Refund failed");
+
+        emit RefundIssued(_campaignId, msg.sender, amount);
+    }
+
+    /// @notice Cek dan update status campaign
+    function checkCampaign(uint256 _campaignId) public campaignExists(_campaignId) {
+        Campaign storage campaign = campaigns[_campaignId];
+        if (campaign.status != CampaignStatus.Active) return;
+        if (block.timestamp < campaign.deadline) return;
+
+        if (campaign.currentAmount >= campaign.goalAmount) {
+            campaign.status = CampaignStatus.Successful;
+            emit CampaignSuccessful(_campaignId, campaign.currentAmount);
+        } else {
+            campaign.status = CampaignStatus.Failed;
+            emit CampaignFailed(_campaignId, campaign.currentAmount, campaign.goalAmount);
+        }
+    }
+
+    // ============================================
+    // VIEW FUNCTIONS
+    // ============================================
+
+    function getCampaignDetails(uint256 _campaignId)
+        public
+        view
+        campaignExists(_campaignId)
+        returns (Campaign memory)
+    {
+        return campaigns[_campaignId];
+    }
+
+    function getMyContribution(uint256 _campaignId) public view returns (uint256) {
+        return contributions[_campaignId][msg.sender];
+    }
+
+    function getMyCampaigns() public view returns (uint256[] memory) {
+        return creatorCampaigns[msg.sender];
+    }
+
+    function getTimeRemaining(uint256 _campaignId)
+        public
+        view
+        campaignExists(_campaignId)
+        returns (uint256)
+    {
+        if (block.timestamp >= campaigns[_campaignId].deadline) return 0;
+        return campaigns[_campaignId].deadline - block.timestamp;
+    }
+
+    function getContractBalance() public view returns (uint256) {
+        return address(this).balance;
     }
 }
 ```
+
+:::tip Koneksi dengan Sesi 1
+Contract ini adalah **implementasi lengkap** dari Final Challenge CrowdFund di Sesi 1. Jika Anda sudah membuat versi sendiri di Remix, Anda bisa gunakan versi Anda sendiri!
+:::
 
 ---
 
@@ -474,16 +678,16 @@ Compiled 1 Solidity file successfully
 
 **Check hasil compilation:**
 ```bash
-ls -la artifacts/contracts/SimpleStorage.sol/
+ls -la artifacts/contracts/CrowdFund.sol/
 ```
 
-Anda akan melihat file `SimpleStorage.json` yang berisi ABI dan bytecode.
+Anda akan melihat file `CrowdFund.json` yang berisi ABI dan bytecode.
 
 ---
 
 ### Step 11: Buat Deployment Script
 
-**1. Buat file `ignition/modules/SimpleStorage.ts`:**
+**1. Buat file `ignition/modules/CrowdFund.ts`:**
 
 ```bash
 mkdir -p ignition/modules
@@ -491,28 +695,28 @@ mkdir -p ignition/modules
 
 **2. Isi dengan deployment script:**
 
-Buka/buat file `ignition/modules/SimpleStorage.ts`:
+Buka/buat file `ignition/modules/CrowdFund.ts`:
 
 ```typescript
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 /**
- * Hardhat Ignition deployment module untuk SimpleStorage
+ * Hardhat Ignition deployment module untuk CrowdFund
  */
-const SimpleStorageModule = buildModule("SimpleStorageModule", (m) => {
-  // Deploy SimpleStorage contract
-  const simpleStorage = m.contract("SimpleStorage");
+const CrowdFundModule = buildModule("CrowdFundModule", (m) => {
+  // Deploy CrowdFund contract
+  const crowdFund = m.contract("CrowdFund");
 
   // Return deployed contract instance
-  return { simpleStorage };
+  return { crowdFund };
 });
 
-export default SimpleStorageModule;
+export default CrowdFundModule;
 ```
 
 **Penjelasan:**
 - `buildModule` = fungsi Hardhat Ignition untuk membuat deployment module
-- `m.contract("SimpleStorage")` = deploy contract SimpleStorage
+- `m.contract("CrowdFund")` = deploy contract CrowdFund
 - Contract tidak butuh constructor parameters
 - Return instance untuk digunakan di script lain
 
@@ -551,7 +755,7 @@ export default SimpleStorageModule;
 **Deploy contract ke Sepolia:**
 
 ```bash
-npx hardhat ignition deploy ignition/modules/SimpleStorage.ts --network sepolia
+npx hardhat ignition deploy ignition/modules/CrowdFund.ts --network sepolia
 ```
 
 **Proses deployment:**
@@ -561,16 +765,16 @@ npx hardhat ignition deploy ignition/modules/SimpleStorage.ts --network sepolia
 
 Hardhat Ignition 🚀
 
-Deploying [ SimpleStorageModule ]
+Deploying [ CrowdFundModule ]
 
 Batch #1
-  Executed SimpleStorageModule#SimpleStorage
+  Executed CrowdFundModule#CrowdFund
 
-[ SimpleStorageModule ] successfully deployed 🚀
+[ CrowdFundModule ] successfully deployed 🚀
 
 Deployed Addresses
 
-SimpleStorageModule#SimpleStorage - 0x1234567890abcdef1234567890abcdef12345678
+CrowdFundModule#CrowdFund - 0x1234567890abcdef1234567890abcdef12345678
 ```
 
 **🎉 SAVE CONTRACT ADDRESS INI!**
@@ -591,82 +795,129 @@ npx hardhat verify --network sepolia 0xYourContractAddress
 
 **Output:**
 ```
-Successfully submitted source code for contract
-contracts/SimpleStorage.sol:SimpleStorage at 0x1234...
-https://sepolia.etherscan.io/address/0x1234...
+=== Blockscout ===
+
+📤 Submitted source code for verification on Blockscout:
+
+  contracts/CrowdFund.sol:CrowdFund
+  Address: 0x1234...
+
+⏳ Waiting for verification result...
+
+✅ Contract verified successfully on Blockscout!
+
+  contracts/CrowdFund.sol:CrowdFund
+  Explorer: https://eth-sepolia.blockscout.com/address/0x1234...#code
 ```
 
-**Buka link tersebut di browser** - Anda akan lihat contract verified dengan source code!
+**Buka link Explorer tersebut di browser** - Anda akan lihat contract verified dengan source code!
+
+:::info Etherscan vs Blockscout
+Hardhat 3 akan mencoba verify di **Etherscan**, **Blockscout**, dan **Sourcify** sekaligus. Jika Etherscan gagal (karena perlu API key V2), Blockscout biasanya tetap berhasil. Blockscout adalah block explorer open-source yang gratis!
+:::
 
 ---
 
-## Interact dengan Contract
+## Interact dengan CrowdFund Contract
 
 ### Step 15: Buat Interaction Script
 
 **1. Buat file `scripts/interact.ts`:**
 
 ```typescript
-import hre from "hardhat";
+import { network } from "hardhat";
+import { parseEther, formatEther } from "viem";
 
-async function main() {
-  // Contract address hasil deployment
-  const CONTRACT_ADDRESS = "0xYourContractAddressHere";
+// Contract address hasil deployment
+const CONTRACT_ADDRESS = "0xYourContractAddressHere";
 
-  // Get contract instance
-  const SimpleStorage = await hre.ethers.getContractAt(
-    "SimpleStorage",
-    CONTRACT_ADDRESS
-  );
+// Connect ke network dan dapatkan viem instance
+const { viem } = await network.connect();
+const publicClient = await viem.getPublicClient();
 
-  console.log("SimpleStorage contract:", CONTRACT_ADDRESS);
-  console.log("");
+// Get contract instance menggunakan Viem (Hardhat 3)
+const crowdFund = await viem.getContractAt(
+  "CrowdFund",
+  CONTRACT_ADDRESS
+);
 
-  // 1. Read initial value
-  console.log("📖 Reading initial favorite number...");
-  let favoriteNumber = await SimpleStorage.retrieve();
-  console.log("Current favorite number:", favoriteNumber.toString());
-  console.log("");
+console.log("CrowdFund contract:", CONTRACT_ADDRESS);
+console.log("");
 
-  // 2. Store new value
-  console.log("💾 Storing new favorite number (42)...");
-  const tx1 = await SimpleStorage.store(42);
-  await tx1.wait();
-  console.log("✅ Stored! Transaction:", tx1.hash);
-  console.log("");
+// 1. Buat campaign baru
+console.log("📝 Creating a new campaign...");
+const txHash = await crowdFund.write.createCampaign([
+  "Bangun Perpustakaan Web3",           // title
+  "Dana untuk buku dan resource web3",  // description
+  parseEther("0.05"),                   // goal: 0.05 ETH
+  7n,                                   // durasi: 7 hari (bigint)
+]);
+console.log("✅ Campaign created! Transaction:", txHash);
+console.log("");
 
-  // 3. Read new value
-  console.log("📖 Reading updated favorite number...");
-  favoriteNumber = await SimpleStorage.retrieve();
-  console.log("New favorite number:", favoriteNumber.toString());
-  console.log("");
+// Tunggu transaction di-mine
+await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-  // 4. Add a person
-  console.log("👤 Adding a person...");
-  const tx2 = await SimpleStorage.addPerson("Alice", 777);
-  await tx2.wait();
-  console.log("✅ Person added! Transaction:", tx2.hash);
-  console.log("");
+// 2. Lihat campaign counter
+console.log("📊 Checking campaign counter...");
+const campaignCount = await crowdFund.read.campaignCounter();
+console.log("Total campaigns:", campaignCount.toString());
+console.log("");
 
-  // 5. Get total people
-  console.log("📊 Getting total people...");
-  const totalPeople = await SimpleStorage.getTotalPeople();
-  console.log("Total people:", totalPeople.toString());
-  console.log("");
+// 3. Lihat detail campaign
+console.log("🔍 Getting campaign details...");
+const campaign = await crowdFund.read.getCampaignDetails([1n]);
+console.log("Title:", campaign.title);
+console.log("Goal:", formatEther(campaign.goalAmount), "ETH");
+console.log("Current:", formatEther(campaign.currentAmount), "ETH");
+console.log("Status:", ["Active", "Successful", "Failed", "Claimed"][Number(campaign.status)]);
+console.log("Contributors:", campaign.contributorCount.toString());
+console.log("");
 
-  // 6. Get Alice's favorite number from mapping
-  console.log("🔍 Getting Alice's favorite number from mapping...");
-  const aliceNumber = await SimpleStorage.nameToFavoriteNumber("Alice");
-  console.log("Alice's favorite number:", aliceNumber.toString());
-}
+// 4. Lihat sisa waktu
+console.log("⏰ Checking time remaining...");
+const timeLeft = await crowdFund.read.getTimeRemaining([1n]);
+const daysLeft = Number(timeLeft) / 86400;
+console.log("Time remaining:", daysLeft.toFixed(2), "days");
+console.log("");
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+// 5. Lihat saldo contract
+console.log("💰 Contract balance...");
+const balance = await crowdFund.read.getContractBalance();
+console.log("Balance:", formatEther(balance), "ETH");
+console.log("");
+
+// 6. Lihat campaign yang saya buat
+console.log("📋 My campaigns...");
+const myCampaigns = await crowdFund.read.getMyCampaigns();
+console.log("Campaign IDs:", myCampaigns.map((id: bigint) => id.toString()));
 ```
+
+**Penjelasan Viem di Hardhat 3:**
+
+Hardhat 3 menggunakan **top-level await** (ESM) dan `network.connect()` untuk mendapatkan Viem instance:
+
+```typescript
+// Cara Hardhat 3 (Viem)
+import { network } from "hardhat";
+const { viem } = await network.connect();
+
+// Dapatkan clients
+const publicClient = await viem.getPublicClient();   // untuk read
+const [walletClient] = await viem.getWalletClients(); // untuk write
+
+// Get contract instance
+const contract = await viem.getContractAt("ContractName", "0x...");
+```
+
+| Aksi | Syntax Viem | Penjelasan |
+|------|-------------|------------|
+| Read data | `contract.read.functionName([args])` | Call view/pure function |
+| Send tx | `contract.write.functionName([args])` | Kirim transaction, return tx hash |
+| Tunggu tx | `publicClient.waitForTransactionReceipt({ hash })` | Tunggu sampai di-mine |
+| ETH → wei | `parseEther("1.0")` | Convert string ETH ke bigint wei |
+| wei → ETH | `formatEther(amount)` | Convert bigint wei ke string ETH |
+| Angka besar | `42n` | Pakai **BigInt** literal (akhiran `n`) |
 
 **2. Update CONTRACT_ADDRESS dengan address contract Anda**
 
@@ -678,26 +929,34 @@ npx hardhat run scripts/interact.ts --network sepolia
 
 **Output:**
 ```
-SimpleStorage contract: 0x1234...
+CrowdFund contract: 0x1234...
 
-📖 Reading initial favorite number...
-Current favorite number: 0
+📝 Creating a new campaign...
+✅ Campaign created! Transaction: 0xabc...
 
-💾 Storing new favorite number (42)...
-✅ Stored! Transaction: 0xabc...
+📊 Checking campaign counter...
+Total campaigns: 1
 
-📖 Reading updated favorite number...
-New favorite number: 42
+🔍 Getting campaign details...
+Title: Bangun Perpustakaan Web3
+Goal: 0.05 ETH
+Current: 0.0 ETH
+Status: Active
+Contributors: 0
 
-👤 Adding a person...
-✅ Person added! Transaction: 0xdef...
+⏰ Checking time remaining...
+Time remaining: 7.00 days
 
-📊 Getting total people...
-Total people: 1
+💰 Contract balance...
+Balance: 0.0 ETH
 
-🔍 Getting Alice's favorite number from mapping...
-Alice's favorite number: 777
+📋 My campaigns...
+Campaign IDs: [1]
 ```
+
+:::info Untuk Test Contribute & Refund
+Script di atas hanya membuat campaign. Untuk test `contribute`, Anda perlu akun **berbeda** dari creator (karena creator tidak boleh kontribusi ke campaign sendiri). Coba buat script kedua atau test di Remix dengan multiple accounts!
+:::
 
 ---
 
@@ -794,16 +1053,21 @@ PRIVATE_KEY=0xabc123...  # ❌ Salah
 - ✅ Secure private keys dengan dotenv
 
 **Development Workflow:**
-- ✅ Compile contracts dengan optimization
+- ✅ Compile CrowdFund contract dengan optimization
 - ✅ Deploy menggunakan Hardhat Ignition
 - ✅ Verify di block explorer
-- ✅ Interact dengan TypeScript scripts
+- ✅ Interact dengan TypeScript scripts (create campaign, check details)
 
 **Modern Features:**
 - ✅ Viem library (modern alternative ethers.js)
 - ✅ TypeScript type safety
 - ✅ Plugin architecture
 - ✅ Chain descriptors
+
+**CrowdFund Contract:**
+- ✅ Deploy Final Challenge Sesi 1 secara professional
+- ✅ Interact dengan crowdfunding functions via script
+- ✅ Verifikasi contract di Etherscan
 
 ---
 
