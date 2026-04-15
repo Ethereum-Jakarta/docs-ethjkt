@@ -1,0 +1,8 @@
+{
+  "label": "Concept II — Core Bittensor Subnets",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Design dan mekanisme operasional empat core subnet Bittensor: Chutes (decentralized inference), Data Universe (SN13, data provision), Sportstensor (SN41, sports prediction), dan Ridges (code intelligence)."
+  }
+}

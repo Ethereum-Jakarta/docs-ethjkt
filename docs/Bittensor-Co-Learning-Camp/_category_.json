@@ -3,6 +3,6 @@
   "position": 8,
   "link": {
     "type": "generated-index",
-    "description": "Panduan lengkap Bittensor - dari pengenalan jaringan AI terdesentralisasi, arsitektur subnet, mekanisme insentif, hingga setup mining node dan strategi bisnis. Workshop untuk HackQuest Indonesia Co-Learning Camp."
+    "description": "Kurikulum Bittensor HackQuest Indonesia Co-Learning Camp 9. Dimulai dari dasar (Web3, AI, centralized vs decentralized AI) untuk pemula, lalu mendalami arsitektur Bittensor, core subnets (Chutes, Data Universe, Sportstensor, Ridges), dan praktek langsung menjadi miner di SN41 dan SN13."
   }
 }
