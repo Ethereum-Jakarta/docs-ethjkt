@@ -284,6 +284,6 @@ Setiap unit punya deliverable praktis — end of Unit 6, kamu sudah punya miner 
 
 ---
 
-**Next:** [Unit 2 — Environment Setup & Deployment →](./02-environment-setup)
+**Next:** [Unit 2 — Environment Setup & Deployment →](./environment-setup)
 
 *Data is the new oil. Bittensor is the refinery. 🛢️*

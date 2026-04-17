@@ -264,6 +264,6 @@ Jadi miner di Bittensor. Dapat reward TAO. Kontribusi langsung ke network.
 
 ---
 
-**Next:** [Unit 4 — Kenapa Bittensor Penting?](./04-mengapa-bittensor) 👉
+**Next:** [Unit 4 — Kenapa Bittensor Penting?](./mengapa-bittensor) 👉
 
 *Kamu udah paham konteksnya. Sekarang kita zoom ke pemain utama yang akan kamu pelajari 2 minggu ke depan — Bittensor.* 🦆

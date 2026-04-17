@@ -234,6 +234,6 @@ Kamu **bisa rugi** kalau asal jalan tanpa strategy — biaya registrasi, biaya G
 - ✅ Paham kenapa Decentralized AI matter
 - ✅ Paham posisi Bittensor di ekosistem DeAI
 
-**Next:** [Phase 1 → Concept I → Unit 1: The Rise of AI and Bittensor](../Phase-1-Fundamentals/Concept-1-Introduction/01-rise-of-ai-bittensor) 👉
+**Next:** [Phase 1 → Concept I → Unit 1: The Rise of AI and Bittensor](../Phase-1-Fundamentals/Concept-1-Introduction/rise-of-ai-bittensor) 👉
 
 *Saatnya deep-dive ke teknisnya. Let's go, miner!* 🦆⚡

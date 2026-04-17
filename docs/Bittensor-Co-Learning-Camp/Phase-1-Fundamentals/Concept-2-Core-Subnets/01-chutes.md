@@ -267,4 +267,4 @@ Kalau lima pertanyaan di atas terjawab lancar → lanjut ke Data Universe. Kalau
 
 ---
 
-**Next:** [Unit 2 — Data Universe (SN13) → Decentralized Data Provision](./02-data-universe) 👉
+**Next:** [Unit 2 — Data Universe (SN13) → Decentralized Data Provision](./data-universe) 👉

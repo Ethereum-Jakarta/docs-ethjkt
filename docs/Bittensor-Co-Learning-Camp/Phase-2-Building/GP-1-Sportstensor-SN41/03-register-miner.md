@@ -16,7 +16,7 @@ Setelah unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ [Unit 2 — Wallet & TAO Funding](./02-wallet-tao-funding) selesai
+- ✅ [Unit 2 — Wallet & TAO Funding](./wallet-tao-funding) selesai
 - ✅ Coldkey `sn41_miner` punya saldo ≥ 1.5 TAO (mainnet) atau ≥ 5 test-τ (testnet)
 - ✅ Hotkey `miner_01` sudah dibuat
 - ✅ Akses internet stabil (proses register bisa 30–90 detik)
@@ -322,4 +322,4 @@ Kalau kamu register hotkey kedua di netuid 41 dengan coldkey sama — OK, dua sl
 
 ---
 
-**Next:** [Unit 4 — Almanac Registration & Miner Identity Binding →](./04-almanac-registration)
+**Next:** [Unit 4 — Almanac Registration & Miner Identity Binding →](./almanac-registration)

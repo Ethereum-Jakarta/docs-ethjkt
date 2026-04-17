@@ -16,7 +16,7 @@ Di akhir unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ Selesai [Unit 3 — Config & Scraping Strategy](./03-miner-config-scraping)
+- ✅ Selesai [Unit 3 — Config & Scraping Strategy](./miner-config-scraping)
 - ✅ Miner kamu sudah bisa scrape data (Reddit/X/YT) ke local buffer
 :::
 
@@ -387,6 +387,6 @@ while True:
 
 ---
 
-**Next:** [Unit 5 — S3 Storage Configuration & Data Upload →](./05-s3-storage-upload)
+**Next:** [Unit 5 — S3 Storage Configuration & Data Upload →](./s3-storage-upload)
 
 *Dalam economy attention, fresh data is currency. 💎*

@@ -574,7 +574,7 @@ Selamat, kamu sudah selesai **Concept I — Introduction to Bittensor**! Kamu se
 
 Selanjutnya di **Concept II — Core Bittensor Subnets**, kita akan bedah 4 subnet spesifik yang akan kamu interact langsung:
 
-**Next:** [Concept II — Unit 1: Chutes (Decentralized Inference Infrastructure)](../Concept-2-Core-Subnets/01-chutes) 👉
+**Next:** [Concept II — Unit 1: Chutes (Decentralized Inference Infrastructure)](../Concept-2-Core-Subnets/chutes) 👉
 
 *Chutes adalah subnet yang bikin Bittensor jadi "AWS-nya AI decentralized" — inference API yang bisa diakses siapa saja dengan TAO. Kita akan lihat bagaimana dia bekerja dan kenapa dia foundational untuk ekosistem.*
 
@@ -586,6 +586,6 @@ Selanjutnya di **Concept II — Core Bittensor Subnets**, kita akan bedah 4 subn
 - [Bittensor Tokenomics Overview](https://docs.bittensor.com/dynamic-tao/dtao-guide)
 - [Taostats Explorer](https://taostats.io) — real-time metagraph, alpha prices, emission
 - [Bittensor Chrome Extension (Opentensor)](https://bittensor.com/wallet)
-- Phase 0 recap: [Centralized vs Decentralized AI](../../Phase-0-Prerequisites/03-centralized-vs-decentralized-ai)
+- Phase 0 recap: [Centralized vs Decentralized AI](../../Phase-0-Prerequisites/centralized-vs-decentralized-ai)
 
 *Ready untuk eksplor subnet production? Lanjut ke Chutes!* 🦆⚡

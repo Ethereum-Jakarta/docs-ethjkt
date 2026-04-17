@@ -17,7 +17,7 @@ Setelah unit ini kamu akan punya:
 :::
 
 :::note Prasyarat
-- ✅ Sudah menyelesaikan [Unit 1 — Intro SN41](./01-intro-sn41)
+- ✅ Sudah menyelesaikan [Unit 1 — Intro SN41](./intro-sn41)
 - ✅ Python 3.10+ (`python3 --version`)
 - ✅ `pip` dan `venv` sudah siap
 - ✅ Akses internet stabil
@@ -355,4 +355,4 @@ Simpan screenshot `btcli wallet list` dan `btcli wallet overview` — dibutuhkan
 
 ---
 
-**Next:** [Unit 3 — Registering a Miner on Sportstensor →](./03-register-miner)
+**Next:** [Unit 3 — Registering a Miner on Sportstensor →](./register-miner)

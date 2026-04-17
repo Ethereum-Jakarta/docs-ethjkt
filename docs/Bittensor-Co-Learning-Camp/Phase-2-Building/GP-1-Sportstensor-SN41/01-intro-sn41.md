@@ -227,4 +227,4 @@ Kalau keempatnya bisa kamu jawab tanpa scroll ulang — kamu siap lanjut.
 
 ---
 
-**Next:** [Unit 2 — Bittensor Wallet Setup & TAO Funding →](./02-wallet-tao-funding)
+**Next:** [Unit 2 — Bittensor Wallet Setup & TAO Funding →](./wallet-tao-funding)

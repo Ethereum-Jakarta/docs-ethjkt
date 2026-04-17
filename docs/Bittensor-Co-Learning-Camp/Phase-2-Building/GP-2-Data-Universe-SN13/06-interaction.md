@@ -17,7 +17,7 @@ Di akhir unit ini kamu bisa:
 :::
 
 :::note Prasyarat
-- ✅ Selesai [Unit 5 — S3 Storage Upload](./05-s3-storage-upload)
+- ✅ Selesai [Unit 5 — S3 Storage Upload](./s3-storage-upload)
 - ✅ Miner sudah upload data ke R2 dan commit metadata on-chain
 - ✅ Sudah running 12+ jam stabil
 :::

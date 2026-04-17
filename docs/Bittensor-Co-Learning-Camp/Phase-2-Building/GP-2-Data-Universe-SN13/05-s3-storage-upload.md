@@ -16,7 +16,7 @@ Di akhir unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ Selesai [Unit 4 — Scoring System](./04-scoring-optimization)
+- ✅ Selesai [Unit 4 — Scoring System](./scoring-optimization)
 - ✅ Miner sudah scrape data ke local buffer (Parquet/JSON.gz)
 - ✅ Credit card untuk provisioning cloud storage (estimasi $5-15/bulan)
 :::
@@ -448,6 +448,6 @@ Atau lewat Cloudflare dashboard → Bucket → Settings → Object lifecycle rul
 
 ---
 
-**Next:** [Unit 6 — Interaction Layer →](./06-interaction)
+**Next:** [Unit 6 — Interaction Layer →](./interaction)
 
 *Storage is cheap, lost data is expensive. 💾*

@@ -171,7 +171,7 @@ Web3 + AI = **AI yang dimiliki bersama**, di mana:
 - Siapa pun bisa akses (permissionless)
 - Kontribusi dapat reward otomatis (token TAO)
 
-Ini yang dibangun Bittensor. Kita akan bahas lebih jauh di [Unit 3 — Centralized AI vs Decentralized AI](./03-centralized-vs-decentralized-ai).
+Ini yang dibangun Bittensor. Kita akan bahas lebih jauh di [Unit 3 — Centralized AI vs Decentralized AI](./centralized-vs-decentralized-ai).
 
 ---
 
@@ -196,6 +196,6 @@ Kalau ketiga pertanyaan di atas bisa kamu jawab, kamu siap lanjut.
 
 ---
 
-**Next:** [Unit 2 — Apa itu AI?](./02-apa-itu-ai) 👉
+**Next:** [Unit 2 — Apa itu AI?](./apa-itu-ai) 👉
 
 *Sudah paham Web3? Sekarang kita masuk ke AI — komponen lain yang Bittensor gabungkan.* 🧠

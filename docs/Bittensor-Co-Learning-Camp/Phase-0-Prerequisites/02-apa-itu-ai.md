@@ -204,7 +204,7 @@ Supaya nggak abstract, contoh AI yang kamu sudah pakai:
 | **Siri / Alexa** | Speech Recognition + LLM |
 | **Face ID iPhone** | CNN (Convolutional Neural Network) |
 
-AI udah ada di mana-mana. Pertanyaannya: **siapa yang kontrol?** → Ini yang kita bahas di [Unit 3](./03-centralized-vs-decentralized-ai).
+AI udah ada di mana-mana. Pertanyaannya: **siapa yang kontrol?** → Ini yang kita bahas di [Unit 3](./centralized-vs-decentralized-ai).
 
 ---
 
@@ -237,6 +237,6 @@ AI udah ada di mana-mana. Pertanyaannya: **siapa yang kontrol?** → Ini yang ki
 
 ---
 
-**Next:** [Unit 3 — Centralized AI vs Decentralized AI](./03-centralized-vs-decentralized-ai) 👉
+**Next:** [Unit 3 — Centralized AI vs Decentralized AI](./centralized-vs-decentralized-ai) 👉
 
 *Sekarang kamu paham Web3 + AI. Waktunya gabungkan keduanya — dan paham kenapa "decentralized AI" itu game changer.* 🚀

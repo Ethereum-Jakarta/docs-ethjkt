@@ -345,7 +345,7 @@ Setelah Concept I, kita masuk Concept II untuk bedah 4 core subnet: Chutes, Data
 
 Sudah siap masuk ke bagian teknisnya?
 
-**Next:** [Unit 2 — Core Concepts & Mechanisms of Bittensor](./02-core-concepts) 👉
+**Next:** [Unit 2 — Core Concepts & Mechanisms of Bittensor](./core-concepts) 👉
 
 *Di unit berikut, kita akan bedah: apa itu subnet (arsitektur lengkap), bagaimana miner bekerja, bagaimana validator evaluasi, dan bagaimana Yuma Consensus mengagregasi semua itu jadi satu angka reward.*
 
@@ -357,4 +357,4 @@ Sudah siap masuk ke bagian teknisnya?
 - ["Attention Is All You Need" — Vaswani et al. 2017](https://arxiv.org/abs/1706.03762)
 - [ImageNet 2012 Paper (AlexNet)](https://papers.nips.cc/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b)
 - [State of AI Report 2024 — Nathan Benaich](https://www.stateof.ai/)
-- Phase 0 recap: [Centralized vs Decentralized AI](../../Phase-0-Prerequisites/03-centralized-vs-decentralized-ai)
+- Phase 0 recap: [Centralized vs Decentralized AI](../../Phase-0-Prerequisites/centralized-vs-decentralized-ai)

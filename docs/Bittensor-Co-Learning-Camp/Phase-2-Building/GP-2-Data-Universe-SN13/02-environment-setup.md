@@ -16,7 +16,7 @@ Di akhir unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ Selesai [Unit 1 — Introduction to SN13](./01-intro-sn13)
+- ✅ Selesai [Unit 1 — Introduction to SN13](./intro-sn13)
 - ✅ Punya **coldkey + hotkey** (dari GP-1)
 - ✅ Punya **minimal 0.5 TAO** di coldkey untuk registration fee + reserve
 - ✅ Credit card / e-wallet untuk provision VPS (~$40/bulan)
@@ -398,6 +398,6 @@ Setelah setup, VPS kamu harus punya layout ini:
 
 ---
 
-**Next:** [Unit 3 — Miner Configuration & Data Scraping Strategy →](./03-miner-config-scraping)
+**Next:** [Unit 3 — Miner Configuration & Data Scraping Strategy →](./miner-config-scraping)
 
 *Infrastructure is destiny. 🏗️*

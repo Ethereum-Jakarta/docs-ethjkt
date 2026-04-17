@@ -16,7 +16,7 @@ Setelah unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ [Unit 4 — Almanac Registration](./04-almanac-registration) selesai — binding sukses
+- ✅ [Unit 4 — Almanac Registration](./almanac-registration) selesai — binding sukses
 - ✅ Sportstensor repo sudah cloned di `~/bittensor/sportstensor`
 - ✅ `config.yaml` valid
 - ✅ Port 8091 (atau sesuai config) accessible dari internet
@@ -435,4 +435,4 @@ Miner yang di-"set and forget" sering underperform karena validator update proto
 
 ---
 
-**Next:** [Unit 6 — Programmatic Trade Execution →](./06-programmatic-trade-execution)
+**Next:** [Unit 6 — Programmatic Trade Execution →](./programmatic-trade-execution)
