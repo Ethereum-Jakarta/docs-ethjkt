@@ -1,0 +1,8 @@
+{
+  "label": "Guided Project II — Data Universe (SN13) Mining",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Panduan lengkap menjadi miner di Data Universe (SN13): intro subnet, environment setup & deployment, miner configuration & data scraping strategy, scoring system, S3 storage & data upload, dan interaction layer."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "label": "Phase 1 — Bittensor Fundamentals",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Fondasi teori Bittensor: sejarah, arsitektur inti (subnet, miner, validator), Yuma Consensus, tokenomics TAO & Dynamic TAO, dan deep-dive ke empat core subnets (Chutes, Data Universe, Sportstensor, Ridges)."
+  }
+}

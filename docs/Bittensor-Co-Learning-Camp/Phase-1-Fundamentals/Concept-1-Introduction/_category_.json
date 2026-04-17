@@ -1,0 +1,8 @@
+{
+  "label": "Concept I — Introduction to Bittensor",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Rise of AI dan kemunculan Bittensor, konsep inti & mekanisme (subnet, miner, validator, Yuma Consensus), serta tooling & tokenomics TAO."
+  }
+}
