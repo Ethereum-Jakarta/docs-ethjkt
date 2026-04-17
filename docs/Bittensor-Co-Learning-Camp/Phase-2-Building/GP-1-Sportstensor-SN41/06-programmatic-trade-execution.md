@@ -17,7 +17,7 @@ Setelah unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ [Unit 5 — Miner Init & Metadata](./05-miner-init-metadata) selesai — miner running, validator query sudah masuk
+- ✅ [Unit 5 — Miner Init & Metadata](./miner-init-metadata) selesai — miner running, validator query sudah masuk
 - ✅ Python fundamentals (async, dataclass, try/except)
 - ✅ Akses ke minimal **satu sports data API** (The Odds API free tier — [the-odds-api.com](https://the-odds-api.com))
 :::
@@ -599,4 +599,4 @@ Baseline implied-odds + cache + fallback sudah **cukup** untuk mulai. Di Unit 7 
 
 ---
 
-**Next:** [Unit 7 — Trading Strategies →](./07-trading-strategies)
+**Next:** [Unit 7 — Trading Strategies →](./trading-strategies)

@@ -331,6 +331,6 @@ Saatnya turun ke lapangan. Di **Phase 2**, kita **benar-benar deploy miner di te
 
 ---
 
-**Next:** [Phase 2 — GP-1 Unit 1: Introduction to SN41](../../Phase-2-Building/GP-1-Sportstensor-SN41/01-intro-sn41) 🚀
+**Next:** [Phase 2 — GP-1 Unit 1: Introduction to SN41](../../Phase-2-Building/GP-1-Sportstensor-SN41/intro-sn41) 🚀
 
 Mari mulai nge-miner betulan!

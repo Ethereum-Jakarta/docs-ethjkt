@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 _generate.py)",
+      "Bash(grep -c \"\\\\.svg$\")"
+    ]
+  }
+}

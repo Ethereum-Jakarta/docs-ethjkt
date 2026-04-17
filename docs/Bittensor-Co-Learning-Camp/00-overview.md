@@ -160,7 +160,7 @@ Untuk mendapat **NFT Certificate + Quack Believers invitation**, kamu harus meny
 4. **Phase 3** dibaca setelah camp selesai untuk eksplorasi mandiri.
 :::
 
-**Siap?** Lanjut ke [Phase 0 — Unit 1: Apa itu Web3?](./Phase-0-Prerequisites/01-apa-itu-web3) 👉
+**Siap?** Lanjut ke [Phase 0 — Unit 1: Apa itu Web3?](./Phase-0-Prerequisites/apa-itu-web3) 👉
 
 ---
 

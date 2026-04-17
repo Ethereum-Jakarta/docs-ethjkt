@@ -16,7 +16,7 @@ Setelah unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ [Unit 3 — Register Miner di SN41](./03-register-miner) selesai — UID sudah ter-assign
+- ✅ [Unit 3 — Register Miner di SN41](./register-miner) selesai — UID sudah ter-assign
 - ✅ Hotkey `miner_01` terdaftar di metagraph netuid 41
 - ✅ Git + Python 3.10+ tersedia di server
 - ✅ Port publik (default **8091** atau sesuai repo) bisa di-expose — kalau VPS pastikan firewall ok, kalau rumah pastikan port forwarding aktif
@@ -355,7 +355,7 @@ Artinya server Almanac tidak bisa verify signature kamu.
 
 Almanac cek metagraph dulu sebelum bind.
 
-- **Fix:** balik ke [Unit 3](./03-register-miner) dan konfirmasi UID sudah ter-assign.
+- **Fix:** balik ke [Unit 3](./register-miner) dan konfirmasi UID sudah ter-assign.
 
 ### `Endpoint unreachable`
 
@@ -411,4 +411,4 @@ Meski hotkey address public, path ke wallet lokal kamu sebaiknya tidak publik. S
 
 ---
 
-**Next:** [Unit 5 — Miner Initialization & Metadata Registration →](./05-miner-init-metadata)
+**Next:** [Unit 5 — Miner Initialization & Metadata Registration →](./miner-init-metadata)

@@ -16,7 +16,7 @@ Di akhir unit ini kamu bisa:
 :::
 
 :::note Prasyarat
-- ✅ Selesai [Unit 2 — Environment Setup](./02-environment-setup)
+- ✅ Selesai [Unit 2 — Environment Setup](./environment-setup)
 - ✅ Miner teregister di NetUID 13, smoke test clean
 - ✅ Akses ke `~/data-universe` di VPS
 :::
@@ -538,6 +538,6 @@ Ukuran: Parquet biasanya **3–5× lebih kecil** dari JSON setelah kompresi.
 
 ---
 
-**Next:** [Unit 4 — Understanding Scoring & Optimizing Rewards →](./04-scoring-optimization)
+**Next:** [Unit 4 — Understanding Scoring & Optimizing Rewards →](./scoring-optimization)
 
 *Scrape smart, not hard. 🧠*

@@ -572,7 +572,7 @@ Semua istilah ini harus kamu kenal by heart sebelum lanjut ke Unit 3.
 
 Kamu sekarang paham arsitektur Bittensor. Selanjutnya kita masuk ke **tools praktis** untuk interact dengan network ini.
 
-**Next:** [Unit 3 — Tooling & Tokenomics](./03-tooling-tokenomics) 👉
+**Next:** [Unit 3 — Tooling & Tokenomics](./tooling-tokenomics) 👉
 
 *Di unit berikut: install btcli, bikin wallet, kenalan dengan TAO tokenomics lengkap (halving, max supply 21M), dTAO + alpha tokens, dan Chrome Extension wallet.*
 
@@ -583,4 +583,4 @@ Kamu sekarang paham arsitektur Bittensor. Selanjutnya kita masuk ke **tools prak
 - [Bittensor Docs — Subnet Architecture](https://docs.bittensor.com/subnets/understanding-subnets)
 - [Yuma Consensus Deep Dive (Opentensor Blog)](https://blog.opentensor.ai/)
 - [Metagraph Reference](https://docs.bittensor.com/reference/metagraph)
-- Phase 0 recap: [Kenapa Bittensor Penting?](../../Phase-0-Prerequisites/04-mengapa-bittensor)
+- Phase 0 recap: [Kenapa Bittensor Penting?](../../Phase-0-Prerequisites/mengapa-bittensor)

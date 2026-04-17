@@ -17,7 +17,7 @@ Setelah unit ini kamu akan:
 :::
 
 :::note Prasyarat
-- ✅ [Unit 6 — Programmatic Trade Execution](./06-programmatic-trade-execution) selesai — handler baseline sudah jalan
+- ✅ [Unit 6 — Programmatic Trade Execution](./programmatic-trade-execution) selesai — handler baseline sudah jalan
 - ✅ Miner sudah running 24/7 + logging aktif minimal 48 jam (biar ada data evaluasi)
 - ✅ Basic Python data science: `pandas`, `numpy`, idealnya `scikit-learn`
 - ✅ Minimal 1 sumber **historical odds + outcomes** (kaggle / scraped / API trial)
@@ -475,4 +475,4 @@ Submit ke organizer ETHJKT / HackQuest Indonesia sesuai instruksi kanal submissi
 
 **Selamat!** 🎉 Kamu sudah menyelesaikan Guided Project I — Sportstensor SN41. Lanjut ke GP-II untuk belajar mining di subnet data-provision:
 
-**Next:** [GP-II Unit 1 — Intro ke Subnet SN13 Data Universe →](../GP-2-Data-Universe-SN13/01-intro-sn13)
+**Next:** [GP-II Unit 1 — Intro ke Subnet SN13 Data Universe →](../GP-2-Data-Universe-SN13/intro-sn13)

@@ -321,4 +321,4 @@ Semua terjawab → lanjut. Kalau masih goyang di scoring formula, baca ulang bag
 
 ---
 
-**Next:** [Unit 3 — Sportstensor (SN41) → Sports Event Prediction Subnet](./03-sportstensor) 👉
+**Next:** [Unit 3 — Sportstensor (SN41) → Sports Event Prediction Subnet](./sportstensor) 👉
