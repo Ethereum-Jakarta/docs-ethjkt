@@ -1,0 +1,8 @@
+{
+  "label": "GP-0 — Local Mining: Hands-On Setup",
+  "position": 0,
+  "link": {
+    "type": "generated-index",
+    "description": "Panduan hands-on mining Bittensor di komputer lokal (Windows WSL2, macOS, Linux) menggunakan testnet — dari install btcli sampai miner berjalan, tanpa VPS dan tanpa GPU."
+  }
+}
