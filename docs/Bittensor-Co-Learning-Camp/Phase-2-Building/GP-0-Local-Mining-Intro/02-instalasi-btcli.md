@@ -12,14 +12,27 @@ import TabItem from '@theme/TabItem';
 :::info Goal Unit Ini
 Di akhir unit ini kamu akan:
 - Punya **Python 3.10+** terinstall dan verified
-- Punya **virtual environment** `~/bittensor-env` yang terisolasi
-- **`btcli`** dan **Bittensor SDK** (`bittensor<10.0.0`) terinstall di venv
+- Punya **virtual environment** `~/bittensor-env-v10` yang terisolasi
+- **`btcli`** (`bittensor-cli`) dan **Bittensor SDK** (`bittensor` 10.x) terinstall di venv
 - Bisa menjalankan `btcli --help` tanpa error
 :::
 
 :::note Prasyarat
 - ✅ [Unit 1](./intro-dan-hardware-check) selesai — WSL2 aktif (Windows) atau terminal siap
 - ✅ Koneksi internet untuk download packages
+:::
+
+:::danger Sudah Coba Versi Lama Kemarin & Gagal?
+Panduan ini sudah **diperbarui untuk Bittensor SDK 10.x**. Kalau kemarin kamu mengikuti versi lama dan venv-nya rusak (`ImportError`, `ScaleObj`, dll), **jangan pakai venv lama itu lagi**. Kita sengaja memakai nama venv **baru** di bawah ini — `~/bittensor-env-v10` — supaya kamu mulai dari nol yang bersih.
+
+Opsional, bersihkan sisa instalasi lama yang rusak:
+```bash
+# Hapus venv lama yang rusak
+rm -rf ~/bittensor-env
+
+# Hapus juga baris 'alias btenv=...' lama dari ~/.bashrc (kalau ada),
+# supaya tidak bentrok dengan alias baru btenv10
+```
 :::
 
 ---
@@ -119,42 +132,42 @@ Virtual environment (venv) = sandbox terisolasi untuk dependencies Python. Penti
 
 ```bash
 # Buat venv di home directory
-python3 -m venv ~/bittensor-env
+python3 -m venv ~/bittensor-env-v10
 
 # Aktifkan venv
-source ~/bittensor-env/bin/activate
+source ~/bittensor-env-v10/bin/activate
 
 # Prompt kamu akan berubah jadi:
-# (bittensor-env) ubuntu@hostname:~$
+# (bittensor-env-v10) ubuntu@hostname:~$
 ```
 
 Tambah alias supaya tidak perlu ketik panjang tiap kali:
 
 ```bash
-echo 'alias btenv="source ~/bittensor-env/bin/activate"' >> ~/.bashrc
+echo 'alias btenv10="source ~/bittensor-env-v10/bin/activate"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Sekarang cukup ketik `btenv` untuk aktifkan venv.
+Sekarang cukup ketik `btenv10` untuk aktifkan venv.
 
 </TabItem>
 <TabItem value="macos" label="🍎 macOS">
 
 ```bash
 # Buat venv
-python3.10 -m venv ~/bittensor-env
+python3.10 -m venv ~/bittensor-env-v10
 
 # Aktifkan venv
-source ~/bittensor-env/bin/activate
+source ~/bittensor-env-v10/bin/activate
 
 # Prompt kamu berubah jadi:
-# (bittensor-env) username@hostname ~ %
+# (bittensor-env-v10) username@hostname ~ %
 ```
 
 Tambah alias:
 
 ```bash
-echo 'alias btenv="source ~/bittensor-env/bin/activate"' >> ~/.zprofile
+echo 'alias btenv10="source ~/bittensor-env-v10/bin/activate"' >> ~/.zprofile
 source ~/.zprofile
 ```
 
@@ -163,13 +176,13 @@ source ~/.zprofile
 
 ```bash
 # Buat venv
-python3 -m venv ~/bittensor-env
+python3 -m venv ~/bittensor-env-v10
 
 # Aktifkan
-source ~/bittensor-env/bin/activate
+source ~/bittensor-env-v10/bin/activate
 
 # Alias untuk kemudahan
-echo 'alias btenv="source ~/bittensor-env/bin/activate"' >> ~/.bashrc
+echo 'alias btenv10="source ~/bittensor-env-v10/bin/activate"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -177,31 +190,35 @@ source ~/.bashrc
 </Tabs>
 
 :::warning Jangan Lupa Aktifkan venv
-Setiap kali buka terminal baru, kamu harus aktifkan venv lagi: `source ~/bittensor-env/bin/activate` (atau `btenv` kalau sudah setup alias). Kalau lupa, `btcli` tidak akan ditemukan.
+Setiap kali buka terminal baru, kamu harus aktifkan venv lagi: `source ~/bittensor-env-v10/bin/activate` (atau `btenv10` kalau sudah setup alias). Kalau lupa, `btcli` tidak akan ditemukan.
 :::
 
 ---
 
 ## 🔧 Step 3 — Install btcli & Bittensor SDK
 
-Pastikan venv **aktif** (ada `(bittensor-env)` di prompt) sebelum lanjut.
+Pastikan venv **aktif** (ada `(bittensor-env-v10)` di prompt) sebelum lanjut.
 
 ```bash
 # Upgrade pip dulu
 pip install --upgrade pip
 
-# Install Bittensor CLI (command line tool)
-pip install bittensor-cli
-
-# Install Bittensor SDK — PENTING: pin ke versi < 10.0.0
-# Banyak subnet template belum kompatibel dengan SDK v10+
-pip install "bittensor<10.0.0"
+# Install Bittensor CLI (btcli) + Bittensor SDK (versi terbaru, 10.x)
+pip install bittensor-cli bittensor
 ```
 
-:::danger Kenapa `bittensor<10.0.0`?
-SDK Bittensor versi 10.0.0 memperkenalkan breaking changes pada API internal. Sebagian besar subnet template publik (termasuk `opentensor/bittensor-subnet-template`) masih menggunakan struktur SDK lama. Kalau kamu install versi terbaru, bisa muncul error `ImportError` atau `AttributeError` saat jalankan miner.
+:::danger Jangan pin `bittensor<10.0.0` lagi!
+Versi lama panduan ini menyuruh `pip install "bittensor<10.0.0"`. **Sekarang itu justru bikin error.** Per 2026, `btcli` (`bittensor-cli` 9.x) butuh `async-substrate-interface` versi **2.x**, sedangkan SDK `bittensor` **9.x** butuh API **1.x** — jadi keduanya **bentrok di satu venv** dan muncul:
 
-Kalau nanti subnet spesifik yang kamu pakai sudah support SDK v10+, kamu bisa upgrade.
+```
+ImportError: cannot import name 'ScaleObj' from 'async_substrate_interface.types'
+```
+
+Solusinya: **install `bittensor` 10.x** (tanpa pin sama sekali). SDK 10.x dan btcli 9.x **kompatibel** karena sama-sama memakai async-substrate 2.x — `pip check` bersih, tanpa konflik.
+:::
+
+:::note btcli & SDK beda nomor versi — itu normal sekarang
+`btcli` (`bittensor-cli`, ~9.22.x) dan SDK (`bittensor`, ~10.4.x) sekarang ada di **major version yang berbeda**. Itu disengaja — keduanya sudah jadi package terpisah. Jangan kaget kalau nomornya tidak sama.
 :::
 
 ---
@@ -215,31 +232,38 @@ btcli --help
 
 # Verifikasi btcli version
 btcli --version
-# Output: btcli/x.x.x ...
+# Output: BTCLI version: 9.22.3 (atau lebih baru)
 
 # Verifikasi SDK
 python -c "import bittensor; print('bittensor version:', bittensor.__version__)"
-# Output: bittensor version: 7.x.x atau 8.x.x (harus < 10)
+# Output: bittensor version: 10.4.1 (harus >= 10)
 ```
 
 Output `btcli --help` yang normal:
 
 ```text
-usage: btcli <command> <command args>
+ Usage: btcli [OPTIONS] COMMAND [ARGS]...
 
-bittensor cli v8.x.x
+ Command line interface (CLI) for Bittensor.
 
-positional arguments:
-  {wallet,subnets,stake,root,info,...}
-    wallet              Commands for managing and viewing wallets.
-    subnets             Commands for interacting with subnets.
-    ...
+╭─ Commands ──────────────────────────────────────────────╮
+│ config     Config commands, aliases: `c`, `conf`        │
+│ wallet     Wallet commands, aliases: `wallets`, `w`     │
+│ stake      Stake commands, alias: `st`                  │
+│ subnets    Subnets commands, alias: `s`, `subnet`       │
+│ sudo       Sudo commands, alias: `su`                   │
+│ ...                                                     │
+╰─────────────────────────────────────────────────────────╯
 ```
+
+:::note Format btcli v9 berbeda
+btcli v9 memakai tampilan tabel (rich/typer), bukan `argparse` gaya lama. Perhatikan `subnets` punya alias `subnet` dan `s` — keduanya bisa dipakai.
+:::
 
 :::tip Kalau `btcli: command not found`
 venv belum aktif. Jalankan:
 ```bash
-source ~/bittensor-env/bin/activate
+source ~/bittensor-env-v10/bin/activate
 ```
 Lalu coba lagi.
 :::
@@ -263,10 +287,10 @@ python -m bittensor certifi
 | `error: Microsoft Visual C++ 14.0 required` | Kamu di Windows tanpa WSL2 | Pindah ke terminal Ubuntu WSL2 |
 | `failed building wheel for cryptography` | Dev headers kurang | `sudo apt install libssl-dev libffi-dev python3-dev` |
 | `pip: command not found` | pip tidak ada di PATH venv | `python3 -m ensurepip --upgrade` |
-| `btcli: command not found` | venv tidak aktif | `source ~/bittensor-env/bin/activate` |
-| `ModuleNotFoundError: 'bittensor'` | SDK belum install atau venv salah | Pastikan venv aktif, lalu `pip install "bittensor<10.0.0"` |
-| `ERROR: Could not find a version that satisfies the requirement bittensor` | Network issue / pypi timeout | `pip install "bittensor<10.0.0" --retries 5` |
-| `ImportError: cannot import name 'X' from 'bittensor'` | SDK v10+ incompatible | `pip uninstall bittensor && pip install "bittensor<10.0.0"` |
+| `btcli: command not found` | venv tidak aktif | `source ~/bittensor-env-v10/bin/activate` |
+| `ModuleNotFoundError: 'bittensor'` | SDK belum install atau venv salah | Pastikan venv aktif, lalu `pip install bittensor` |
+| `ERROR: Could not find a version that satisfies the requirement bittensor` | Network issue / pypi timeout | `pip install bittensor --retries 5` |
+| `ImportError: cannot import name 'ScaleObj' from 'async_substrate_interface...'` | SDK `bittensor` 9.x terpasang bareng btcli → bentrok async-substrate | `pip install -U bittensor` (pakai **10.x**, jangan pin `<10`) |
 
 ---
 
@@ -274,7 +298,7 @@ python -m bittensor certifi
 
 ```bash
 # Aktifkan venv (wajib tiap session baru)
-source ~/bittensor-env/bin/activate   # atau: btenv
+source ~/bittensor-env-v10/bin/activate   # atau: btenv10
 
 # Deaktifkan venv
 deactivate
@@ -291,9 +315,9 @@ pip install --upgrade bittensor-cli
 ## 🎯 Rangkuman
 
 - **Python 3.10+** adalah syarat minimum — Ubuntu 22.04 sudah include
-- **venv** terisolasi di `~/bittensor-env` — aktifkan setiap sesi baru
-- Install **`bittensor-cli`** (btcli) dan **`bittensor<10.0.0`** (SDK) terpisah
-- Alias `btenv` memudahkan aktivasi
+- **venv** terisolasi di `~/bittensor-env-v10` — aktifkan setiap sesi baru
+- Install **`bittensor-cli`** (btcli) dan **`bittensor`** (SDK 10.x) — **jangan** pin `<10`
+- Alias `btenv10` memudahkan aktivasi
 
 ---
 

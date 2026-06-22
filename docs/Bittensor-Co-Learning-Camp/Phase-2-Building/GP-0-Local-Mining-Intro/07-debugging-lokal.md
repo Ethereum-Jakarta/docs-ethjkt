@@ -110,6 +110,12 @@ tmux attach -t bittensor-miner
 
 ## 🔟 Top 10 Isu Paling Umum
 
+:::danger Isu Khusus Testnet: `Storage function "Swap.AlphaSqrtPrice" not found`
+Kalau perintah btcli ke **testnet** (`wallet balance`, `wallet overview`, `subnets metagraph`, `subnet register`) gagal dengan error ini — **bukan salah instalasimu**. Chain testnet sedang menjalankan runtime yang belum sinkron dengan btcli terbaru. Bukti: btcli normal di **mainnet**, dan SDK normal di testnet.
+
+**Solusi:** untuk operasi testnet, pakai script SDK dari repo fork — `python scripts/status.py ...` (ganti `wallet balance`/`metagraph`) dan `python scripts/register.py ...` (ganti `subnet register`). Lihat Unit 4. Operasi wallet **lokal** (`wallet create`/`list`) dan semua perintah **mainnet** tetap normal di btcli.
+:::
+
 ### Isu 1 — `btcli: command not found`
 
 **Gejala:** Ketik `btcli` → `command not found`
@@ -118,11 +124,11 @@ tmux attach -t bittensor-miner
 
 ```bash
 # Fix
-source ~/bittensor-env/bin/activate
+source ~/bittensor-env-v10/bin/activate
 btcli --version  # sekarang harus muncul
 ```
 
-**Cegah:** Tambah alias `btenv` ke `.bashrc` / `.zprofile` (lihat Unit 2).
+**Cegah:** Tambah alias `btenv10` ke `.bashrc` / `.zprofile` (lihat Unit 2).
 
 ---
 
@@ -135,28 +141,36 @@ btcli --version  # sekarang harus muncul
 ```bash
 # Verifikasi venv aktif
 which python
-# Harus: /home/user/bittensor-env/bin/python
+# Harus: /home/user/bittensor-env-v10/bin/python
 
-# Reinstall SDK
-pip install "bittensor<10.0.0"
+# Reinstall SDK (versi terbaru, JANGAN pin <10)
+pip install bittensor
 ```
 
 ---
 
-### Isu 3 — `ImportError` atau `AttributeError` terkait bittensor
+### Isu 3 — `ImportError: cannot import name 'ScaleObj'` (konflik versi)
 
-**Gejala:** Error seperti `cannot import name 'SubnetInfo' from 'bittensor'` atau `AttributeError: 'subtensor' object has no attribute 'X'`
+**Gejala:**
+```text
+ImportError: cannot import name 'ScaleObj' from 'async_substrate_interface.types'
+```
 
-**Penyebab:** Versi SDK terlalu baru (v10+) tidak kompatibel dengan subnet template.
+**Penyebab:** SDK `bittensor` **9.x** terpasang bareng `btcli` (yang butuh `async-substrate-interface` 2.x). Keduanya bentrok di satu venv.
 
 ```bash
 # Cek versi
 python -c "import bittensor; print(bittensor.__version__)"
 
-# Kalau >=10.0.0, downgrade:
-pip uninstall bittensor -y
-pip install "bittensor<10.0.0"
+# Kalau 9.x → UPGRADE ke 10.x (bukan downgrade):
+pip install -U bittensor
 ```
+
+:::danger Jangan downgrade ke `bittensor<10`!
+Saran lama "pin ke `bittensor<10`" sekarang **justru penyebab error ini**. Pakai SDK **10.x** + fork template SDK-10 (Unit 5).
+:::
+
+**Gejala lain —** `AttributeError: module 'bittensor' has no attribute 'metagraph'`: kamu menjalankan template **resmi** (SDK 9.x) di atas SDK 10.x. Solusinya pakai fork `Ethereum-Jakarta/bittensor-subnet-template-v10` (lihat Unit 5).
 
 ---
 
@@ -235,7 +249,7 @@ ERROR | Your balance τ 0.0000 is insufficient to pay the registration fee
 
 **Solusi:**
 1. Minta TAO testnet dari faucet (Unit 3)
-2. Catatan: POW registration dinonaktifkan di NetUID 1, wajib pakai TAO testnet
+2. Catatan: registrasi memakai **recycle TAO** (era dTAO), jadi TAO testnet wajib ada sebelum register
 
 ```bash
 btcli subnet register \
@@ -247,9 +261,18 @@ btcli subnet register \
 
 ---
 
-### Isu 8 — `Active: False` di Metagraph
+### Isu 8 — Axon `—` / `Active: False` di Metagraph
 
-**Gejala:** Miner jalan tapi `btcli subnets metagraph` menampilkan `Active: False`.
+**Gejala:** Miner jalan tapi di metagraph kolom **AXON** masih `—` (axon belum serving / tidak terdeteksi).
+
+:::note Cek metagraph di testnet pakai script SDK
+`btcli subnets metagraph --network test` gagal (`Swap.AlphaSqrtPrice`). Pakai:
+```bash
+cd ~/bittensor-subnet-template-v10
+python scripts/metagraph.py --netuid 1 --wallet.name mywallet --wallet.hotkey miner1
+```
+Kalau kolom **AXON** baris kamu (`<-- you`) masih `—`, lanjut diagnosa di bawah.
+:::
 
 **Langkah diagnosa:**
 
@@ -300,15 +323,16 @@ Sering penyebabnya: hotkey belum teregister di subnet → cek dengan `btcli wall
 **Checklist:**
 
 ```bash
-# 1. Cek apakah immunity period masih aktif
-btcli subnets metagraph --netuid 1 --network test
-# Lihat kolom "Immunity"
+# 1. Cek status kamu di metagraph (testnet: pakai script SDK, bukan btcli)
+cd ~/bittensor-subnet-template-v10
+python scripts/metagraph.py --netuid 1 --wallet.name mywallet --wallet.hotkey miner1
+# Lihat baris '<-- you': kolom EMISSION/TRUST/INCENT
 
 # 2. Cek apakah ada validator aktif di subnet testnet
 # (Testnet mungkin tidak punya validator aktif — normal, tidak ada reward di testnet)
 
-# 3. Cek versi subnet template — harus compatible dengan versi btcli
-git -C ~/bittensor-subnet-template log --oneline -5
+# 3. Cek versi subnet template fork
+git -C ~/bittensor-subnet-template-v10 log --oneline -5
 
 # 4. Pastikan axon endpoint benar-benar reachable
 curl -v http://<public_ip>:8091
@@ -385,7 +409,7 @@ df -h ~
 |-------|----------|--------|
 | `SSL: CERTIFICATE_VERIFY_FAILED` | SSL cert macOS belum update | `python -m bittensor certifi` |
 | Miner mati saat layar mati | Sleep mode aktif | Pakai `caffeinate -i python3 ...` |
-| `zsh: command not found: btcli` | venv tidak aktif atau PATH salah | `source ~/bittensor-env/bin/activate` |
+| `zsh: command not found: btcli` | venv tidak aktif atau PATH salah | `source ~/bittensor-env-v10/bin/activate` |
 | Homebrew permission error | Multi-user Mac | `sudo chown -R $(whoami) /opt/homebrew` (Apple Silicon) |
 | `libomp` atau `libssl` error | Missing dylib | `brew install libomp openssl` |
 | Python 3.10 tidak ditemukan | PATH belum diupdate | `export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"` |

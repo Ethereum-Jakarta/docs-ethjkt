@@ -13,12 +13,12 @@ import TabItem from '@theme/TabItem';
 Di akhir unit ini kamu akan:
 - Berhasil **register hotkey** di **NetUID 1 testnet** menggunakan TAO testnet
 - Punya **UID** (nomor posisi miner di subnet)
-- Bisa verifikasi status via `btcli subnets metagraph`
+- Bisa verifikasi status via metagraph (di testnet: `scripts/metagraph.py`; di mainnet: `btcli subnets metagraph`)
 :::
 
 :::note Prasyarat
 - ✅ [Unit 3](./wallet-setup) selesai — wallet & hotkey siap, TAO testnet ada
-- ✅ venv aktif: `source ~/bittensor-env/bin/activate`
+- ✅ venv aktif: `source ~/bittensor-env-v10/bin/activate`
 - ✅ Koneksi internet stabil
 :::
 
@@ -47,13 +47,38 @@ Kalau tidak mau set global config, tambah `--network test` di setiap command btc
 
 ## 📊 Step 1 — Lihat Subnet Testnet yang Tersedia
 
-Cek subnet yang tersedia di testnet:
+:::danger `btcli subnets list` Juga Gagal di Testnet (per Juni 2026) — Pakai Script SDK
+`btcli subnets list --network test` kena error yang **sama** (`Storage function "Swap.AlphaSqrtPrice" not found`) karena runtime testnet belum sinkron dengan btcli terbaru — sama seperti register & balance. Untuk melihat daftar subnet **testnet**, pakai script SDK dari repo fork:
+
+```bash
+# Clone repo dulu kalau belum (dipakai lagi di Unit 5)
+cd ~ && git clone https://github.com/Ethereum-Jakarta/bittensor-subnet-template-v10.git
+cd bittensor-subnet-template-v10
+
+# Daftar semua subnet + tingkat keterisian (used/max), urut netuid
+python scripts/subnets.py
+
+# Hanya subnet yang MASIH ada slot kosong, paling kosong di atas
+python scripts/subnets.py --open
+
+# Cek satu subnet: penuh atau tidak?
+python scripts/subnets.py --netuid 1
+```
+
+Script ini bahkan lebih informatif dari `btcli subnets list`: ia menampilkan **used/max UID** tiap subnet, jadi kamu langsung tahu mana yang masih punya slot. `btcli subnets list` tetap normal untuk **mainnet**.
+:::
+
+Untuk **mainnet** (atau begitu runtime testnet sinkron lagi), `btcli` tetap berlaku:
 
 ```bash
 btcli subnets list --network test
 ```
 
-Output menampilkan tabel semua subnet aktif di testnet. Cari **NetUID 1** — ini adalah subnet development/learning Bittensor.
+Output menampilkan tabel semua subnet aktif (per 2026 ada **ratusan subnet** di testnet).
+
+:::warning NetUID 1 Sering Penuh
+**NetUID 1** adalah subnet learning klasik, tapi sekarang sering **penuh (256/256 slot terpakai)** — `python scripts/subnets.py --netuid 1` akan menunjukkannya. Registrasi masih diizinkan, tapi kamu akan mendepak miner skor terendah dan bersaing slot. Untuk latihan, lebih nyaman pilih subnet testnet lain yang slotnya masih kosong — jalankan `python scripts/subnets.py --open`, ambil salah satu netuid dengan banyak slot kosong, lalu **pakai netuid itu** secara konsisten di semua perintah berikutnya (register, miner, metagraph).
+:::
 
 :::note Biaya Registrasi
 Biaya register di subnet yang sudah ada (recycle TAO) akan ditampilkan otomatis saat kamu jalankan `btcli subnet register` di Step 2 — btcli akan tanya konfirmasi dengan angka biaya sebelum lanjut.
@@ -91,6 +116,27 @@ Kalau kamu punya hotkey dengan nama **berbeda** (misal `miner_testnet`), ganti `
 
 ## 🔑 Register Miner (TAO Burn)
 
+:::danger Testnet btcli Sedang Bermasalah (per Juni 2026) — Pakai Script SDK
+Chain **testnet** sekarang menjalankan runtime yang **tidak terbaca oleh btcli terbaru**. Perintah `btcli subnet register --network test` (juga `wallet balance` & `metagraph` di testnet) gagal dengan:
+
+```
+❌ An unknown error has occurred: Storage function "Swap.AlphaSqrtPrice" not found
+```
+
+Ini **bukan** salah instalasimu — btcli tetap normal di **mainnet** dan untuk operasi wallet **lokal** (`wallet create`/`list`). SDK (`bittensor` 10.x) tetap jalan di testnet, jadi untuk register di testnet **pakai script SDK** dari repo fork:
+
+```bash
+# Clone repo dulu kalau belum (dipakai lagi di Unit 5)
+cd ~ && git clone https://github.com/Ethereum-Jakarta/bittensor-subnet-template-v10.git
+cd bittensor-subnet-template-v10
+
+# Register via SDK (butuh TAO testnet di coldkey; akan minta password coldkey)
+python scripts/register.py --wallet.name mywallet --wallet.hotkey miner1 --netuid 1
+```
+
+Perintah `btcli subnet register` di bawah tetap valid untuk **mainnet**, dan akan berfungsi lagi di testnet begitu runtime testnet sinkron dengan btcli.
+:::
+
 ```bash
 btcli subnet register \
   --netuid 1 \
@@ -118,36 +164,56 @@ Ketik `y` dan tekan Enter. Tunggu beberapa detik hingga konfirmasi muncul.
 
 Catat **UID** kamu — angka ini adalah posisi miner kamu di subnet.
 
-:::warning POW Registration Tidak Tersedia di NetUID 1
-`btcli subnet pow_register` tidak bisa dipakai di NetUID 1 karena **POW secara permanen dinonaktifkan** oleh operator subnet ini. Satu-satunya cara register di NetUID 1 adalah via TAO burn.
+:::warning Registrasi = Recycle TAO (era dTAO)
+Sejak **dTAO** (Feb 2025), cara standar mendaftarkan hotkey di **semua** subnet adalah **recycle/burn**: TAO yang kamu pakai untuk register akan **dibakar (recycle)**, bukan dikunci, dan **tidak dikembalikan** saat deregister. POW registration (`pow_register`) sudah bukan jalur umum lagi.
 
-Pastikan kamu sudah punya TAO testnet dari faucet sebelum lanjut (lihat Unit 3).
+Pastikan kamu sudah punya TAO testnet sebelum lanjut (lihat Unit 3).
 :::
 
 ---
 
 ## ✅ Step 2 — Verifikasi Registrasi
 
-Setelah register, verifikasi dengan melihat metagraph:
+Setelah register, verifikasi dengan melihat metagraph.
+
+:::danger `btcli subnets metagraph` Juga Gagal di Testnet — Pakai Script SDK
+Sama seperti `subnets list`, `btcli subnets metagraph --network test` kena error `Swap.AlphaSqrtPrice` di testnet. Pakai script SDK `metagraph.py` (cetak tabel neuron yang sama, plus bisa **menandai UID kamu**):
+
+```bash
+# Tandai baris UID kamu di metagraph netuid 1
+python scripts/metagraph.py --netuid 1 --wallet.name mywallet --wallet.hotkey miner1
+
+# Atau cek cepat status registrasi saja (UID + balance)
+python scripts/status.py --wallet.name mywallet --wallet.hotkey miner1 --netuid 1
+```
+:::
+
+Output `metagraph.py` (baris kamu ditandai `<-- you`):
+
+```text
+Metagraph netuid 1 on test — 256 neurons (block 7399241)
+serving axons: 84/256   validator permits: 127/256   your UID: 87
+
+ UID        STAKE  TRUST  INCENT   DIVID  EMISSION VP ACT    UPD  AXON              HOTKEY
+------------------------------------------------------------------------------------------
+  87       0.0000  0.000  0.0000  0.0000  0.000000  ·   Y     19  —                 5GNaMz7WkB…  <-- you
+```
+
+Penjelasan kolom: **UID** = posisimu, **STAKE** = stake alpha, **VP** = punya validator permit?, **ACT** = active, **UPD** = berapa block sejak update terakhir, **AXON** = `—` artinya miner belum serving (akan terisi `ip:port` begitu `neurons/miner.py` jalan di Unit 5).
+
+Output `status.py`:
+
+```text
+network        : test  (block 7399227)
+registered on netuid 1: True
+  UID          : 87
+  subnet size  : 256 neurons
+```
+
+Untuk **mainnet** (atau begitu runtime testnet sinkron lagi), `btcli` tetap berlaku:
 
 ```bash
 btcli subnets metagraph --netuid 1 --network test
-```
-
-Output menampilkan tabel semua miner di subnet. Cari UID kamu:
-
-```text
-Metagraph for subnet 1 (test)
-┌─────┬─────────────────────────────┬──────────┬──────────┬────────┐
-│ UID │ Hotkey                      │ Stake    │ Trust    │ Active │
-├─────┼─────────────────────────────┼──────────┼──────────┼────────┤
-│ 42  │ 5Gx1...miner1               │ τ 0.00   │ 0.0000   │ True   │
-└─────┴─────────────────────────────┴──────────┴──────────┴────────┘
-```
-
-Atau cek via wallet overview:
-
-```bash
 btcli wallet overview --wallet-name mywallet --network test
 ```
 
@@ -175,7 +241,7 @@ flowchart TD
     FAUCET --> REGISTER[btcli subnet register<br/>--netuid 1 --network test]
     REGISTER --> CONFIRM[Konfirmasi biaya<br/>ketik 'y']
     CONFIRM --> SUCCESS[Dapat UID ✅]
-    SUCCESS --> VERIFY[btcli subnets metagraph<br/>--netuid 1 --network test]
+    SUCCESS --> VERIFY[python scripts/metagraph.py<br/>--netuid 1 --wallet.name mywallet]
     VERIFY --> DONE[UID muncul di metagraph<br/>→ Lanjut Unit 5]
 
     style SUCCESS fill:#F1F3F4,stroke:#5F6368
@@ -200,9 +266,9 @@ flowchart TD
 
 ## 🎯 Rangkuman
 
-- **NetUID 1 testnet** = subnet learning Bittensor
-- Registrasi via **TAO burn**: `btcli subnet register --netuid 1 --wallet-name mywallet --hotkey miner1 --network test`
-- **POW registration dinonaktifkan** di NetUID 1 — wajib pakai TAO testnet
+- **NetUID 1 testnet** = subnet learning klasik, tapi sering **penuh** — pilih subnet testnet yang slotnya kosong kalau perlu
+- Registrasi via **recycle TAO** (era dTAO): `btcli subnet register --netuid <N> --wallet-name mywallet --hotkey miner1 --network test`
+- TAO yang dipakai register **dibakar (recycle)** — tidak dikembalikan saat deregister
 - Setelah register → dapat **UID**, muncul di metagraph
 - Flag btcli menggunakan **tanda hubung**: `--wallet-name`, `--hotkey`, `--network` (bukan titik)
 
@@ -219,7 +285,7 @@ flowchart TD
 1. **`--wallet-name`** adalah flag btcli (CLI tool). **`--wallet.name`** adalah flag yang dipakai saat menjalankan script Python seperti `neurons/miner.py` — keduanya berbeda tool dengan konvensi flag berbeda.
 2. **`--network test`** = pakai testnet Bittensor (sandbox, TAO tidak bernilai uang nyata). Tanpa flag, btcli default ke `finney` (mainnet) yang pakai TAO sungguhan.
 3. **Immunity period** = grace period setelah register (~24 jam mainnet), di mana miner tidak bisa dideregister meski skor 0. Penting supaya ada waktu setup miner.
-4. `btcli subnets metagraph --netuid 1 --network test` — cari UID kamu di tabel. Atau `btcli wallet overview --wallet-name mywallet --network test`.
+4. Di **testnet**: `python scripts/metagraph.py --netuid 1 --wallet.name mywallet --wallet.hotkey miner1` — baris kamu ditandai `<-- you`. Atau `python scripts/status.py ...` untuk cek UID cepat. (Di **mainnet**: `btcli subnets metagraph --netuid 1`.)
 
 </details>
 

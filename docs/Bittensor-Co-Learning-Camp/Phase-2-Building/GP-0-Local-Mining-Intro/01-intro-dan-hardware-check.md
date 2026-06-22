@@ -69,7 +69,7 @@ Semua ini **tanpa GPU, tanpa VPS, tanpa TAO sungguhan.**
 | **GPU** | ❌ Tidak perlu | — | Testnet dengan subnet-template tidak butuh GPU |
 
 :::tip Laptop Lama Pun Bisa
-MacBook Intel 2017, laptop Windows dengan i5 generasi 8, atau PC Linux RAM 8 GB — semua cukup untuk GP-0. Yang penting Python 3.10+ bisa jalan.
+MacBook Intel 2017, laptop Windows dengan i5 generasi 8, atau PC Linux RAM 8 GB — semua cukup untuk GP-0. Yang penting **Python 3.10–3.13** bisa jalan (SDK Bittensor 10.x butuh **minimal 3.10** — Python 3.9 sudah tidak didukung).
 :::
 
 ---

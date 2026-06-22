@@ -19,7 +19,7 @@ Di akhir unit ini kamu akan:
 
 :::note Prasyarat
 - ✅ [Unit 2](./instalasi-btcli) selesai — btcli terinstall dan `btcli --help` berjalan
-- ✅ venv aktif: `source ~/bittensor-env/bin/activate`
+- ✅ venv aktif: `source ~/bittensor-env-v10/bin/activate`
 :::
 
 ---
@@ -48,7 +48,7 @@ Siapapun yang punya **mnemonic coldkey** punya kendali penuh atas semua TAO di w
 Pastikan venv aktif dulu:
 
 ```bash
-source ~/bittensor-env/bin/activate
+source ~/bittensor-env-v10/bin/activate
 ```
 
 Buat coldkey dengan nama wallet:
@@ -110,7 +110,7 @@ Output `btcli wallet list`:
 
 ```text
 Wallets
-└── mywallet  (~/. bittensor/wallets/mywallet)
+└── mywallet  (~/.bittensor/wallets/mywallet)
     └── miner1
 ```
 
@@ -154,6 +154,10 @@ Selain mnemonic, backup juga folder `~/.bittensor/wallets/` ke USB drive atau en
 
 Untuk register miner di testnet, kamu butuh sedikit TAO testnet (tidak perlu beli — gratis dari faucet).
 
+:::warning Ketersediaan Faucet Berubah-ubah
+Faucet testnet kadang dimatikan atau diganti. Kalau faucet web di bawah tidak jalan, **jalur paling andal adalah Discord Bittensor** (channel faucet testnet). Ingat: faucet hanya butuh **public address coldkey** kamu — **jangan pernah** masukkan mnemonic ke website faucet manapun.
+:::
+
 ### Opsi A: Miner's Union Faucet (Paling Mudah)
 
 1. Buka browser: **app.minersunion.ai/testnet-faucet**
@@ -167,6 +171,19 @@ Verifikasi setelah beberapa menit:
 btcli wallet balance --wallet-name mywallet --network test
 ```
 
+:::warning Testnet: cek balance pakai script SDK
+Per Juni 2026, `btcli wallet balance --network test` gagal (`Storage function "Swap.AlphaSqrtPrice" not found`) karena runtime testnet belum sinkron dengan btcli terbaru. Ini bukan salah instalasimu. Untuk cek balance di **testnet**, pakai script SDK dari repo fork:
+```bash
+# Clone repo dulu kalau belum (dipakai lagi di Unit 4 & 5)
+cd ~ && git clone https://github.com/Ethereum-Jakarta/bittensor-subnet-template-v10.git
+cd bittensor-subnet-template-v10
+
+# Cek balance + status registrasi via SDK
+python scripts/status.py --wallet.name mywallet --wallet.hotkey miner1 --netuid 1
+```
+btcli `wallet balance` tetap normal untuk **mainnet**.
+:::
+
 ### Opsi B: Bittensor Discord Faucet
 
 1. Join Discord Bittensor: **discord.gg/bittensor**
@@ -175,9 +192,9 @@ btcli wallet balance --wallet-name mywallet --network test
 4. Bot atau moderator akan kirim TAO testnet
 
 :::note Berapa TAO Testnet yang Dibutuhkan?
-Registration fee di testnet netuid 1 bervariasi — biasanya sangat murah. **1 τ testnet** cukup untuk beberapa kali percobaan register.
+Biaya registrasi (recycle) di testnet bervariasi — biasanya sangat murah. **1 τ testnet** cukup untuk beberapa kali percobaan register.
 
-Catatan: POW registration dinonaktifkan di NetUID 1, jadi TAO testnet dari faucet wajib ada.
+Catatan: registrasi memakai **recycle TAO** (era dTAO), jadi TAO testnet dari faucet wajib ada sebelum register.
 :::
 
 ---
