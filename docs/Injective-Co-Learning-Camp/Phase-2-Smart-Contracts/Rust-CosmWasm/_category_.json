@@ -1,0 +1,8 @@
+{
+  "label": "Jalur B — Rust & CosmWasm",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Rust secukupnya untuk Web3 (ownership, borrowing, Result), anatomi contract CosmWasm (instantiate, execute, query), sampai build, optimize, store, dan instantiate contract di Injective testnet dengan injectived."
+  }
+}

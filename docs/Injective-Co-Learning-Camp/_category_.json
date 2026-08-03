@@ -1,0 +1,8 @@
+{
+  "label": "Injective Co-Learning Camp",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "description": "Kurikulum Injective HackQuest Indonesia Co-Learning Camp 11. Mulai dari nol (Web3, apa itu Injective, Cosmos & MultiVM), lanjut ke arsitektur chain dan on-chain orderbook, smart contract dengan Solidity di Injective EVM dan Rust/CosmWasm, sampai membangun dApp dengan Injective TypeScript SDK."
+  }
+}

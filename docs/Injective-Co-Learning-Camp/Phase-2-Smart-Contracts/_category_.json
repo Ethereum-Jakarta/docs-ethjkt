@@ -1,0 +1,8 @@
+{
+  "label": "Phase 2 — Smart Contract di Injective",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Dua jalur smart contract di Injective: Solidity di Injective EVM (chain ID 1439 testnet) dari sintaks paling dasar sampai deploy dengan Hardhat atau Foundry, dan Rust/CosmWasm dari fondasi Rust sampai store dan instantiate contract dengan injectived."
+  }
+}

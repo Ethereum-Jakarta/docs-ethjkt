@@ -1,0 +1,8 @@
+{
+  "label": "Injective TypeScript SDK",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Setup @injectivelabs/sdk-ts dengan versi aman, konfigurasi endpoint testnet, query saldo dan data chain, koneksi wallet, sampai menyusun pesan transaksi lalu broadcast dan konfirmasi."
+  }
+}

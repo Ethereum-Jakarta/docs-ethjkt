@@ -1,0 +1,8 @@
+{
+  "label": "Phase 3 — Building dengan Injective SDK",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Membangun aplikasi di atas Injective dengan TypeScript SDK: setup dan konfigurasi network, query data chain, integrasi wallet Keplr dan MetaMask, menyusun dan broadcast transaksi, lalu guided project end-to-end dari contract sampai frontend dan demo."
+  }
+}

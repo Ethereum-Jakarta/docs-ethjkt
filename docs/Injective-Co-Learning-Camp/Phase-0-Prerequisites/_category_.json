@@ -1,0 +1,8 @@
+{
+  "label": "Phase 0 — Prerequisites (Mulai dari Nol)",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Fondasi paling dasar untuk pemula total: apa itu Web3, apa itu Injective dan kenapa ada chain khusus untuk keuangan, Cosmos & IBC & MultiVM, sampai setup wallet dan testnet. Kalau kamu belum pernah menyentuh blockchain sebelumnya — mulai dari sini."
+  }
+}

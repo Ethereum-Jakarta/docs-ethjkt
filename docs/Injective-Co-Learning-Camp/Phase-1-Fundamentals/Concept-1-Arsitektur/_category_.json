@@ -1,0 +1,8 @@
+{
+  "label": "Concept I — Arsitektur & Tokenomics",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Cara kerja Injective di dalam: Cosmos SDK dan Tendermint/CometBFT, instant finality, modul-modul bawaan chain, exchange module dengan central limit order book on-chain, dan tokenomics INJ termasuk burn auction."
+  }
+}

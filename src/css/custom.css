@@ -82,3 +82,24 @@
 .markdown code {
   font-family: var(--bt-font-code);
 }
+
+/* ---- Injective Co-Learning Camp (CLC11) ---- */
+:root {
+  --inj-navy: #001B4D;
+  --inj-blue: #0082FA;
+  --inj-cyan: #00C2FF;
+}
+
+/* Injective logo utility — mirrors the Bittensor helper above. */
+.injective-logo {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0.25em;
+}
+.injective-logo--symbol   { height: 1.2em; width: auto; }
+.injective-logo--wordmark { height: 1.4em; width: auto; }
+.injective-logo--hero     { height: 72px;  width: auto; display: block; margin: 1.5rem 0; }
+
+[data-theme='dark'] .injective-logo--auto-invert {
+  filter: invert(1);
+}

@@ -1,0 +1,8 @@
+{
+  "label": "Jalur A — Solidity di Injective EVM",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Belajar Solidity dari nol: tipe data, function, state, dan event; lalu pola lanjutan seperti inheritance, modifier, custom error, dan hemat gas; ditutup dengan deploy dan verifikasi contract ke Injective EVM testnet memakai Hardhat atau Foundry."
+  }
+}
