@@ -109,8 +109,8 @@ Ini bukan sekadar penyesuaian kosmetik — ini celah nyata yang tidak digarap ti
 
 ```mermaid
 flowchart TB
-    A["Frontend (React / Next.js)"] --> B["Injective TS SDK"]
-    B --> C["Wallet (Keplr / MetaMask)"]
+    A["Frontend (React + Vite)"] --> B["wagmi + viem<br/>(atau Injective TS SDK)"]
+    B --> C["Wallet (MetaMask / Keplr)"]
     B --> D["Injective Testnet"]
     D --> E["Contract kamu<br/>(Solidity atau CosmWasm)"]
 
@@ -122,9 +122,19 @@ flowchart TB
 | | **Solidity (EVM)** | **CosmWasm (Rust)** |
 |---|---|---|
 | Kalau kamu | Lebih nyaman dengan JS/Solidity | Ingin mendalami Rust |
-| Deploy | Hardhat / Foundry | injectived + Docker |
-| Panggil dari frontend | ethers.js atau Injective SDK | `MsgExecuteContractCompat` |
+| Deploy | Hardhat 3 / Foundry | injectived + Docker |
+| Panggil dari frontend | wagmi + viem (atau ethers.js) | `MsgExecuteContractCompat` |
 | Tingkat kesulitan | 🟢 Lebih mudah | 🟡 Lebih menantang |
+
+:::danger Satu hal yang akan menghemat berjam-jam waktumu
+Apa pun jalur yang kamu pilih, **jangan pakai RPC `https://k8s.testnet.json-rpc.injective.network/`** yang masih beredar di banyak tutorial.
+
+Endpoint itu menerima transaksimu — transaksinya benar-benar masuk chain — tapi **tidak pernah mengembalikan receipt**. Deploy dan setiap transaksi akan terlihat menggantung selamanya padahal sebenarnya berhasil.
+
+Pakai ini: `https://testnet.sentry.chain.json-rpc.injective.network/`
+
+Detail lengkapnya ada di [Unit 2](./kontrak-dan-backend).
+:::
 
 :::tip Rekomendasi
 Pakai **Solidity** kecuali kamu punya alasan khusus untuk CosmWasm.

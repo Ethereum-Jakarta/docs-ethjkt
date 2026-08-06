@@ -132,7 +132,7 @@ Isi persis seperti ini:
 | Field | Nilai |
 |---|---|
 | Network Name | `Injective EVM Testnet` |
-| New RPC URL | `https://k8s.testnet.json-rpc.injective.network/` |
+| New RPC URL | `https://testnet.sentry.chain.json-rpc.injective.network/` |
 | Chain ID | `1439` |
 | Currency Symbol | `INJ` |
 | Block Explorer URL | `https://testnet.blockscout.injective.network/` |
@@ -288,7 +288,7 @@ Klik ikon puzzle di toolbar browser dan pin ekstensinya. Kalau memakai Brave, pa
 
 :::tip Yang Harus Kamu Ingat
 - **Keplr** untuk sisi Cosmos (`inj1...`), **MetaMask** untuk sisi EVM (`0x...`) — pasang keduanya
-- Injective EVM Testnet: **Chain ID `1439`**, RPC `https://k8s.testnet.json-rpc.injective.network/`
+- Injective EVM Testnet: **Chain ID `1439`**, RPC `https://testnet.sentry.chain.json-rpc.injective.network/`
 - Testnet ≠ mainnet. **Chain ID 1439 = latihan. Chain ID 1776 = uang sungguhan.** Jangan tertukar
 - [Chainlist](https://chainlist.org/?search=injective&testnets=true) bisa menambahkan jaringan dalam satu klik — tapi **baca chain ID di dialog MetaMask sebelum menyetujui**, dan cocokkan dengan tabel resmi
 - Faucet punya rate limit; ambil secukupnya dan minta bantuan di Telegram kalau kehabisan

@@ -301,7 +301,7 @@ async function pastikanJaringanBenar() {
             {
               chainId: chainIdInjective,
               chainName: "Injective EVM Testnet",
-              rpcUrls: ["https://k8s.testnet.json-rpc.injective.network/"],
+              rpcUrls: ["https://testnet.sentry.chain.json-rpc.injective.network/"],
               nativeCurrency: { name: "INJ", symbol: "INJ", decimals: 18 },
               blockExplorerUrls: ["https://testnet.blockscout.injective.network/"],
             },

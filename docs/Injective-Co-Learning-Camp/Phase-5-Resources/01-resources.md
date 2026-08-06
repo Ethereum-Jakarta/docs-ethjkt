@@ -38,10 +38,29 @@ Kalau ada yang tidak berfungsi, cek [docs.injective.network](https://docs.inject
 |---|---|---|
 | Chain ID (desimal) | `1439` | `1776` |
 | Chain ID (heksa) | `0x59f` | `0x6f0` |
-| JSON-RPC | `https://k8s.testnet.json-rpc.injective.network/` | `https://sentry.evm-rpc.injective.network/` |
+| JSON-RPC | `https://testnet.sentry.chain.json-rpc.injective.network/` | `https://sentry.evm-rpc.injective.network/` |
 | WebSocket | `wss://k8s.testnet.ws.injective.network/` | `wss://sentry.evm-ws.injective.network` |
-| Explorer | [testnet.blockscout.injective.network](https://testnet.blockscout.injective.network/) | [blockscout.injective.network](https://blockscout.injective.network/) |
+| Explorer (UI) | [testnet.blockscout.injective.network](https://testnet.blockscout.injective.network/) | [blockscout.injective.network](https://blockscout.injective.network/) |
+| Explorer (API) | `https://testnet.blockscout-api.injective.network/api` | `https://blockscout-api.injective.network/api` |
 | Mata uang | INJ (18 desimal) | INJ (18 desimal) |
+
+:::danger Dua hal yang sering salah di tabel ini
+
+**1. Jangan pakai RPC testnet `https://k8s.testnet.json-rpc.injective.network/`.**
+Endpoint itu menerima transaksi tapi **tidak pernah mengembalikan** `eth_getTransactionReceipt`, sehingga `tx.wait()` dan `waitForDeployment()` menggantung selamanya meski transaksinya sukses. Pakai endpoint **sentry** di tabel.
+
+**2. URL API explorer ≠ URL explorer.**
+API-nya ada di host dengan sisipan `-api`, bukan di path `/api` milik UI:
+
+```bash
+$ curl -so /dev/null -w "%{http_code}\n" "https://testnet.blockscout.injective.network/api?module=block&action=eth_block_number"
+404
+$ curl -so /dev/null -w "%{http_code}\n" "https://testnet.blockscout-api.injective.network/api?module=block&action=eth_block_number"
+200
+```
+
+Ini yang dibutuhkan `hardhat verify` / `forge verify-contract`.
+:::
 
 ### Injective Cosmos-Native
 

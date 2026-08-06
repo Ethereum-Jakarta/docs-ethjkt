@@ -35,6 +35,32 @@ Di akhir [Unit 1](./solidity-dasar), kamu sempat men-deploy `Celengan` ke Inject
 Unit ini memakai **Hardhat atau Foundry** — cara yang dipakai tim sungguhan, karena project-nya bisa masuk version control, punya test otomatis, dan bisa diulang dengan satu perintah. Ini keterampilan yang terbawa langsung ke [Phase 3](../../Phase-3-Building/TS-SDK/setup-injective-ts-sdk) dan ke [guided project](../../Phase-3-Building/Guided-Project/project-overview).
 :::
 
+:::danger Dua jebakan yang akan membuang waktumu — baca sebelum mulai
+
+**1. RPC `k8s.testnet.json-rpc.injective.network` rusak untuk deploy.**
+
+Endpoint ini masih beredar luas, tapi ia **menerima** transaksi (transaksi benar-benar masuk chain, nonce naik, saldo berkurang) sambil **selalu menjawab `null`** untuk `eth_getTransactionByHash` dan `eth_getTransactionReceipt`.
+
+Akibatnya `waitForDeployment()` / `tx.wait()` menunggu selamanya, dan kamu akan menyimpulkan deploy gagal — **padahal contract-mu sudah ter-deploy.**
+
+Pakai endpoint sentry di seluruh unit ini:
+
+```text
+https://testnet.sentry.chain.json-rpc.injective.network/
+```
+
+**2. `@nomicfoundation/hardhat-toolbox` versi terbaru adalah paket kosong.**
+
+`npm install --save-dev @nomicfoundation/hardhat-toolbox` sekarang memasang v7, yang isinya cuma pesan:
+
+```text
+Warning: You installed the `latest` version of @nomicfoundation/hardhat-toolbox,
+which does not work with Hardhat 2 nor 3.
+```
+
+Versinya **wajib** kamu tentukan sendiri — lihat Step 2.
+:::
+
 :::danger Sebelum mulai: soal private key
 Unit ini butuh private key wallet-mu untuk menandatangani transaksi deploy.
 
@@ -75,7 +101,15 @@ Pilih **Foundry** kalau kamu sudah nyaman dengan terminal dan ingin test yang ce
 mkdir celengan-injective
 cd celengan-injective
 npm init -y
-npm install --save-dev hardhat
+```
+
+### Step 2 — Pasang dependensi (perhatikan versinya)
+
+Unit ini memakai **Hardhat 2**, jadi versinya harus dipin — kalau tidak, npm memasang Hardhat 3 yang format konfigurasinya sama sekali berbeda dan semua contoh di bawah tidak akan jalan.
+
+```bash
+npm install --save-dev hardhat@^2.26 @nomicfoundation/hardhat-toolbox@^5 dotenv
+npm install @openzeppelin/contracts
 npx hardhat init
 ```
 
@@ -87,12 +121,11 @@ Pilih **"Create a JavaScript project"** dan setujui opsi bawaannya.
 contracts  hardhat.config.js  node_modules  package.json  scripts  test
 ```
 
-### Step 2 — Pasang dependensi
+:::tip Mau langsung pakai Hardhat 3?
+Boleh — Hardhat 3 adalah versi yang didukung ke depan, dan [Guided Project Unit 2](../../Phase-3-Building/Guided-Project/kontrak-dan-backend) memakainya dari awal lengkap dengan konfigurasi yang sudah teruji.
 
-```bash
-npm install --save-dev @nomicfoundation/hardhat-toolbox dotenv
-npm install @openzeppelin/contracts
-```
+Bedanya cukup besar: ESM (`"type": "module"`), `defineConfig` + `plugins[]`, `type: "http"` di setiap network, dan tidak ada lagi `hre.ethers` global. Kalau ini deploy pertamamu, selesaikan unit ini dengan Hardhat 2 dulu supaya konsepnya dulu yang tertanam, baru pindah versi di Phase 3.
+:::
 
 ### Step 3 — Simpan private key dengan aman
 
@@ -138,9 +171,10 @@ module.exports = {
   },
   networks: {
     injectiveTestnet: {
-      url: "https://k8s.testnet.json-rpc.injective.network/",
+      url: "https://testnet.sentry.chain.json-rpc.injective.network/",
       chainId: 1439,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      timeout: 120000,
     },
   },
   etherscan: {
@@ -152,7 +186,8 @@ module.exports = {
         network: "injectiveTestnet",
         chainId: 1439,
         urls: {
-          apiURL: "https://testnet.blockscout.injective.network/api",
+          // API-nya ada di HOST TERPISAH, bukan <explorer>/api
+          apiURL: "https://testnet.blockscout-api.injective.network/api",
           browserURL: "https://testnet.blockscout.injective.network/",
         },
       },
@@ -160,6 +195,25 @@ module.exports = {
   },
 };
 ```
+
+:::danger URL API Blockscout ≠ URL explorer-nya
+Ini menjebak hampir semua orang yang menebak bahwa API-nya ada di `<url-explorer>/api`:
+
+| | URL |
+|---|---|
+| UI explorer (dibuka di browser) | `https://testnet.blockscout.injective.network` |
+| **API** (dipakai `hardhat verify`) | `https://testnet.blockscout-api.injective.network/api` |
+
+```bash
+$ curl -s "https://testnet.blockscout.injective.network/api?module=block&action=eth_block_number"
+HTTP 404
+
+$ curl -s "https://testnet.blockscout-api.injective.network/api?module=block&action=eth_block_number"
+{"jsonrpc":"2.0","result": "0x819cce0","id": 1}
+```
+
+Perhatikan sisipan `-api` pada nama host — itu **host** yang berbeda, bukan path.
+:::
 
 ### Step 5 — Simpan contract
 
@@ -337,7 +391,7 @@ Buat `.env`:
 
 ```bash
 PRIVATE_KEY=masukkan_private_key_wallet_latihanmu_disini
-INJECTIVE_TESTNET_RPC=https://k8s.testnet.json-rpc.injective.network/
+INJECTIVE_TESTNET_RPC=https://testnet.sentry.chain.json-rpc.injective.network/
 ```
 
 Pastikan diabaikan git:
@@ -363,10 +417,10 @@ optimizer = true
 optimizer_runs = 200
 
 [rpc_endpoints]
-injective_testnet = "https://k8s.testnet.json-rpc.injective.network/"
+injective_testnet = "https://testnet.sentry.chain.json-rpc.injective.network/"
 
 [etherscan]
-injective_testnet = { key = "kosong", url = "https://testnet.blockscout.injective.network/api", chain = 1439 }
+injective_testnet = { key = "kosong", url = "https://testnet.blockscout-api.injective.network/api", chain = 1439 }
 ```
 
 ### Step 6 — Simpan contract
@@ -554,7 +608,7 @@ https://testnet.blockscout.injective.network/address/0x8bC4...71aA#code
 forge verify-contract \
   --chain-id 1439 \
   --verifier blockscout \
-  --verifier-url https://testnet.blockscout.injective.network/api \
+  --verifier-url https://testnet.blockscout-api.injective.network/api \
   ALAMAT_CONTRACT_KAMU \
   src/Celengan.sol:Celengan
 ```
@@ -595,7 +649,7 @@ Periksa juga bahwa kamu memakai akun yang benar — private key di `.env` harus 
 <details>
 <summary><strong>"invalid chain id" atau "network mismatch"</strong></summary>
 
-Pastikan `chainId: 1439` di konfigurasimu dan RPC URL-nya persis `https://k8s.testnet.json-rpc.injective.network/` (termasuk garis miring di akhir).
+Pastikan `chainId: 1439` di konfigurasimu dan RPC URL-nya persis `https://testnet.sentry.chain.json-rpc.injective.network/` (termasuk garis miring di akhir).
 
 </details>
 
@@ -603,6 +657,23 @@ Pastikan `chainId: 1439` di konfigurasimu dan RPC URL-nya persis `https://k8s.te
 <summary><strong>"nonce too low" atau "replacement transaction underpriced"</strong></summary>
 
 Ada transaksi sebelumnya yang tersangkut. Di MetaMask: **Settings → Advanced → Clear activity tab data**, lalu coba lagi.
+
+</details>
+
+<details>
+<summary><strong>Deploy diam saja, tidak selesai-selesai (paling sering terjadi)</strong></summary>
+
+Kamu hampir pasti memakai RPC `https://k8s.testnet.json-rpc.injective.network/`. Endpoint itu menerima transaksimu tapi **tidak pernah mengembalikan receipt**, jadi `waitForDeployment()` menunggu tanpa batas.
+
+**Jangan langsung Ctrl+C lalu deploy ulang** — transaksinya kemungkinan besar sudah berhasil, dan mengulang hanya membuang gas serta menghasilkan contract kembar.
+
+Cek dulu:
+
+1. Buka alamat wallet-mu di [Blockscout](https://testnet.blockscout.injective.network/)
+2. Lihat apakah ada transaksi `Contract Creation` yang sukses
+3. Kalau ada — itu contract-mu. Catat alamatnya.
+
+Lalu ganti RPC di `hardhat.config.js` ke `https://testnet.sentry.chain.json-rpc.injective.network/` dan deploy berikutnya akan selesai dalam hitungan detik.
 
 </details>
 
@@ -650,7 +721,7 @@ Kamu akan membutuhkannya untuk [submission kelulusan](../../Phase-4-Graduation/p
 ## 🎯 Rangkuman
 
 :::tip Yang Harus Kamu Ingat
-- Injective EVM Testnet: **chain ID `1439`**, RPC `https://k8s.testnet.json-rpc.injective.network/`
+- Injective EVM Testnet: **chain ID `1439`**, RPC `https://testnet.sentry.chain.json-rpc.injective.network/` — **bukan** endpoint `k8s.…` yang tidak pernah mengembalikan receipt
 - **Hardhat** untuk yang nyaman dengan JavaScript; **Foundry** untuk test cepat
 - Private key **selalu** di `.env`, dan `.env` **selalu** di `.gitignore` — verifikasi sebelum commit
 - Pakai **wallet khusus latihan**, jangan wallet berisi aset sungguhan
