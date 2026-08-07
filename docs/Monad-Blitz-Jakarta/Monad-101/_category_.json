@@ -1,0 +1,8 @@
+{
+  "label": "Workshop Monad 101",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Materi workshop Monad 101: kenapa dunia butuh blockchain berthroughput tinggi, apa itu Monad dan angka-angkanya, enam primitif arsitektur yang membuatnya cepat, apa yang berubah (dan tidak berubah) untuk developer, framework dan tooling resmi, serta katalog infra ekosistem."
+  }
+}
